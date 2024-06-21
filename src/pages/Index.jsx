@@ -15,7 +15,9 @@ import {
   MoreVertical,
   Edit,
   Trash,
-} from "lucide-react"
+  Eye,
+  FileText,
+} from "lucide-react";
 
 import { Badge } from "@/components/ui/badge"
 import {
@@ -52,7 +54,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
+import { useInvoicesDev } from "@/integrations/supabase/index.js";
+import { useSupabase } from "@/integrations/supabase/index.js";
 import {
   Tabs,
   TabsContent,
@@ -68,14 +72,15 @@ import {
 
 
 
-const dummyData = [
-  { id: 1, name: "Product 1", price: "$10", stock: 100 },
-  { id: 2, name: "Product 2", price: "$20", stock: 200 },
-  { id: 3, name: "Product 3", price: "$30", stock: 300 },
-];
+
 
 const Index = () => {
-  return (
+  const { data: invoices, error, isLoading } = useInvoicesDev();
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading invoices: {error.message}</div>;
+
+return (
     <div className="p-4">
     <Tabs defaultValue="all">
       <div className="flex items-center">
@@ -126,9 +131,9 @@ const Index = () => {
       <TabsContent value="all">
         <Card x-chunk="dashboard-06-chunk-0">
           <CardHeader>
-            <CardTitle>Products</CardTitle>
+            <CardTitle>Invoices</CardTitle>
             <CardDescription>
-              Manage your products and view their sales performance.
+              Manage your invoices and view their details.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -136,19 +141,19 @@ const Index = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead>ID</TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Price</TableHead>
-                  <TableHead>Stock</TableHead>
+                  <TableHead>Sender</TableHead>
+                  <TableHead>Amount</TableHead>
+                  <TableHead>Status</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {dummyData.map((product) => (
-                  <TableRow key={product.id}>
-                    <TableCell>{product.id}</TableCell>
-                    <TableCell>{product.name}</TableCell>
-                    <TableCell>{product.price}</TableCell>
-                    <TableCell>{product.stock}</TableCell>
+                {invoices.map((invoice) => (
+                  <TableRow key={invoice.id}>
+                    <TableCell>{invoice.id}</TableCell>
+                    <TableCell>{invoice.sender}</TableCell>
+                    <TableCell>{invoice.amount}</TableCell>
+                    <TableCell>{invoice.status}</TableCell>
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -158,7 +163,12 @@ const Index = () => {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem>
-                            <Edit className="mr-2 h-4 w-4" />
+                            <FileText className="mr-2 h-4 w-4" />
+                            PDF
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <Eye className="mr-2 h-4 w-4" />
+                            View Details
                             Edit
                           </DropdownMenuItem>
                           <DropdownMenuItem>
@@ -175,8 +185,7 @@ const Index = () => {
           </CardContent>
           <CardFooter>
             <div className="text-xs text-muted-foreground">
-              Showing <strong>1-3</strong> of <strong>3</strong>{" "}
-              products
+              Showing <strong>{invoices.length}</strong> invoices
             </div>
           </CardFooter>
         </Card>
