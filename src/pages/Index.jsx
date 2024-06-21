@@ -8,6 +8,7 @@ import {
   FileText,
   Eye,
   Trash,
+  Stamp,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge"
@@ -89,6 +90,7 @@ const Index = () => {
   const { data: invoices, error, isLoading } = useInvoicesDev();
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [statuses, setStatuses] = useState([]);
+  const [isStampDrawerOpen, setIsStampDrawerOpen] = useState(false);
 
   useEffect(() => {
     if (invoices) {
@@ -114,6 +116,10 @@ const Index = () => {
     const visibleInvoices = invoices.filter(invoice => statuses.includes(invoice.status));
     const blob = new Blob([JSON.stringify(visibleInvoices, null, 2)], { type: 'application/json' });
     saveAs(blob, 'invoices.json');
+  };
+
+  const handleStampClick = () => {
+    setIsStampDrawerOpen(true);
   };
 
   return (
@@ -214,6 +220,10 @@ const Index = () => {
                               <Trash className="mr-2 h-4 w-4" />
                               Delete
                             </DropdownMenuItem>
+                            <DropdownMenuItem onClick={handleStampClick}>
+                              <Stamp className="mr-2 h-4 w-4" />
+                              Stamp
+                            </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </TableCell>
@@ -277,6 +287,10 @@ const Index = () => {
                               <DropdownMenuItem>
                                 <Trash className="mr-2 h-4 w-4" />
                                 Delete
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={handleStampClick}>
+                                <Stamp className="mr-2 h-4 w-4" />
+                                Stamp
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -377,6 +391,33 @@ const Index = () => {
           </DrawerContent>
         </Drawer>
       )}
+
+      <Drawer open={isStampDrawerOpen} onOpenChange={setIsStampDrawerOpen}>
+        <DrawerContent side="right">
+          <div className="p-4">
+            <div className="font-semibold text-lg mb-4">Kontierungsstempel</div>
+            <div className="grid gap-3">
+              <div className="grid grid-cols-2 gap-4">
+                <Input placeholder="Pick a date" label="Eingegangen_am" />
+                <Input placeholder="Pick a date" label="Fällig_am" />
+                <Input placeholder="Pick a date" label="Gebucht" />
+                <Input placeholder="Konto" />
+                <Input placeholder="EV/VP" />
+                <Input placeholder="Belegtext" />
+                <Input placeholder="Kommentar" />
+                <div className="col-span-2">
+                  <label className="block text-sm font-medium text-gray-700">Skonto</label>
+                  <input type="range" min="0" max="100" className="w-full" />
+                </div>
+                <Input placeholder="Select..." label="Kostenstelle" />
+                <Input placeholder="Select..." label="VB" />
+                <Input placeholder="ticket Number" />
+              </div>
+              <Button className="mt-4">Submit</Button>
+            </div>
+          </div>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 };
