@@ -59,7 +59,16 @@ import {
   TooltipTrigger,
   TooltipProvider,
 } from "@/components/ui/tooltip"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 
 // Define a function to get the color variant based on the status
 const getStatusBadgeVariant = (status) => {
@@ -201,11 +210,11 @@ const Index = () => {
       </Tabs>
 
       {selectedInvoice && (
-        <Dialog open={!!selectedInvoice} onOpenChange={() => setSelectedInvoice(null)}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Invoice Details</DialogTitle>
-            </DialogHeader>
+        <Drawer open={!!selectedInvoice} onOpenChange={() => setSelectedInvoice(null)}>
+          <DrawerContent side="right">
+            <DrawerHeader>
+              <DrawerTitle>Invoice Details</DrawerTitle>
+            </DrawerHeader>
             <Card>
               <CardHeader>
                 <CardTitle>Invoice Information</CardTitle>
@@ -238,8 +247,8 @@ const Index = () => {
                 <Button variant="outline" onClick={() => setSelectedInvoice(null)}>Close</Button>
               </CardFooter>
             </Card>
-          </DialogContent>
-        </Dialog>
+          </DrawerContent>
+        </Drawer>
       )}
     </div>
   );
