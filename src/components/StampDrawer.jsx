@@ -17,11 +17,11 @@ const StampDrawer = ({ isOpen, onOpenChange }) => {
           <div className="grid gap-3">
             <div className="grid gap-4">
               <div>
-                <Label htmlFor="eingegangen_am">Eingegangen_am</Label>
+                <Label htmlFor="eingegangen_am">Eingegangen am</Label>
                 <DatePickerDemo id="eingegangen_am" />
               </div>
               <div>
-                <Label htmlFor="faellig_am">Fällig_am</Label>
+                <Label htmlFor="faellig_am">Fällig am</Label>
                 <DatePickerDemo id="faellig_am" />
               </div>
               <div>
