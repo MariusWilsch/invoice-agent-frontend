@@ -28,7 +28,7 @@ const InvoiceTable = ({ invoices, onViewDetails, onStampClick }) => {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-1/4 whitespace-normal">Sender</TableHead>
+          <TableHead className="w-2/4 whitespace-normal">Sender</TableHead>
           <TableHead className="w-1/4 whitespace-normal">Amount</TableHead>
           <TableHead className="w-1/4 whitespace-normal">Status</TableHead>
           <TableHead className="w-1/4 whitespace-normal">Actions</TableHead>
@@ -37,7 +37,7 @@ const InvoiceTable = ({ invoices, onViewDetails, onStampClick }) => {
       <TableBody>
         {invoices.map((invoice) => (
           <TableRow key={invoice.id}>
-            <TableCell className="w-1/4 whitespace-normal">
+            <TableCell className="w-2/4 whitespace-normal">
               {invoice.sender && invoice.sender.length > 0 && (
                 <>
                   <div>{invoice.sender[0]}</div>
