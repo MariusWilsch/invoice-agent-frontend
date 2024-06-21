@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { saveAs } from 'file-saver';
+import { useForm, Controller } from "react-hook-form";
+import { Calendar } from "@/components/ui/calendar";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Slider } from "@/components/ui/slider";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import {
   File,
   ListFilter,
@@ -18,7 +26,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -36,7 +43,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import {
   Table,
@@ -60,16 +66,6 @@ import {
   TooltipTrigger,
   TooltipProvider,
 } from "@/components/ui/tooltip"
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
 
 // Define a function to get the color variant based on the status
 const getStatusBadgeVariant = (status) => {
@@ -89,6 +85,13 @@ const Index = () => {
   const { data: invoices, error, isLoading } = useInvoicesDev();
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [statuses, setStatuses] = useState([]);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const { handleSubmit, control } = useForm();
+  const onSubmit = (data) => {
+    console.log(data);
+    setIsDrawerOpen(false);
+  };
 
   useEffect(() => {
     if (invoices) {
@@ -158,10 +161,10 @@ const Index = () => {
                 Export JSON
               </span>
             </Button>
-            <Button size="sm" className="h-8 gap-1">
+            <Button size="sm" className="h-8 gap-1" onClick={() => setIsDrawerOpen(true)}>
               <PlusCircle className="h-3.5 w-3.5" />
               <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                Add Invoice
+                Stamp
               </span>
             </Button>
           </div>
@@ -377,6 +380,143 @@ const Index = () => {
           </DrawerContent>
         </Drawer>
       )}
+
+      <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+        <DrawerContent side="right">
+          <div className="p-4">
+            <div className="font-semibold text-lg mb-4">Kontierungstempel</div>
+            <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3">
+              <Controller
+                name="eingegangen_am"
+                control={control}
+                render={({ field }) => (
+                  <div>
+                    <label>Eingegangen_am</label>
+                    <Calendar {...field} />
+                  </div>
+                )}
+              />
+              <Controller
+                name="faellig_am"
+                control={control}
+                render={({ field }) => (
+                  <div>
+                    <label>Fällig_am</label>
+                    <Calendar {...field} />
+                  </div>
+                )}
+              />
+              <Controller
+                name="gebucht"
+                control={control}
+                render={({ field }) => (
+                  <div>
+                    <label>Gebucht</label>
+                    <Calendar {...field} />
+                  </div>
+                )}
+              />
+              <Controller
+                name="konto"
+                control={control}
+                render={({ field }) => (
+                  <div>
+                    <label>Konto</label>
+                    <Input {...field} />
+                  </div>
+                )}
+              />
+              <Controller
+                name="ev_vp"
+                control={control}
+                render={({ field }) => (
+                  <div>
+                    <label>EV/VP</label>
+                    <Input {...field} />
+                  </div>
+                )}
+              />
+              <Controller
+                name="belegtext"
+                control={control}
+                render={({ field }) => (
+                  <div>
+                    <label>Belegtext</label>
+                    <Input {...field} />
+                  </div>
+                )}
+              />
+              <Controller
+                name="kommentar"
+                control={control}
+                render={({ field }) => (
+                  <div>
+                    <label>Kommentar</label>
+                    <Textarea {...field} />
+                  </div>
+                )}
+              />
+              <Controller
+                name="skonto"
+                control={control}
+                render={({ field }) => (
+                  <div>
+                    <label>Skonto</label>
+                    <Slider {...field} />
+                  </div>
+                )}
+              />
+              <Controller
+                name="kostenstelle"
+                control={control}
+                render={({ field }) => (
+                  <div>
+                    <label>Kostenstelle</label>
+                    <Select {...field}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="option1">Option 1</SelectItem>
+                        <SelectItem value="option2">Option 2</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+              />
+              <Controller
+                name="vb"
+                control={control}
+                render={({ field }) => (
+                  <div>
+                    <label>VB</label>
+                    <Select {...field}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="option1">Option 1</SelectItem>
+                        <SelectItem value="option2">Option 2</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+              />
+              <Controller
+                name="ticket_number"
+                control={control}
+                render={({ field }) => (
+                  <div>
+                    <label>Ticket Number</label>
+                    <Input type="number" {...field} />
+                  </div>
+                )}
+              />
+              <Button type="submit">Submit</Button>
+            </form>
+          </div>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 };
