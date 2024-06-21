@@ -215,7 +215,7 @@ const Index = () => {
       </Tabs>
 
       {selectedInvoice && (
-        <Drawer open={!!selectedInvoice} onOpenChange={handleDrawerOpenChange}>
+        <Drawer open={!!selectedInvoice} onOpenChange={(isOpen) => { if (!isOpen) setSelectedInvoice(null); }}>
           <DrawerContent side="right">
             <div className="p-4">
               <div className="font-semibold text-lg mb-4">Invoice Information</div>
