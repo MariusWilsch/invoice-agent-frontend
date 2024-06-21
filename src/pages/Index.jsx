@@ -84,6 +84,7 @@ const Index = () => {
 
   const handleViewDetails = (invoice) => {
     setSelectedInvoice(invoice);
+    setTimeout(() => (document.body.style.pointerEvents = ""), 500);
   };
 
   return (
