@@ -14,7 +14,7 @@ const StampDrawer = ({ isOpen, onOpenChange }) => {
       <SheetTrigger asChild>
         <Button>Open Sheet</Button>
       </SheetTrigger>
-      <SheetContent side="right">
+      <SheetContent side="right" className="w-[45vw]">
         <div className="p-4">
           <div className="font-semibold text-lg mb-4">Kontierungsstempel</div>
           <div className="grid gap-3">

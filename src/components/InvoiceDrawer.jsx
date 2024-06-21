@@ -8,7 +8,7 @@ import {
 const InvoiceDrawer = ({ selectedInvoice, setSelectedInvoice }) => {
   return (
     <Drawer open={!!selectedInvoice} onOpenChange={(isOpen) => { if (!isOpen) setSelectedInvoice(null); }}>
-      <DrawerContent side="right">
+      <DrawerContent side="right" className="w-[45vw]">
         <div className="p-4">
           <div className="font-semibold text-lg mb-4">Invoice Information</div>
           <div className="grid gap-3">
