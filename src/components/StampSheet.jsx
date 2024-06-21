@@ -10,7 +10,7 @@ import { Slider } from "@/components/ui/slider";
 
 const StampDrawer = ({ isOpen, onOpenChange }) => {
   return (
-    <Sheet open={isOpen} onOpenChange={onOpenChange}>
+    <Sheet open={isOpen} onOpenChange={onOpenChange} modal={false}>
       
       <SheetContent side="right" className="w-[45vw] min-w-[45vw]">
         <div className="p-4">
