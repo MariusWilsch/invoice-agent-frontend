@@ -71,6 +71,9 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { Calendar } from "@/components/ui/calendar";
+import { DatePickerDemo } from "@/components/ui/date-picker";
+import { Slider } from "@/components/ui/slider";
 
 // Define a function to get the color variant based on the status
 const getStatusBadgeVariant = (status) => {
@@ -398,16 +401,16 @@ const Index = () => {
             <div className="font-semibold text-lg mb-4">Kontierungsstempel</div>
             <div className="grid gap-3">
               <div className="grid grid-cols-2 gap-4">
-                <Input placeholder="Pick a date" label="Eingegangen_am" />
-                <Input placeholder="Pick a date" label="Fällig_am" />
-                <Input placeholder="Pick a date" label="Gebucht" />
+                <DatePickerDemo label="Eingegangen_am" />
+                <DatePickerDemo label="Fällig_am" />
+                <DatePickerDemo label="Gebucht" />
                 <Input placeholder="Konto" />
                 <Input placeholder="EV/VP" />
                 <Input placeholder="Belegtext" />
                 <Input placeholder="Kommentar" />
                 <div className="col-span-2">
                   <label className="block text-sm font-medium text-gray-700">Skonto</label>
-                  <input type="range" min="0" max="100" className="w-full" />
+                  <Slider defaultValue={[0]} max={100} step={1} />
                 </div>
                 <Input placeholder="Select..." label="Kostenstelle" />
                 <Input placeholder="Select..." label="VB" />
