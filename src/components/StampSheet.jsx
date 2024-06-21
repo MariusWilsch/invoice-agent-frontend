@@ -20,43 +20,43 @@ const StampDrawer = ({ isOpen, onOpenChange }) => {
           <div className="grid gap-3">
             <div className="grid gap-4">
               <div className="flex flex-col">
-                <Label htmlFor="eingegangen_am">Eingegangen am</Label>
-                <DatePickerDemo id="eingegangen_am" />
+                <Label htmlFor="eingegangen_am" className="mb-2">Eingegangen am</Label>
+                <DatePickerDemo id="eingegangen_am" className="mb-4" />
               </div>
-              <div className="flex flex-col">
-                <Label htmlFor="faellig_am">Fällig am</Label>
-                <DatePickerDemo id="faellig_am" />
+              <div className="flex flex-col mb-4">
+                <Label htmlFor="faellig_am" className="mb-2">Fällig am</Label>
+                <DatePickerDemo id="faellig_am" className="mb-4" />
               </div>
-              <div className="flex flex-col">
-                <Label htmlFor="gebucht">Gebucht</Label>
-                <DatePickerDemo id="gebucht" />
+              <div className="flex flex-col mb-4">
+                <Label htmlFor="gebucht" className="mb-2">Gebucht</Label>
+                <DatePickerDemo id="gebucht" className="mb-4" />
               </div>
-              <div className="flex flex-col">
-                <Label htmlFor="konto">Konto</Label>
-                <Input id="konto" placeholder="Konto" className="w-full" />
+              <div className="flex flex-col mb-4">
+                <Label htmlFor="konto" className="mb-2">Konto</Label>
+                <Input id="konto" placeholder="Konto" className="mb-4" />
               </div>
-              <div className="flex flex-col">
-                <Label htmlFor="ev_vp">EV/VP</Label>
-                <Input id="ev_vp" placeholder="EV/VP" className="w-full" />
+              <div className="flex flex-col mb-4">
+                <Label htmlFor="ev_vp" className="mb-2">EV/VP</Label>
+                <Input id="ev_vp" placeholder="EV/VP" className="mb-4" />
               </div>
-              <div className="flex flex-col">
-                <Label htmlFor="belegtext">Belegtext</Label>
-                <Input id="belegtext" placeholder="Belegtext" className="w-full" />
+              <div className="flex flex-col mb-4">
+                <Label htmlFor="belegtext" className="mb-2">Belegtext</Label>
+                <Input id="belegtext" placeholder="Belegtext" className="mb-4" />
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex flex-col">
-                  <Label htmlFor="kommentar">Kommentar</Label>
-                  <Input id="kommentar" placeholder="Kommentar" className="w-full" />
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div className="flex flex-col mb-4">
+                  <Label htmlFor="kommentar" className="mb-2">Kommentar</Label>
+                  <Input id="kommentar" placeholder="Kommentar" className="mb-4" />
                 </div>
-                <div className="flex flex-col">
-                  <Label htmlFor="skonto">Skonto</Label>
-                  <Slider id="skonto" defaultValue={[0]} max={100} step={1} className="w-full" />
+                <div className="flex flex-col mb-4">
+                  <Label htmlFor="skonto" className="mb-2">Skonto</Label>
+                  <Slider id="skonto" defaultValue={[0]} max={100} step={1} className="mb-4" />
                 </div>
               </div>
-              <div className="flex flex-col">
-                <Label htmlFor="kostenstelle">Kostenstelle</Label>
+              <div className="flex flex-col mb-4">
+                <Label htmlFor="kostenstelle" className="mb-2">Kostenstelle</Label>
                 <Select>
-                  <SelectTrigger id="kostenstelle" className="w-full">
+                  <SelectTrigger id="kostenstelle" className="w-full mb-4">
                     <SelectValue placeholder="Select..." />
                   </SelectTrigger>
                   <SelectContent>
@@ -65,10 +65,10 @@ const StampDrawer = ({ isOpen, onOpenChange }) => {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex flex-col">
-                <Label htmlFor="vb">VB</Label>
+              <div className="flex flex-col mb-4">
+                <Label htmlFor="vb" className="mb-2">VB</Label>
                 <Select>
-                  <SelectTrigger id="vb" className="w-full">
+                  <SelectTrigger id="vb" className="w-full mb-4">
                     <SelectValue placeholder="Select..." />
                   </SelectTrigger>
                   <SelectContent>
@@ -77,9 +77,9 @@ const StampDrawer = ({ isOpen, onOpenChange }) => {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex flex-col">
-                <Label htmlFor="ticket_number">Ticket Number</Label>
-                <Input id="ticket_number" placeholder="Ticket Number" className="w-full" />
+              <div className="flex flex-col mb-4">
+                <Label htmlFor="ticket_number" className="mb-2">Ticket Number</Label>
+                <Input id="ticket_number" placeholder="Ticket Number" className="mb-4" />
               </div>
             </div>
             <Button className="mt-4">Submit</Button>
