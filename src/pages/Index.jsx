@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { saveAs } from 'file-saver';
+import { saveAs } from "file-saver";
 import {
   File,
   ListFilter,
@@ -11,15 +11,15 @@ import {
   Stamp,
 } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/components/ui/badge";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
-import { Button } from "@/components/ui/button"
+} from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -27,7 +27,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -36,9 +36,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   Table,
   TableBody,
@@ -48,18 +48,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useInvoicesDev } from "@/integrations/supabase/index.js";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
   TooltipProvider,
-} from "@/components/ui/tooltip"
+} from "@/components/ui/tooltip";
 import {
   Drawer,
   DrawerClose,
@@ -95,7 +90,9 @@ const Index = () => {
 
   useEffect(() => {
     if (invoices) {
-      const uniqueStatuses = Array.from(new Set(invoices.map(invoice => invoice.status)));
+      const uniqueStatuses = Array.from(
+        new Set(invoices.map((invoice) => invoice.status))
+      );
       setStatuses(uniqueStatuses);
     }
   }, [invoices]);
@@ -107,16 +104,14 @@ const Index = () => {
     setSelectedInvoice(invoice);
   };
 
-  const handleDrawerOpenChange = (isOpen) => {
-    if (!isOpen) {
-      document.body.style.pointerEvents = "";
-    }
-  };
-
   const handleExportJSON = () => {
-    const visibleInvoices = invoices.filter(invoice => statuses.includes(invoice.status));
-    const blob = new Blob([JSON.stringify(visibleInvoices, null, 2)], { type: 'application/json' });
-    saveAs(blob, 'invoices.json');
+    const visibleInvoices = invoices.filter((invoice) =>
+      statuses.includes(invoice.status)
+    );
+    const blob = new Blob([JSON.stringify(visibleInvoices, null, 2)], {
+      type: "application/json",
+    });
+    saveAs(blob, "invoices.json");
   };
 
   const handleStampClick = () => {
@@ -129,8 +124,10 @@ const Index = () => {
         <div className="flex items-center">
           <TabsList>
             <TabsTrigger value="all">All</TabsTrigger>
-            {statuses.map(status => (
-              <TabsTrigger key={status} value={status.toLowerCase()}>{status}</TabsTrigger>
+            {statuses.map((status) => (
+              <TabsTrigger key={status} value={status.toLowerCase()}>
+                {status}
+              </TabsTrigger>
             ))}
           </TabsList>
           <div className="ml-auto flex items-center gap-2">
@@ -146,14 +143,19 @@ const Index = () => {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Filter by</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {statuses.map(status => (
+                {statuses.map((status) => (
                   <DropdownMenuCheckboxItem key={status}>
                     {status}
                   </DropdownMenuCheckboxItem>
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
-            <Button size="sm" variant="outline" className="h-8 gap-1" onClick={handleExportJSON}>
+            <Button
+              size="sm"
+              variant="outline"
+              className="h-8 gap-1"
+              onClick={handleExportJSON}
+            >
               <File className="h-3.5 w-3.5" />
               <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
                 Export JSON
@@ -203,11 +205,17 @@ const Index = () => {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => window.open(invoice.public_url, '_blank')}>
+                            <DropdownMenuItem
+                              onClick={() =>
+                                window.open(invoice.public_url, "_blank")
+                              }
+                            >
                               <FileText className="mr-2 h-4 w-4" />
                               PDF
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleViewDetails(invoice)}>
+                            <DropdownMenuItem
+                              onClick={() => handleViewDetails(invoice)}
+                            >
                               <Eye className="mr-2 h-4 w-4" />
                               View Details
                             </DropdownMenuItem>
@@ -234,13 +242,14 @@ const Index = () => {
             </CardFooter>
           </Card>
         </TabsContent>
-      {statuses.map(status => (
+        {statuses.map((status) => (
           <TabsContent key={status} value={status.toLowerCase()}>
             <Card x-chunk="dashboard-06-chunk-0">
               <CardHeader>
                 <CardTitle>{status} Invoices</CardTitle>
                 <CardDescription>
-                  Manage your {status.toLowerCase()} invoices and view their details.
+                  Manage your {status.toLowerCase()} invoices and view their
+                  details.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -254,50 +263,67 @@ const Index = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {invoices.filter(invoice => invoice.status === status).map((invoice) => (
-                      <TableRow key={invoice.id}>
-                        <TableCell>{invoice.sender}</TableCell>
-                        <TableCell>{invoice.amount}</TableCell>
-                        <TableCell>
-                          <Badge variant={getStatusBadgeVariant(invoice.status)}>
-                            {invoice.status}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <DropdownMenu modal={false}>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="outline" size="icon">
-                                <MoreVertical className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem onClick={() => window.open(invoice.public_url, '_blank')}>
-                                <FileText className="mr-2 h-4 w-4" />
-                                PDF
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleViewDetails(invoice)}>
-                                <Eye className="mr-2 h-4 w-4" />
-                                View Details
-                              </DropdownMenuItem>
-                              <DropdownMenuItem>
-                                <Trash className="mr-2 h-4 w-4" />
-                                Delete
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={handleStampClick}>
-                                <Stamp className="mr-2 h-4 w-4" />
-                                Stamp
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    {invoices
+                      .filter((invoice) => invoice.status === status)
+                      .map((invoice) => (
+                        <TableRow key={invoice.id}>
+                          <TableCell>{invoice.sender}</TableCell>
+                          <TableCell>{invoice.amount}</TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={getStatusBadgeVariant(invoice.status)}
+                            >
+                              {invoice.status}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <DropdownMenu modal={false}>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="outline" size="icon">
+                                  <MoreVertical className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem
+                                  onClick={() =>
+                                    window.open(invoice.public_url, "_blank")
+                                  }
+                                >
+                                  <FileText className="mr-2 h-4 w-4" />
+                                  PDF
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() => handleViewDetails(invoice)}
+                                >
+                                  <Eye className="mr-2 h-4 w-4" />
+                                  View Details
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                  <Trash className="mr-2 h-4 w-4" />
+                                  Delete
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={handleStampClick}>
+                                  <Stamp className="mr-2 h-4 w-4" />
+                                  Stamp
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                      ))}
                   </TableBody>
                 </Table>
               </CardContent>
               <CardFooter>
                 <div className="text-xs text-muted-foreground">
-                  Showing <strong>{invoices.filter(invoice => invoice.status === status).length}</strong> {status.toLowerCase()} invoices
+                  Showing{" "}
+                  <strong>
+                    {
+                      invoices.filter((invoice) => invoice.status === status)
+                        .length
+                    }
+                  </strong>{" "}
+                  {status.toLowerCase()} invoices
                 </div>
               </CardFooter>
             </Card>
@@ -306,10 +332,16 @@ const Index = () => {
       </Tabs>
 
       {selectedInvoice && (
-        <InvoiceDrawer selectedInvoice={selectedInvoice} setSelectedInvoice={setSelectedInvoice} />
+        <InvoiceDrawer
+          selectedInvoice={selectedInvoice}
+          setSelectedInvoice={setSelectedInvoice}
+        />
       )}
 
-      <StampSheet isOpen={isStampSheetOpen} onOpenChange={setIsStampSheetOpen} />
+      <StampSheet
+        isOpen={isStampSheetOpen}
+        onOpenChange={setIsStampSheetOpen}
+      />
     </div>
   );
 };
