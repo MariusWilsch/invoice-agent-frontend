@@ -70,6 +70,20 @@ import {
   TooltipProvider,
 } from "@/components/ui/tooltip"
 
+// Define a function to get the color variant based on the status
+const getStatusBadgeVariant = (status) => {
+  switch (status) {
+    case "Active":
+      return "success";
+    case "Draft":
+      return "warning";
+    case "Archived":
+      return "secondary";
+    default:
+      return "default";
+  }
+};
+
 const Index = () => {
   const { data: invoices, error, isLoading } = useInvoicesDev();
 
@@ -147,7 +161,11 @@ return (
                   <TableRow key={invoice.id}>
                     <TableCell>{invoice.sender}</TableCell>
                     <TableCell>{invoice.amount}</TableCell>
-                    <TableCell>{invoice.status}</TableCell>
+                    <TableCell>
+                      <Badge variant={getStatusBadgeVariant(invoice.status)}>
+                        {invoice.status}
+                      </Badge>
+                    </TableCell>
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
