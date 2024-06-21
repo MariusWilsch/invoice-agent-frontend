@@ -93,7 +93,6 @@ const Index = () => {
 
   const handleViewDetails = (invoice) => {
     setSelectedInvoice(invoice);
-    setTimeout(() => (document.body.style.pointerEvents = ""), 500);
   };
 
   const handleDrawerOpenChange = (isOpen) => {
