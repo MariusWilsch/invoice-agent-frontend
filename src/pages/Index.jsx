@@ -185,7 +185,7 @@ const Index = () => {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => window.open(invoice.public_url, '_blank')}>
                               <FileText className="mr-2 h-4 w-4" />
                               PDF
                             </DropdownMenuItem>
