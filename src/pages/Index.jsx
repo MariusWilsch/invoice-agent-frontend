@@ -70,7 +70,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import StampDrawer from "@/components/StampDrawer";
+import StampSheet from "@/components/StampSheet";
 import InvoiceDrawer from "@/components/InvoiceDrawer";
 
 // Define a function to get the color variant based on the status
@@ -91,7 +91,7 @@ const Index = () => {
   const { data: invoices, error, isLoading } = useInvoicesDev();
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [statuses, setStatuses] = useState([]);
-  const [isStampDrawerOpen, setIsStampDrawerOpen] = useState(false);
+  const [isStampSheetOpen, setIsStampSheetOpen] = useState(false);
 
   useEffect(() => {
     if (invoices) {
@@ -120,7 +120,7 @@ const Index = () => {
   };
 
   const handleStampClick = () => {
-    setIsStampDrawerOpen(true);
+    setIsStampSheetOpen(true);
   };
 
   return (
@@ -309,7 +309,7 @@ const Index = () => {
         <InvoiceDrawer selectedInvoice={selectedInvoice} setSelectedInvoice={setSelectedInvoice} />
       )}
 
-      <StampDrawer isOpen={isStampDrawerOpen} onOpenChange={setIsStampDrawerOpen} />
+      <StampSheet isOpen={isStampSheetOpen} onOpenChange={setIsStampSheetOpen} />
     </div>
   );
 };
