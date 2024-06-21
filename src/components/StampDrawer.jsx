@@ -15,7 +15,7 @@ const StampDrawer = ({ isOpen, onOpenChange }) => {
         <div className="p-4">
           <div className="font-semibold text-lg mb-4">Kontierungsstempel</div>
           <div className="grid gap-3">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid gap-4">
               <div>
                 <Label htmlFor="eingegangen_am">Eingegangen_am</Label>
                 <DatePickerDemo id="eingegangen_am" />
