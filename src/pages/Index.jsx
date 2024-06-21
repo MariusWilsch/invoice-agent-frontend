@@ -181,23 +181,23 @@ const Index = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Sender</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Actions</TableHead>
+                    <TableHead className="w-1/4 whitespace-normal">Sender</TableHead>
+                    <TableHead className="w-1/4 whitespace-normal">Amount</TableHead>
+                    <TableHead className="w-1/4 whitespace-normal">Status</TableHead>
+                    <TableHead className="w-1/4 whitespace-normal">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {invoices.map((invoice) => (
                     <TableRow key={invoice.id}>
-                      <TableCell>{invoice.sender}</TableCell>
-                      <TableCell>{invoice.amount}</TableCell>
-                      <TableCell>
+                      <TableCell className="w-1/4 whitespace-normal">{invoice.sender}</TableCell>
+                      <TableCell className="w-1/4 whitespace-normal">{invoice.amount}</TableCell>
+                      <TableCell className="w-1/4 whitespace-normal">
                         <Badge variant={getStatusBadgeVariant(invoice.status)}>
                           {invoice.status}
                         </Badge>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="w-1/4 whitespace-normal">
                         <DropdownMenu modal={false}>
                           <DropdownMenuTrigger asChild>
                             <Button variant="outline" size="icon">
@@ -256,10 +256,10 @@ const Index = () => {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Sender</TableHead>
-                      <TableHead>Amount</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Actions</TableHead>
+                      <TableHead className="w-1/4 whitespace-normal">Sender</TableHead>
+                      <TableHead className="w-1/4 whitespace-normal">Amount</TableHead>
+                      <TableHead className="w-1/4 whitespace-normal">Status</TableHead>
+                      <TableHead className="w-1/4 whitespace-normal">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -267,16 +267,16 @@ const Index = () => {
                       .filter((invoice) => invoice.status === status)
                       .map((invoice) => (
                         <TableRow key={invoice.id}>
-                          <TableCell>{invoice.sender}</TableCell>
-                          <TableCell>{invoice.amount}</TableCell>
-                          <TableCell>
+                          <TableCell className="w-1/4 whitespace-normal">{invoice.sender}</TableCell>
+                          <TableCell className="w-1/4 whitespace-normal">{invoice.amount}</TableCell>
+                          <TableCell className="w-1/4 whitespace-normal">
                             <Badge
                               variant={getStatusBadgeVariant(invoice.status)}
                             >
                               {invoice.status}
                             </Badge>
                           </TableCell>
-                          <TableCell>
+                          <TableCell className="w-1/4 whitespace-normal">
                             <DropdownMenu modal={false}>
                               <DropdownMenuTrigger asChild>
                                 <Button variant="outline" size="icon">
