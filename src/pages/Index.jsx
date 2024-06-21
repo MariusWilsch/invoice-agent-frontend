@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { saveAs } from 'file-saver';
 import {
   File,
   ListFilter,
@@ -109,6 +110,12 @@ const Index = () => {
     }
   };
 
+  const handleExportJSON = () => {
+    const visibleInvoices = invoices.filter(invoice => statuses.includes(invoice.status));
+    const blob = new Blob([JSON.stringify(visibleInvoices, null, 2)], { type: 'application/json' });
+    saveAs(blob, 'invoices.json');
+  };
+
   return (
     <div className="p-4">
       <Tabs defaultValue="all">
@@ -143,6 +150,12 @@ const Index = () => {
               <File className="h-3.5 w-3.5" />
               <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
                 Export
+              </span>
+            </Button>
+            <Button size="sm" variant="outline" className="h-8 gap-1" onClick={handleExportJSON}>
+              <File className="h-3.5 w-3.5" />
+              <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                Export JSON
               </span>
             </Button>
             <Button size="sm" className="h-8 gap-1">
