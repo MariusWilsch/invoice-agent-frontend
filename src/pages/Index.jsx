@@ -217,9 +217,6 @@ const Index = () => {
       {selectedInvoice && (
         <Drawer open={!!selectedInvoice} onOpenChange={handleDrawerOpenChange}>
           <DrawerContent side="right">
-            <DrawerHeader>
-              <DrawerTitle>Invoice Details</DrawerTitle>
-            </DrawerHeader>
             <Card>
               <CardHeader>
                 <CardTitle>Invoice Information</CardTitle>
