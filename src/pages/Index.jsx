@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   File,
   ListFilter,
@@ -87,6 +87,14 @@ const getStatusBadgeVariant = (status) => {
 const Index = () => {
   const { data: invoices, error, isLoading } = useInvoicesDev();
   const [selectedInvoice, setSelectedInvoice] = useState(null);
+  const [statuses, setStatuses] = useState([]);
+
+  useEffect(() => {
+    if (invoices) {
+      const uniqueStatuses = Array.from(new Set(invoices.map(invoice => invoice.status)));
+      setStatuses(uniqueStatuses);
+    }
+  }, [invoices]);
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading invoices: {error.message}</div>;
@@ -107,11 +115,9 @@ const Index = () => {
         <div className="flex items-center">
           <TabsList>
             <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="active">Active</TabsTrigger>
-            <TabsTrigger value="draft">Draft</TabsTrigger>
-            <TabsTrigger value="archived" className="hidden sm:flex">
-              Archived
-            </TabsTrigger>
+            {statuses.map(status => (
+              <TabsTrigger key={status} value={status.toLowerCase()}>{status}</TabsTrigger>
+            ))}
           </TabsList>
           <div className="ml-auto flex items-center gap-2">
             <DropdownMenu modal={false}>
@@ -212,6 +218,71 @@ const Index = () => {
             </CardFooter>
           </Card>
         </TabsContent>
+      {statuses.map(status => (
+          <TabsContent key={status} value={status.toLowerCase()}>
+            <Card x-chunk="dashboard-06-chunk-0">
+              <CardHeader>
+                <CardTitle>{status} Invoices</CardTitle>
+                <CardDescription>
+                  Manage your {status.toLowerCase()} invoices and view their details.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Sender</TableHead>
+                      <TableHead>Amount</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {invoices.filter(invoice => invoice.status === status).map((invoice) => (
+                      <TableRow key={invoice.id}>
+                        <TableCell>{invoice.sender}</TableCell>
+                        <TableCell>{invoice.amount}</TableCell>
+                        <TableCell>
+                          <Badge variant={getStatusBadgeVariant(invoice.status)}>
+                            {invoice.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <DropdownMenu modal={false}>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="outline" size="icon">
+                                <MoreVertical className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => window.open(invoice.public_url, '_blank')}>
+                                <FileText className="mr-2 h-4 w-4" />
+                                PDF
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleViewDetails(invoice)}>
+                                <Eye className="mr-2 h-4 w-4" />
+                                View Details
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                <Trash className="mr-2 h-4 w-4" />
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+              <CardFooter>
+                <div className="text-xs text-muted-foreground">
+                  Showing <strong>{invoices.filter(invoice => invoice.status === status).length}</strong> {status.toLowerCase()} invoices
+                </div>
+              </CardFooter>
+            </Card>
+          </TabsContent>
+        ))}
       </Tabs>
 
       {selectedInvoice && (
