@@ -1,5 +1,5 @@
 import React from "react";
-import { FileText, Eye, Trash, Stamp } from "lucide-react";
+import { FileText, Eye, Trash, Stamp, MoreVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
