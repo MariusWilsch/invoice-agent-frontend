@@ -18,15 +18,21 @@ const StampDrawer = ({ isOpen, onOpenChange }) => {
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col mb-4 min-w-[200px]">
               <Label htmlFor="eingegangen_am" className="mb-2">Eingegangen am</Label>
-              <DatePickerDemo id="eingegangen_am" className="mb-4 w-full" />
+              <div className="w-full">
+                <DatePickerDemo id="eingegangen_am" className="mb-4 w-full" />
+              </div>
             </div>
             <div className="flex flex-col mb-4 min-w-[200px]">
               <Label htmlFor="faellig_am" className="mb-2">Fällig am</Label>
-              <DatePickerDemo id="faellig_am" className="mb-4 w-full" />
+              <div className="w-full">
+                <DatePickerDemo id="faellig_am" className="mb-4 w-full" />
+              </div>
             </div>
             <div className="flex flex-col mb-4 min-w-[200px]">
               <Label htmlFor="gebucht" className="mb-2">Gebucht</Label>
-              <DatePickerDemo id="gebucht" className="mb-4 w-full" />
+              <div className="w-full">
+                <DatePickerDemo id="gebucht" className="mb-4 w-full" />
+              </div>
             </div>
             <div className="flex flex-col mb-4 min-w-[200px]">
               <Label htmlFor="konto" className="mb-2">Konto</Label>
