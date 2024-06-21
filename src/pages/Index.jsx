@@ -12,6 +12,9 @@ import {
   Settings,
   ShoppingCart,
   Users2,
+  MoreVertical,
+  Edit,
+  Trash,
 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
@@ -64,6 +67,12 @@ import {
 } from "@/components/ui/tooltip"
 
 
+
+const dummyData = [
+  { id: 1, name: "Product 1", price: "$10", stock: 100 },
+  { id: 2, name: "Product 2", price: "$20", stock: 200 },
+  { id: 3, name: "Product 3", price: "$30", stock: 300 },
+];
 
 const Index = () => {
   return (
@@ -123,11 +132,50 @@ const Index = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-          {/* <!-- ADD MOST OF THE CODE HERE --> */}
+          <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>ID</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Price</TableHead>
+                  <TableHead>Stock</TableHead>
+                  <TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {dummyData.map((product) => (
+                  <TableRow key={product.id}>
+                    <TableCell>{product.id}</TableCell>
+                    <TableCell>{product.name}</TableCell>
+                    <TableCell>{product.price}</TableCell>
+                    <TableCell>{product.stock}</TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="outline" size="icon">
+                            <MoreVertical className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem>
+                            <Edit className="mr-2 h-4 w-4" />
+                            Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <Trash className="mr-2 h-4 w-4" />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </CardContent>
           <CardFooter>
             <div className="text-xs text-muted-foreground">
-              Showing <strong>1-10</strong> of <strong>32</strong>{" "}
+              Showing <strong>1-3</strong> of <strong>3</strong>{" "}
               products
             </div>
           </CardFooter>
