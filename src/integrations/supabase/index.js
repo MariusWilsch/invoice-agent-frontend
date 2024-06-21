@@ -11,210 +11,82 @@ export function SupabaseProvider({ children }) {
     return React.createElement(QueryClientProvider, { client: queryClient }, children);
 }
 
-const fromSupabase = async (query) => {
-    const { data, error } = await query;
-    if (error) throw new Error(error.message);
-    return data;
-};
-
 /* supabase integration types
 
-### event
+### notes
 
 | name       | type        | format | required |
 |------------|-------------|--------|----------|
 | id         | int8        | number | true     |
-| name       | text        | string | true     |
 | created_at | timestamptz | string | true     |
-| date       | date        | string | true     |
-
-### user
-
-| name       | type        | format | required |
-|------------|-------------|--------|----------|
-| id         | int8        | number | true     |
-| username   | text        | string | true     |
-| email      | text        | string | true     |
-| created_at | timestamptz | string | true     |
-
-### product
-
-| name       | type        | format | required |
-|------------|-------------|--------|----------|
-| id         | int8        | number | true     |
-| name       | text        | string | true     |
-| price      | numeric     | number | true     |
-| created_at | timestamptz | string | true     |
-
-### order
-
-| name       | type        | format | required |
-|------------|-------------|--------|----------|
-| id         | int8        | number | true     |
-| user_id    | int8        | number | true     |
-| product_id | int8        | number | true     |
-| quantity   | int4        | number | true     |
-| total      | numeric     | number | true     |
-| created_at | timestamptz | string | true     |
+| title      | text        | string | false    |
+| content    | text        | string | false    |
+| color      | text        | string | false    |
+| pinned     | boolean     | boolean| false    |
 
 */
 
-export const useEvents = () => useQuery({
-    queryKey: ['events'],
-    queryFn: () => fromSupabase(supabase.from('event').select('*')),
+// Hook to fetch all notes
+export const useNotes = () => useQuery({
+    queryKey: ['notes'],
+    queryFn: async () => {
+        const { data, error } = await supabase.from('notes').select('*');
+        if (error) throw new Error(error.message);
+        return data;
+    },
 });
 
-export const useEvent = (id) => useQuery({
-    queryKey: ['event', id],
-    queryFn: () => fromSupabase(supabase.from('event').select('*').eq('id', id).single()),
+// Hook to fetch a single note by ID
+export const useNote = (id) => useQuery({
+    queryKey: ['notes', id],
+    queryFn: async () => {
+        const { data, error } = await supabase.from('notes').select('*').eq('id', id).single();
+        if (error) throw new Error(error.message);
+        return data;
+    },
 });
 
-export const useAddEvent = () => {
+// Hook to create a new note
+export const useAddNote = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (newEvent) => fromSupabase(supabase.from('event').insert([newEvent])),
+        mutationFn: async (newNote) => {
+            const { data, error } = await supabase.from('notes').insert([newNote]);
+            if (error) throw new Error(error.message);
+            return data;
+        },
         onSuccess: () => {
-            queryClient.invalidateQueries('events');
+            queryClient.invalidateQueries('notes');
         },
     });
 };
 
-export const useUpdateEvent = () => {
+// Hook to update an existing note
+export const useUpdateNote = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (updatedEvent) => fromSupabase(supabase.from('event').update(updatedEvent).eq('id', updatedEvent.id)),
+        mutationFn: async (updatedNote) => {
+            const { data, error } = await supabase.from('notes').update(updatedNote).eq('id', updatedNote.id);
+            if (error) throw new Error(error.message);
+            return data;
+        },
         onSuccess: () => {
-            queryClient.invalidateQueries('events');
+            queryClient.invalidateQueries('notes');
         },
     });
 };
 
-export const useDeleteEvent = () => {
+// Hook to delete a note
+export const useDeleteNote = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (id) => fromSupabase(supabase.from('event').delete().eq('id', id)),
-        onSuccess: () => {
-            queryClient.invalidateQueries('events');
+        mutationFn: async (id) => {
+            const { data, error } = await supabase.from('notes').delete().eq('id', id);
+            if (error) throw new Error(error.message);
+            return data;
         },
-    });
-};
-
-export const useUsers = () => useQuery({
-    queryKey: ['users'],
-    queryFn: () => fromSupabase(supabase.from('user').select('*')),
-});
-
-export const useUser = (id) => useQuery({
-    queryKey: ['user', id],
-    queryFn: () => fromSupabase(supabase.from('user').select('*').eq('id', id).single()),
-});
-
-export const useAddUser = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: (newUser) => fromSupabase(supabase.from('user').insert([newUser])),
         onSuccess: () => {
-            queryClient.invalidateQueries('users');
-        },
-    });
-};
-
-export const useUpdateUser = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: (updatedUser) => fromSupabase(supabase.from('user').update(updatedUser).eq('id', updatedUser.id)),
-        onSuccess: () => {
-            queryClient.invalidateQueries('users');
-        },
-    });
-};
-
-export const useDeleteUser = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: (id) => fromSupabase(supabase.from('user').delete().eq('id', id)),
-        onSuccess: () => {
-            queryClient.invalidateQueries('users');
-        },
-    });
-};
-
-export const useProducts = () => useQuery({
-    queryKey: ['products'],
-    queryFn: () => fromSupabase(supabase.from('product').select('*')),
-});
-
-export const useProduct = (id) => useQuery({
-    queryKey: ['product', id],
-    queryFn: () => fromSupabase(supabase.from('product').select('*').eq('id', id).single()),
-});
-
-export const useAddProduct = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: (newProduct) => fromSupabase(supabase.from('product').insert([newProduct])),
-        onSuccess: () => {
-            queryClient.invalidateQueries('products');
-        },
-    });
-};
-
-export const useUpdateProduct = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: (updatedProduct) => fromSupabase(supabase.from('product').update(updatedProduct).eq('id', updatedProduct.id)),
-        onSuccess: () => {
-            queryClient.invalidateQueries('products');
-        },
-    });
-};
-
-export const useDeleteProduct = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: (id) => fromSupabase(supabase.from('product').delete().eq('id', id)),
-        onSuccess: () => {
-            queryClient.invalidateQueries('products');
-        },
-    });
-};
-
-export const useOrders = () => useQuery({
-    queryKey: ['orders'],
-    queryFn: () => fromSupabase(supabase.from('order').select('*')),
-});
-
-export const useOrder = (id) => useQuery({
-    queryKey: ['order', id],
-    queryFn: () => fromSupabase(supabase.from('order').select('*').eq('id', id).single()),
-});
-
-export const useAddOrder = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: (newOrder) => fromSupabase(supabase.from('order').insert([newOrder])),
-        onSuccess: () => {
-            queryClient.invalidateQueries('orders');
-        },
-    });
-};
-
-export const useUpdateOrder = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: (updatedOrder) => fromSupabase(supabase.from('order').update(updatedOrder).eq('id', updatedOrder.id)),
-        onSuccess: () => {
-            queryClient.invalidateQueries('orders');
-        },
-    });
-};
-
-export const useDeleteOrder = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: (id) => fromSupabase(supabase.from('order').delete().eq('id', id)),
-        onSuccess: () => {
-            queryClient.invalidateQueries('orders');
+            queryClient.invalidateQueries('notes');
         },
     });
 };
