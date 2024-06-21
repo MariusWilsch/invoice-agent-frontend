@@ -96,6 +96,12 @@ const Index = () => {
     setTimeout(() => (document.body.style.pointerEvents = ""), 500);
   };
 
+  const handleDrawerOpenChange = (isOpen) => {
+    if (!isOpen) {
+      document.body.style.pointerEvents = "";
+    }
+  };
+
   return (
     <div className="p-4">
       <Tabs defaultValue="all">
@@ -210,7 +216,7 @@ const Index = () => {
       </Tabs>
 
       {selectedInvoice && (
-        <Drawer open={!!selectedInvoice} onOpenChange={() => setSelectedInvoice(null)}>
+        <Drawer open={!!selectedInvoice} onOpenChange={handleDrawerOpenChange}>
           <DrawerContent side="right">
             <DrawerHeader>
               <DrawerTitle>Invoice Details</DrawerTitle>
