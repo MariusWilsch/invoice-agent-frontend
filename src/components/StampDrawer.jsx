@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/drawer";
 
 import { Input } from "@/components/ui/input";
+import { DatePickerDemo } from "@/components/ui/date-picker";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
@@ -20,15 +21,15 @@ const StampDrawer = ({ isOpen, onOpenChange }) => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="eingegangen_am">Eingegangen_am</Label>
-                <Input type="date" id="eingegangen_am" />
+                <DatePickerDemo id="eingegangen_am" />
               </div>
               <div>
                 <Label htmlFor="faellig_am">Fällig_am</Label>
-                <Input type="date" id="faellig_am" />
+                <DatePickerDemo id="faellig_am" />
               </div>
               <div>
                 <Label htmlFor="gebucht">Gebucht</Label>
-                <Input type="date" id="gebucht" />
+                <DatePickerDemo id="gebucht" />
               </div>
               <div>
                 <Label htmlFor="konto">Konto</Label>
