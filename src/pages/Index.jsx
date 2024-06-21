@@ -70,10 +70,6 @@ import {
   TooltipProvider,
 } from "@/components/ui/tooltip"
 
-
-
-
-
 const Index = () => {
   const { data: invoices, error, isLoading } = useInvoicesDev();
 
@@ -140,7 +136,6 @@ return (
           <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>ID</TableHead>
                   <TableHead>Sender</TableHead>
                   <TableHead>Amount</TableHead>
                   <TableHead>Status</TableHead>
@@ -150,7 +145,6 @@ return (
               <TableBody>
                 {invoices.map((invoice) => (
                   <TableRow key={invoice.id}>
-                    <TableCell>{invoice.id}</TableCell>
                     <TableCell>{invoice.sender}</TableCell>
                     <TableCell>{invoice.amount}</TableCell>
                     <TableCell>{invoice.status}</TableCell>
@@ -169,7 +163,6 @@ return (
                           <DropdownMenuItem>
                             <Eye className="mr-2 h-4 w-4" />
                             View Details
-                            Edit
                           </DropdownMenuItem>
                           <DropdownMenuItem>
                             <Trash className="mr-2 h-4 w-4" />
