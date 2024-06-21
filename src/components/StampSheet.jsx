@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { DatePickerDemo } from "@/components/ui/date-picker";
 
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -11,9 +11,7 @@ import { Slider } from "@/components/ui/slider";
 const StampDrawer = ({ isOpen, onOpenChange }) => {
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      <SheetTrigger asChild>
-        <Button>Open Sheet</Button>
-      </SheetTrigger>
+      
       <SheetContent side="right" className="w-[45vw] min-w-[45vw]">
         <div className="p-4">
           <div className="font-semibold text-lg mb-4">Kontierungsstempel</div>
