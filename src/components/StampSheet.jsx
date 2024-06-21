@@ -33,23 +33,25 @@ const StampDrawer = ({ isOpen, onOpenChange }) => {
               </div>
               <div className="flex flex-col">
                 <Label htmlFor="konto">Konto</Label>
-                <Input id="konto" placeholder="Konto" />
+                <Input id="konto" placeholder="Konto" className="w-full" />
               </div>
               <div className="flex flex-col">
                 <Label htmlFor="ev_vp">EV/VP</Label>
-                <Input id="ev_vp" placeholder="EV/VP" />
+                <Input id="ev_vp" placeholder="EV/VP" className="w-full" />
               </div>
               <div className="flex flex-col">
                 <Label htmlFor="belegtext">Belegtext</Label>
-                <Input id="belegtext" placeholder="Belegtext" />
+                <Input id="belegtext" placeholder="Belegtext" className="w-full" />
               </div>
-              <div className="flex flex-col">
-                <Label htmlFor="kommentar">Kommentar</Label>
-                <Input id="kommentar" placeholder="Kommentar" />
-              </div>
-              <div className="col-span-2">
-                <Label htmlFor="skonto">Skonto</Label>
-                <Slider id="skonto" defaultValue={[0]} max={100} step={1} />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col">
+                  <Label htmlFor="kommentar">Kommentar</Label>
+                  <Input id="kommentar" placeholder="Kommentar" className="w-full" />
+                </div>
+                <div className="flex flex-col">
+                  <Label htmlFor="skonto">Skonto</Label>
+                  <Slider id="skonto" defaultValue={[0]} max={100} step={1} className="w-full" />
+                </div>
               </div>
               <div className="flex flex-col">
                 <Label htmlFor="kostenstelle">Kostenstelle</Label>
@@ -77,7 +79,7 @@ const StampDrawer = ({ isOpen, onOpenChange }) => {
               </div>
               <div className="flex flex-col">
                 <Label htmlFor="ticket_number">Ticket Number</Label>
-                <Input id="ticket_number" placeholder="Ticket Number" />
+                <Input id="ticket_number" placeholder="Ticket Number" className="w-full" />
               </div>
             </div>
             <Button className="mt-4">Submit</Button>
