@@ -206,28 +206,38 @@ const Index = () => {
             <DialogHeader>
               <DialogTitle>Invoice Details</DialogTitle>
             </DialogHeader>
-            <div>
-              <p><strong>ID:</strong> {selectedInvoice.id}</p>
-              <p><strong>Created At:</strong> {selectedInvoice.created_at}</p>
-              <p><strong>Eingegangen Am:</strong> {selectedInvoice.eingegangen_am}</p>
-              <p><strong>Konto:</strong> {selectedInvoice.konto}</p>
-              <p><strong>EV VP:</strong> {selectedInvoice.ev_vp}</p>
-              <p><strong>Belegtext:</strong> {selectedInvoice.belegtext}</p>
-              <p><strong>Kommentar:</strong> {selectedInvoice.kommentar}</p>
-              <p><strong>Fällig Am:</strong> {selectedInvoice.fällig_am}</p>
-              <p><strong>Gebucht:</strong> {selectedInvoice.gebucht}</p>
-              <p><strong>Kostenstelle:</strong> {selectedInvoice.kostenstelle}</p>
-              <p><strong>VB:</strong> {selectedInvoice.VB}</p>
-              <p><strong>Wer Geprüft:</strong> {selectedInvoice.wer_geprüft}</p>
-              <p><strong>Wer Bezahlt:</strong> {selectedInvoice.wer_bezahlt}</p>
-              <p><strong>Status:</strong> {selectedInvoice.status}</p>
-              <p><strong>Amount:</strong> {selectedInvoice.amount}</p>
-              <p><strong>Sender:</strong> {selectedInvoice.sender}</p>
-              <p><strong>Email Body:</strong> {selectedInvoice.email_body}</p>
-              <p><strong>Public URL:</strong> {selectedInvoice.public_url}</p>
-              <p><strong>Faellig Am:</strong> {selectedInvoice.faellig_am}</p>
-              <p><strong>Skonto:</strong> {selectedInvoice.skonto}</p>
-            </div>
+            <Card>
+              <CardHeader>
+                <CardTitle>Invoice Information</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <p><strong>ID:</strong> {selectedInvoice.id}</p>
+                  <p><strong>Created At:</strong> {selectedInvoice.created_at}</p>
+                  <p><strong>Eingegangen Am:</strong> {selectedInvoice.eingegangen_am}</p>
+                  <p><strong>Konto:</strong> {selectedInvoice.konto}</p>
+                  <p><strong>EV VP:</strong> {selectedInvoice.ev_vp}</p>
+                  <p><strong>Belegtext:</strong> {selectedInvoice.belegtext}</p>
+                  <p><strong>Kommentar:</strong> {selectedInvoice.kommentar}</p>
+                  <p><strong>Fällig Am:</strong> {selectedInvoice.fällig_am}</p>
+                  <p><strong>Gebucht:</strong> {selectedInvoice.gebucht}</p>
+                  <p><strong>Kostenstelle:</strong> {selectedInvoice.kostenstelle}</p>
+                  <p><strong>VB:</strong> {selectedInvoice.VB}</p>
+                  <p><strong>Wer Geprüft:</strong> {selectedInvoice.wer_geprüft}</p>
+                  <p><strong>Wer Bezahlt:</strong> {selectedInvoice.wer_bezahlt}</p>
+                  <p><strong>Status:</strong> {selectedInvoice.status}</p>
+                  <p><strong>Amount:</strong> {selectedInvoice.amount}</p>
+                  <p><strong>Sender:</strong> {selectedInvoice.sender}</p>
+                  <p><strong>Email Body:</strong> {selectedInvoice.email_body}</p>
+                  <p><strong>Public URL:</strong> {selectedInvoice.public_url}</p>
+                  <p><strong>Faellig Am:</strong> {selectedInvoice.faellig_am}</p>
+                  <p><strong>Skonto:</strong> {selectedInvoice.skonto}</p>
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Button variant="outline" onClick={() => setSelectedInvoice(null)}>Close</Button>
+              </CardFooter>
+            </Card>
           </DialogContent>
         </Dialog>
       )}
