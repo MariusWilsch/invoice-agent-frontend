@@ -48,7 +48,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useInvoicesDev } from "@/integrations/supabase/index.js";
-import { useSupabase } from "@/integrations/supabase/index.js";
 import {
   Tabs,
   TabsContent,

@@ -10,7 +10,7 @@ import { Slider } from "@/components/ui/slider";
 
 const StampDrawer = ({ isOpen, onOpenChange }) => {
   return (
-    <Drawer open={isOpen} onOpenChange={onOpenChange}>
+    <Drawer open={isOpen} onOpenChange={onOpenChange} modal={false}>
       <DrawerContent side="right">
         <div className="p-4">
           <div className="font-semibold text-lg mb-4">Kontierungsstempel</div>
