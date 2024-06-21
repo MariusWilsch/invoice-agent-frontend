@@ -37,7 +37,14 @@ const InvoiceTable = ({ invoices, onViewDetails, onStampClick }) => {
       <TableBody>
         {invoices.map((invoice) => (
           <TableRow key={invoice.id}>
-            <TableCell className="w-1/4 whitespace-normal">{invoice.sender}</TableCell>
+            <TableCell className="w-1/4 whitespace-normal">
+              {invoice.sender && invoice.sender.length > 0 && (
+                <>
+                  <div>{invoice.sender[0]}</div>
+                  {invoice.sender.length > 1 && <div>{invoice.sender[1]}</div>}
+                </>
+              )}
+            </TableCell>
             <TableCell className="w-1/4 whitespace-normal">{invoice.amount}</TableCell>
             <TableCell className="w-1/4 whitespace-normal">
               <Badge variant={getStatusBadgeVariant(invoice.status)}>
