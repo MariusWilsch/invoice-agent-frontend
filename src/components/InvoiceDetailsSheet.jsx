@@ -4,7 +4,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "
 const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-[60vw] sm:w-[60vw]">
+      <SheetContent side="right" className="w-[60vw] sm:w-[60vw] min-w-[50vw]">
         <SheetHeader>
           <SheetTitle>Invoice Details</SheetTitle>
           <SheetDescription>View the details of the selected invoice.</SheetDescription>
