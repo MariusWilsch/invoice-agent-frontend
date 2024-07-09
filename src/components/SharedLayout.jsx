@@ -97,7 +97,7 @@ const SharedLayout = () => {
                   <Package2 className="h-5 w-5" />
                 </a>
               </TooltipTrigger>
-              <TooltipContent side="right">Dashboard</TooltipContent>
+              <TooltipContent side="right">Home</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </nav>
@@ -141,7 +141,7 @@ const SharedLayout = () => {
           <Breadcrumb className="hidden md:flex">
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbLink href="/">Dashboard</BreadcrumbLink>
+                <BreadcrumbLink href="/">Home</BreadcrumbLink>
               </BreadcrumbItem>
               {generateBreadcrumbs().map((breadcrumb, index) => (
                 <React.Fragment key={breadcrumb.to}>
