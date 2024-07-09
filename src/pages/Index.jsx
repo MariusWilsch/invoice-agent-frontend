@@ -65,7 +65,6 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import StampSheet from "@/components/StampSheet";
-import InvoiceDrawer from "@/components/InvoiceDrawer";
 
 // Define a function to get the color variant based on the status
 const getStatusBadgeVariant = (status) => {
@@ -83,7 +82,6 @@ const getStatusBadgeVariant = (status) => {
 
 const Index = () => {
   const { data: invoices, error, isLoading } = useInvoicesDev();
-  const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [statuses, setStatuses] = useState([]);
   const [isStampSheetOpen, setIsStampSheetOpen] = useState(false);
 
@@ -98,10 +96,6 @@ const Index = () => {
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading invoices: {error.message}</div>;
-
-  const handleViewDetails = (invoice) => {
-    setSelectedInvoice(invoice);
-  };
 
   const handleStampClick = () => {
     setIsStampSheetOpen(true);
@@ -191,9 +185,7 @@ const Index = () => {
                               <FileText className="mr-2 h-4 w-4" />
                               PDF
                             </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => handleViewDetails(invoice)}
-                            >
+                            <DropdownMenuItem onClick={() => {}}>
                               <Eye className="mr-2 h-4 w-4" />
                               View Details
                             </DropdownMenuItem>
@@ -270,9 +262,7 @@ const Index = () => {
                                   <FileText className="mr-2 h-4 w-4" />
                                   PDF
                                 </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() => handleViewDetails(invoice)}
-                                >
+                                <DropdownMenuItem onClick={() => {}}>
                                   <Eye className="mr-2 h-4 w-4" />
                                   View Details
                                 </DropdownMenuItem>
@@ -308,13 +298,6 @@ const Index = () => {
           </TabsContent>
         ))}
       </Tabs>
-
-      {selectedInvoice && (
-        <InvoiceDrawer
-          selectedInvoice={selectedInvoice}
-          setSelectedInvoice={setSelectedInvoice}
-        />
-      )}
 
       <StampSheet
         isOpen={isStampSheetOpen}
