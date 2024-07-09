@@ -142,7 +142,7 @@ const Index = () => {
           </div>
         </div>
         <TabsContent value="all">
-          <Card x-chunk="dashboard-06-chunk-0">
+          <Card>
             <CardHeader>
               <CardTitle>Invoices</CardTitle>
               <CardDescription>
@@ -214,7 +214,7 @@ const Index = () => {
         </TabsContent>
         {statuses.map((status) => (
           <TabsContent key={status} value={status.toLowerCase()}>
-            <Card x-chunk="dashboard-06-chunk-0">
+            <Card>
               <CardHeader>
                 <CardTitle>{status} Invoices</CardTitle>
                 <CardDescription>
