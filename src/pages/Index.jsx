@@ -168,8 +168,8 @@ const Index = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {invoices.map((invoice) => (
-                    <TableRow key={invoice.id}>
+                  {invoices.map((invoice, index) => (
+                    <TableRow key={invoice.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                       <TableCell>{invoice.sender}</TableCell>
                       <TableCell>{invoice.amount}</TableCell>
                       <TableCell>
@@ -243,8 +243,8 @@ const Index = () => {
                   <TableBody>
                     {invoices
                       .filter((invoice) => invoice.status === status)
-                      .map((invoice) => (
-                        <TableRow key={invoice.id}>
+                      .map((invoice, index) => (
+                        <TableRow key={invoice.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                           <TableCell>{invoice.sender}</TableCell>
                           <TableCell>{invoice.amount}</TableCell>
                           <TableCell>
