@@ -19,14 +19,6 @@ import {
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-  BreadcrumbLink,
-} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -73,14 +65,6 @@ const SharedLayout = () => {
   const location = useLocation();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
-  const generateBreadcrumbs = () => {
-    const pathnames = location.pathname.split("/").filter((x) => x);
-    return pathnames.map((value, index) => {
-      const to = `/${pathnames.slice(0, index + 1).join("/")}`;
-      return { name: value.charAt(0).toUpperCase() + value.slice(1), to };
-    });
-  };
-
   const statuses = ["Pending", "Completed", "Cancelled"];
 
   return (
@@ -120,21 +104,6 @@ const SharedLayout = () => {
               </nav>
             </SheetContent>
           </Sheet>
-          <Breadcrumb className="hidden md:flex">
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/">Dashboard</BreadcrumbLink>
-              </BreadcrumbItem>
-              {generateBreadcrumbs().map((breadcrumb, index) => (
-                <React.Fragment key={breadcrumb.to}>
-                  <BreadcrumbSeparator />
-                  <BreadcrumbItem>
-                    <BreadcrumbLink href={breadcrumb.to}>{breadcrumb.name}</BreadcrumbLink>
-                  </BreadcrumbItem>
-                </React.Fragment>
-              ))}
-            </BreadcrumbList>
-          </Breadcrumb>
           <div className="relative ml-auto flex-1 md:grow-0">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
