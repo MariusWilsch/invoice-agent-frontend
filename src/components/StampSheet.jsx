@@ -12,7 +12,7 @@ const StampDrawer = ({ isOpen, onOpenChange }) => {
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange} modal={false}>
       
-      <SheetContent side="right" className="w-[45vw] min-w-[50vw]">
+      <SheetContent side="right" className="w-[45vw] min-w-[45vw]">
         <div className="p-4">
           <div className="font-semibold text-lg mb-4">Kontierungsstempel</div>
           <div className="grid grid-cols-2 gap-4">
