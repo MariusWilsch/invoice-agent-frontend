@@ -3,7 +3,6 @@ import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import {
   File,
-  Home,
   LineChart,
   ListFilter,
   Package,
@@ -95,10 +94,10 @@ const SharedLayout = () => {
                   href="/"
                   className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
                 >
-                  <Home className="h-5 w-5" />
+                  <Package2 className="h-5 w-5" />
                 </a>
               </TooltipTrigger>
-              <TooltipContent side="right">Home</TooltipContent>
+              <TooltipContent side="right">Dashboard</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </nav>
@@ -142,7 +141,7 @@ const SharedLayout = () => {
           <Breadcrumb className="hidden md:flex">
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                <BreadcrumbLink href="/">Dashboard</BreadcrumbLink>
               </BreadcrumbItem>
               {generateBreadcrumbs().map((breadcrumb, index) => (
                 <React.Fragment key={breadcrumb.to}>
