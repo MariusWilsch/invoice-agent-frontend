@@ -65,6 +65,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import StampSheet from "@/components/StampSheet";
+import InvoiceDetailsSheet from "@/components/InvoiceDetailsSheet";
 
 // Define a function to get the color variant based on the status
 const getStatusBadgeVariant = (status) => {
@@ -84,6 +85,8 @@ const Index = () => {
   const { data: invoices, error, isLoading } = useInvoicesDev();
   const [statuses, setStatuses] = useState([]);
   const [isStampSheetOpen, setIsStampSheetOpen] = useState(false);
+  const [isDetailsSheetOpen, setIsDetailsSheetOpen] = useState(false);
+  const [selectedInvoice, setSelectedInvoice] = useState(null);
 
   useEffect(() => {
     if (invoices) {
@@ -99,6 +102,11 @@ const Index = () => {
 
   const handleStampClick = () => {
     setIsStampSheetOpen(true);
+  };
+
+  const handleViewDetails = (invoice) => {
+    setSelectedInvoice(invoice);
+    setIsDetailsSheetOpen(true);
   };
 
   return (
@@ -185,7 +193,7 @@ const Index = () => {
                               <FileText className="mr-2 h-4 w-4" />
                               PDF
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => {}}>
+                            <DropdownMenuItem onClick={() => handleViewDetails(invoice)}>
                               <Eye className="mr-2 h-4 w-4" />
                               View Details
                             </DropdownMenuItem>
@@ -262,7 +270,7 @@ const Index = () => {
                                   <FileText className="mr-2 h-4 w-4" />
                                   PDF
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => {}}>
+                                <DropdownMenuItem onClick={() => handleViewDetails(invoice)}>
                                   <Eye className="mr-2 h-4 w-4" />
                                   View Details
                                 </DropdownMenuItem>
@@ -302,6 +310,12 @@ const Index = () => {
       <StampSheet
         isOpen={isStampSheetOpen}
         onOpenChange={setIsStampSheetOpen}
+      />
+
+      <InvoiceDetailsSheet
+        isOpen={isDetailsSheetOpen}
+        onOpenChange={setIsDetailsSheetOpen}
+        invoice={selectedInvoice}
       />
     </div>
   );
