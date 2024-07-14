@@ -1,56 +1,100 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import FormLabel from '../atoms/FormLabel';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const SelectField = ({ id, label, options, onCreateOption }) => {
-  const [inputValue, setInputValue] = useState('');
-  const [isCreating, setIsCreating] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState("");
+  const [searchValue, setSearchValue] = useState("");
+  const [filteredOptions, setFilteredOptions] = useState(options);
 
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
+  useEffect(() => {
+    if (searchValue) {
+      const lowercasedSearch = searchValue.toLowerCase();
+      setFilteredOptions(
+        options.filter((option) =>
+          option.label.toLowerCase().includes(lowercasedSearch)
+        )
+      );
+    } else {
+      setFilteredOptions(options);
+    }
+  }, [searchValue, options]);
+
+  const handleSelect = (currentValue) => {
+    setValue(currentValue === value ? "" : currentValue);
+    setOpen(false);
   };
 
   const handleCreateOption = () => {
-    if (inputValue.trim()) {
-      onCreateOption(inputValue.trim());
-      setInputValue('');
-      setIsCreating(false);
+    if (searchValue.trim()) {
+      onCreateOption(searchValue.trim());
+      setValue(searchValue.trim());
+      setSearchValue("");
+      setOpen(false);
     }
   };
 
   return (
     <div className="flex flex-col mb-4 min-w-[200px]">
       <FormLabel htmlFor={id}>{label}</FormLabel>
-      <Select onOpenChange={(open) => !open && setIsCreating(false)}>
-        <SelectTrigger id={id} className="mb-4 w-full">
-          <SelectValue placeholder="Select..." />
-        </SelectTrigger>
-        <SelectContent>
-          {options.map((option, index) => (
-            <SelectItem key={index} value={option.value}>{option.label}</SelectItem>
-          ))}
-          {!isCreating && (
-            <SelectItem value="__create__" onSelect={() => setIsCreating(true)}>
-              Create new option...
-            </SelectItem>
-          )}
-          {isCreating && (
-            <div className="p-2">
-              <Input
-                value={inputValue}
-                onChange={handleInputChange}
-                placeholder="Type new option..."
-                className="mb-2"
-              />
-              <Button onClick={handleCreateOption} className="w-full">
-                Create "{inputValue}"
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            className="w-full justify-between"
+          >
+            {value
+              ? options.find((option) => option.value === value)?.label
+              : `Select ${label}...`}
+            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-full p-0">
+          <Command>
+            <CommandInput
+              placeholder={`Search ${label}...`}
+              value={searchValue}
+              onValueChange={setSearchValue}
+            />
+            <CommandEmpty>
+              No {label} found.
+              <Button
+                type="button"
+                onClick={handleCreateOption}
+                className="mt-2 w-full"
+              >
+                Create "{searchValue}"
               </Button>
-            </div>
-          )}
-        </SelectContent>
-      </Select>
+            </CommandEmpty>
+            <CommandGroup>
+              {filteredOptions.map((option) => (
+                <CommandItem
+                  key={option.value}
+                  value={option.value}
+                  onSelect={handleSelect}
+                >
+                  <Check
+                    className={cn(
+                      "mr-2 h-4 w-4",
+                      value === option.value ? "opacity-100" : "opacity-0"
+                    )}
+                  />
+                  {option.label}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </Command>
+        </PopoverContent>
+      </Popover>
     </div>
   );
 };
