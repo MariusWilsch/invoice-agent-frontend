@@ -4,7 +4,7 @@ import Button from '../atoms/Button';
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
 const ActionButton = ({ icon: Icon, tooltip, onClick }) => (
-  <TooltipProvider>
+  <TooltipProvider delayDuration={100}>
     <Tooltip>
       <TooltipTrigger asChild>
         <Button variant="outline" size="sm" onClick={onClick}>
