@@ -45,6 +45,16 @@ const fromSupabase = async (query) => {
 | skonto          | smallint                | number | false    |
 | ticket_number   | text                    | string | false    |
 
+### dropdown_options_invoices_dev
+
+| name       | type                    | format | required |
+|------------|-------------------------|--------|----------|
+| id         | uuid                    | string | true     |
+| field_type | text                    | string | true     |
+| label      | text                    | string | true     |
+| value      | text                    | string | true     |
+| created_at | timestamp with time zone| string | true     |
+
 */
 
 // Hooks for invoices_dev table
@@ -86,6 +96,49 @@ export const useDeleteInvoicesDev = () => {
         mutationFn: (id) => fromSupabase(supabase.from('invoices_dev').delete().eq('id', id)),
         onSuccess: () => {
             queryClient.invalidateQueries('invoices_dev');
+        },
+    });
+};
+
+// Hooks for dropdown_options_invoices_dev table
+
+export const useDropdownOptionsInvoicesDev = () => useQuery({
+    queryKey: ['dropdown_options_invoices_dev'],
+    queryFn: () => fromSupabase(supabase.from('dropdown_options_invoices_dev').select('*')),
+});
+
+export const useDropdownOptionInvoicesDevById = (id) => useQuery({
+    queryKey: ['dropdown_options_invoices_dev', id],
+    queryFn: () => fromSupabase(supabase.from('dropdown_options_invoices_dev').select('*').eq('id', id).single()),
+    enabled: !!id,
+});
+
+export const useAddDropdownOptionInvoicesDev = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (newOption) => fromSupabase(supabase.from('dropdown_options_invoices_dev').insert([newOption])),
+        onSuccess: () => {
+            queryClient.invalidateQueries('dropdown_options_invoices_dev');
+        },
+    });
+};
+
+export const useUpdateDropdownOptionInvoicesDev = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (updatedOption) => fromSupabase(supabase.from('dropdown_options_invoices_dev').update(updatedOption).eq('id', updatedOption.id)),
+        onSuccess: () => {
+            queryClient.invalidateQueries('dropdown_options_invoices_dev');
+        },
+    });
+};
+
+export const useDeleteDropdownOptionInvoicesDev = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (id) => fromSupabase(supabase.from('dropdown_options_invoices_dev').delete().eq('id', id)),
+        onSuccess: () => {
+            queryClient.invalidateQueries('dropdown_options_invoices_dev');
         },
     });
 };
