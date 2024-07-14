@@ -19,10 +19,6 @@ const StampForm = () => (
           <DatePickerDemo />
         </FormField>
         
-        <FormField label="Gebucht" id="gebucht">
-          <DatePickerDemo />
-        </FormField>
-        
         <FormField label="Konto" id="konto">
           <Input placeholder="Enter Konto" />
         </FormField>
