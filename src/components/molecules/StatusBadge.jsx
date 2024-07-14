@@ -2,13 +2,17 @@ import React from 'react';
 import Badge from '../atoms/Badge';
 
 const getStatusBadgeVariant = (status) => {
-  switch (status) {
-    case "Active":
+  switch (status.toLowerCase()) {
+    case "active":
       return "success";
-    case "Draft":
+    case "draft":
       return "warning";
-    case "Archived":
+    case "archived":
       return "secondary";
+    case "kontiert":
+      return "info";
+    case "pending":
+      return "default";
     default:
       return "default";
   }
