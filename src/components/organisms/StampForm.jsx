@@ -37,8 +37,8 @@ const StampForm = () => {
         
         {/* Right Column */}
         <div className="space-y-4">
-          <FormField label="Kommentar" id="kommentar">
-            <Textarea placeholder="Enter Kommentar" />
+          <FormField label="Kommentar" id="kommentar" className="col-span-2">
+            <Textarea placeholder="Enter Kommentar" className="h-[104px]" />
           </FormField>
           
           <FormField label="Skonto" id="skonto">
@@ -92,8 +92,8 @@ const StampForm = () => {
   );
 };
 
-const FormField = ({ label, id, children }) => (
-  <div>
+const FormField = ({ label, id, children, className }) => (
+  <div className={className}>
     <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">
       {label}
     </label>
