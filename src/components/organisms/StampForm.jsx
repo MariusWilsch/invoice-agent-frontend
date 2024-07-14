@@ -41,6 +41,7 @@ const StampForm = () => {
   };
 
   const isAnyFieldFilled = () => {
+    // ! Somehow date fields are not considered as filled
     return (
       Object.values(formData).some(
         (value) => value !== null && value !== "" && value !== undefined
