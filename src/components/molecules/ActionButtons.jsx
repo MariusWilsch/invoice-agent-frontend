@@ -43,7 +43,7 @@ const ActionButtons = ({ invoice, onViewDetails, onDelete, onStamp }) => (
   <div className="flex space-x-1">
     <ActionButton
       icon={Stamp}
-      tooltip="Stamp"
+      tooltip="Stempel"
       onClick={() => onStamp(invoice)}
     />
     <ActionButton
@@ -53,7 +53,7 @@ const ActionButtons = ({ invoice, onViewDetails, onDelete, onStamp }) => (
     />
     <ActionButton
       icon={Eye}
-      tooltip="View"
+      tooltip="Ansehen"
       onClick={() => onViewDetails(invoice)}
     />
     <AlertDialog>
@@ -64,16 +64,15 @@ const ActionButtons = ({ invoice, onViewDetails, onDelete, onStamp }) => (
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+          <AlertDialogTitle>Sind Sie sicher?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete the
-            invoice from the database.
+            Diese Aktion kann nicht rückgängig gemacht werden. Die Rechnung wird dauerhaft aus der Datenbank gelöscht.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>Abbrechen</AlertDialogCancel>
           <AlertDialogAction onClick={() => onDelete(invoice.id)}>
-            Delete
+            Löschen
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
