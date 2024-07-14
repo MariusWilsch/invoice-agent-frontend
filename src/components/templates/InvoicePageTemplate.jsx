@@ -6,7 +6,7 @@ import { ListFilter } from "lucide-react";
 import InvoiceCard from '../organisms/InvoiceCard';
 
 const InvoicePageTemplate = ({ invoices, statuses, onViewDetails, onDelete, onStamp }) => (
-  <div className="p-4">
+  <div>
     <Tabs defaultValue="all">
       <div className="flex items-center mb-4">
         <TabsList>
