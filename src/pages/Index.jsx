@@ -173,7 +173,10 @@ const Index = () => {
                 </TableHeader>
                 <TableBody>
                   {invoices.map((invoice, index) => (
-                    <TableRow key={invoice.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                    <TableRow
+                      key={invoice.id}
+                      className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}
+                    >
                       <TableCell>{invoice.sender}</TableCell>
                       <TableCell>{invoice.amount}</TableCell>
                       <TableCell>
@@ -186,7 +189,9 @@ const Index = () => {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => window.open(invoice.public_url, "_blank")}
+                            onClick={() =>
+                              window.open(invoice.public_url, "_blank")
+                            }
                           >
                             <FileText className="h-4 w-4 mr-1" />
                             PDF
@@ -253,7 +258,12 @@ const Index = () => {
                     {invoices
                       .filter((invoice) => invoice.status === status)
                       .map((invoice, index) => (
-                        <TableRow key={invoice.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                        <TableRow
+                          key={invoice.id}
+                          className={
+                            index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                          }
+                        >
                           <TableCell>{invoice.sender}</TableCell>
                           <TableCell>{invoice.amount}</TableCell>
                           <TableCell>
@@ -268,7 +278,9 @@ const Index = () => {
                               <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => window.open(invoice.public_url, "_blank")}
+                                onClick={() =>
+                                  window.open(invoice.public_url, "_blank")
+                                }
                               >
                                 <FileText className="h-4 w-4 mr-1" />
                                 PDF
