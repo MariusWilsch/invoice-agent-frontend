@@ -9,7 +9,15 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <SupabaseProvider>
       <App />
-      <Toaster position="top-right" />
+      <Toaster 
+        position="top-right" 
+        toastOptions={{
+          style: {
+            background: 'white',
+            color: 'black',
+          },
+        }}
+      />
     </SupabaseProvider>
   </React.StrictMode>,
 )

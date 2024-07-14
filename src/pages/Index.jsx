@@ -7,6 +7,7 @@ import InvoicePageTemplate from "../components/templates/InvoicePageTemplate";
 import StampSheet from "@/components/StampSheet";
 import InvoiceDetailsSheet from "@/components/InvoiceDetailsSheet";
 import { toast } from "sonner";
+import { CheckCircle, XCircle } from "lucide-react";
 
 const Index = () => {
   const { data: invoices, error, isLoading } = useInvoicesDev();
@@ -40,10 +41,16 @@ const Index = () => {
   const handleDelete = async (invoiceId) => {
     try {
       await deleteInvoiceMutation.mutateAsync(invoiceId);
-      toast.success("Invoice deleted successfully");
+      toast.success("Invoice deleted successfully", {
+        icon: <CheckCircle className="h-5 w-5 text-green-500" />,
+        className: "text-green-500",
+      });
     } catch (error) {
       console.error("Error deleting invoice:", error);
-      toast.error("Failed to delete invoice");
+      toast.error("Failed to delete invoice", {
+        icon: <XCircle className="h-5 w-5 text-red-500" />,
+        className: "text-red-500",
+      });
     }
   };
 
