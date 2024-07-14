@@ -28,14 +28,16 @@ const StampForm = () => {
     }));
   };
 
+  const isAnyFieldFilled = () => {
+    return Object.values(formData).some(value => 
+      value !== null && value !== '' && value !== undefined
+    ) || skontoValue > 0;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    const isAnyFieldFilled = Object.values(formData).some(value => 
-      value !== null && value !== '' && value !== undefined
-    ) || skontoValue > 0;
-
-    if (isAnyFieldFilled) {
+    if (isAnyFieldFilled()) {
       console.log('Form submitted:', { ...formData, skonto: skontoValue });
       toast.success('Form submitted successfully');
     } else {
