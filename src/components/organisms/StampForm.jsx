@@ -11,7 +11,7 @@ import { useUpdateInvoicesDev } from "@/integrations/supabase/index.js";
 const StampForm = ({ invoice, onClose }) => {
   const [skontoValue, setSkontoValue] = useState(invoice?.skonto || 0);
   const [formData, setFormData] = useState({
-    id: invoice?.id, // Add this line to include the invoice ID
+    id: invoice?.id,
     eingegangen_am: invoice?.eingegangen_am || null,
     faellig_am: invoice?.faellig_am || null,
     konto: invoice?.konto || "",
@@ -21,6 +21,7 @@ const StampForm = ({ invoice, onClose }) => {
     kommentar: invoice?.kommentar || "",
     kostenstelle: invoice?.kostenstelle || "",
     vb: invoice?.VB || "",
+    status: "Kontiert", // Set the status to "Kontiert"
   });
 
   const updateInvoiceMutation = useUpdateInvoicesDev();
@@ -60,6 +61,7 @@ const StampForm = ({ invoice, onClose }) => {
         const updatedInvoice = {
           ...formData,
           skonto: skontoValue,
+          status: "Kontiert", // Ensure status is set to "Kontiert"
         };
         await updateInvoiceMutation.mutateAsync(updatedInvoice);
         toast.success("Form submitted successfully");
@@ -75,7 +77,7 @@ const StampForm = ({ invoice, onClose }) => {
 
   const handleClear = () => {
     setFormData({
-      id: invoice?.id, // Preserve the invoice ID
+      id: invoice?.id,
       eingegangen_am: null,
       faellig_am: null,
       konto: "",
@@ -85,6 +87,7 @@ const StampForm = ({ invoice, onClose }) => {
       kommentar: "",
       kostenstelle: "",
       vb: "",
+      status: "Kontiert", // Keep the status as "Kontiert"
     });
     setSkontoValue(0);
     toast.info("Form cleared");
