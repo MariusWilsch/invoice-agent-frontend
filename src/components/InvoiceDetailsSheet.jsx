@@ -1,6 +1,5 @@
 import React from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { Separator } from "@/components/ui/separator";
 
 const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
   return (
@@ -24,7 +23,7 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
               <Field label="Fällig_am" value={invoice.fällig_am || "Leer"} />
               <Field label="Amount" value={invoice.amount || "Leer"} />
               <Field label="Gebucht" value={invoice.gebucht || "Leer"} />
-              <Field label="Sender" value={invoice.sender ? (Array.isArray(invoice.sender) ? invoice.sender.join(", ") : invoice.sender) : "Finance, finance@wph.onl"} />
+              <Field label="Sender" value={invoice.sender ? (Array.isArray(invoice.sender) ? invoice.sender.join(", ") : invoice.sender) : "Finance, finance@wph.onl"} withoutSeparator={true} />
               <Field label="Skonto" value={invoice.skonto || "No"} withoutSeparator={true} />
             </div>
           ) : (
@@ -42,7 +41,6 @@ const Field = ({ label, value, withoutSeparator = false }) => (
     <div className="bg-gray-100 p-2 rounded-md">
       <p className="text-sm text-gray-800">{value}</p>
     </div>
-    {!withoutSeparator && <Separator className="mt-2" />}
   </div>
 );
 
