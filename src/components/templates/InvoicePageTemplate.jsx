@@ -2,10 +2,10 @@ import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import Button from '../atoms/Button';
-import { ListFilter, PlusCircle } from "lucide-react";
+import { ListFilter } from "lucide-react";
 import InvoiceCard from '../organisms/InvoiceCard';
 
-const InvoicePageTemplate = ({ invoices, statuses, onViewDetails, onDelete, onStamp, onAddInvoice }) => (
+const InvoicePageTemplate = ({ invoices, statuses, onViewDetails, onDelete, onStamp }) => (
   <div className="p-4">
     <Tabs defaultValue="all">
       <div className="flex items-center">
@@ -37,12 +37,6 @@ const InvoicePageTemplate = ({ invoices, statuses, onViewDetails, onDelete, onSt
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button size="sm" className="h-8 gap-1" onClick={onAddInvoice}>
-            <PlusCircle className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-              Add Invoice
-            </span>
-          </Button>
         </div>
       </div>
       <TabsContent value="all">

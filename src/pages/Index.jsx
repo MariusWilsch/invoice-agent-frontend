@@ -54,11 +54,6 @@ const Index = () => {
     }
   };
 
-  const handleAddInvoice = () => {
-    // Implement add invoice functionality here
-    console.log("Add new invoice");
-  };
-
   return (
     <>
       <InvoicePageTemplate
@@ -67,7 +62,6 @@ const Index = () => {
         onViewDetails={handleViewDetails}
         onDelete={handleDelete}
         onStamp={handleStampClick}
-        onAddInvoice={handleAddInvoice}
       />
 
       <StampSheet
