@@ -21,7 +21,6 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
               <Field label="Belegtext" value={invoice.belegtext || "Leer"} />
               <Field label="wer_bezahlt" value={invoice.wer_bezahlt || "Leer"} />
               <Field label="Kommentar" value={invoice.kommentar || "Leer"} />
-              <Field label="Status" value={invoice.status || "Empfangen"} />
               <Field label="Fällig_am" value={invoice.fällig_am || "Leer"} />
               <Field label="Amount" value={invoice.amount || "Leer"} />
               <Field label="Gebucht" value={invoice.gebucht || "Leer"} />
