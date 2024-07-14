@@ -11,6 +11,7 @@ import { useUpdateInvoicesDev } from "@/integrations/supabase/index.js";
 const StampForm = ({ invoice, onClose }) => {
   const [skontoValue, setSkontoValue] = useState(invoice?.skonto || 0);
   const [formData, setFormData] = useState({
+    id: invoice?.id, // Add this line to include the invoice ID
     eingegangen_am: invoice?.eingegangen_am || null,
     faellig_am: invoice?.faellig_am || null,
     konto: invoice?.konto || "",
@@ -57,10 +58,10 @@ const StampForm = ({ invoice, onClose }) => {
     if (isAnyFieldFilled()) {
       try {
         const updatedInvoice = {
-          id: invoice.id,
           ...formData,
           skonto: skontoValue,
         };
+        console.log("Updating invoice with data:", updatedInvoice); // Add this line for debugging
         await updateInvoiceMutation.mutateAsync(updatedInvoice);
         toast.success("Form submitted successfully");
         onClose();
@@ -75,6 +76,7 @@ const StampForm = ({ invoice, onClose }) => {
 
   const handleClear = () => {
     setFormData({
+      id: invoice?.id, // Preserve the invoice ID
       eingegangen_am: null,
       faellig_am: null,
       konto: "",
