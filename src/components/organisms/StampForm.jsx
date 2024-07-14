@@ -31,23 +31,20 @@ const StampForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    // Check if at least one field is filled
     const isAnyFieldFilled = Object.values(formData).some(value => 
       value !== null && value !== '' && value !== undefined
     ) || skontoValue > 0;
 
     if (isAnyFieldFilled) {
-      // Proceed with form submission
       console.log('Form submitted:', { ...formData, skonto: skontoValue });
       toast.success('Form submitted successfully');
     } else {
-      // Show error toast
       toast.error('Please fill at least one field before submitting');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6 h-full overflow-auto pr-4">
       <div className="grid grid-cols-2 gap-4">
         {/* Left Column */}
         <div className="space-y-4">
