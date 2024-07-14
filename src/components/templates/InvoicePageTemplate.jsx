@@ -8,7 +8,7 @@ import InvoiceCard from '../organisms/InvoiceCard';
 const InvoicePageTemplate = ({ invoices, statuses, onViewDetails, onDelete, onStamp }) => (
   <div className="p-4">
     <Tabs defaultValue="all">
-      <div className="flex items-center">
+      <div className="flex items-center mb-4">
         <TabsList>
           <TabsTrigger value="all">All</TabsTrigger>
           {statuses.map((status) => (
