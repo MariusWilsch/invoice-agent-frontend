@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   File,
   ListFilter,
-  MoreVertical,
   PlusCircle,
   FileText,
   Eye,
@@ -109,6 +108,11 @@ const Index = () => {
     setIsDetailsSheetOpen(true);
   };
 
+  const handleDelete = (invoiceId) => {
+    // Implement delete functionality here
+    console.log(`Delete invoice with ID: ${invoiceId}`);
+  };
+
   return (
     <div className="p-4">
       <Tabs defaultValue="all">
@@ -178,35 +182,40 @@ const Index = () => {
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <DropdownMenu modal={false}>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="outline" size="icon">
-                              <MoreVertical className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem
-                              onClick={() =>
-                                window.open(invoice.public_url, "_blank")
-                              }
-                            >
-                              <FileText className="mr-2 h-4 w-4" />
-                              PDF
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleViewDetails(invoice)}>
-                              <Eye className="mr-2 h-4 w-4" />
-                              View Details
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <Trash className="mr-2 h-4 w-4" />
-                              Delete
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={handleStampClick}>
-                              <Stamp className="mr-2 h-4 w-4" />
-                              Stamp
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                        <div className="flex space-x-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => window.open(invoice.public_url, "_blank")}
+                          >
+                            <FileText className="h-4 w-4 mr-1" />
+                            PDF
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleViewDetails(invoice)}
+                          >
+                            <Eye className="h-4 w-4 mr-1" />
+                            View
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleDelete(invoice.id)}
+                          >
+                            <Trash className="h-4 w-4 mr-1" />
+                            Delete
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={handleStampClick}
+                          >
+                            <Stamp className="h-4 w-4 mr-1" />
+                            Stamp
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -255,35 +264,40 @@ const Index = () => {
                             </Badge>
                           </TableCell>
                           <TableCell>
-                            <DropdownMenu modal={false}>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="outline" size="icon">
-                                  <MoreVertical className="h-4 w-4" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuItem
-                                  onClick={() =>
-                                    window.open(invoice.public_url, "_blank")
-                                  }
-                                >
-                                  <FileText className="mr-2 h-4 w-4" />
-                                  PDF
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => handleViewDetails(invoice)}>
-                                  <Eye className="mr-2 h-4 w-4" />
-                                  View Details
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                  <Trash className="mr-2 h-4 w-4" />
-                                  Delete
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={handleStampClick}>
-                                  <Stamp className="mr-2 h-4 w-4" />
-                                  Stamp
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
+                            <div className="flex space-x-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => window.open(invoice.public_url, "_blank")}
+                              >
+                                <FileText className="h-4 w-4 mr-1" />
+                                PDF
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleViewDetails(invoice)}
+                              >
+                                <Eye className="h-4 w-4 mr-1" />
+                                View
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleDelete(invoice.id)}
+                              >
+                                <Trash className="h-4 w-4 mr-1" />
+                                Delete
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={handleStampClick}
+                              >
+                                <Stamp className="h-4 w-4 mr-1" />
+                                Stamp
+                              </Button>
+                            </div>
                           </TableCell>
                         </TableRow>
                       ))}
