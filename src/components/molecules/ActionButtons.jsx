@@ -1,7 +1,12 @@
-import React from 'react';
+import React from "react";
 import { FileText, Eye, Trash, Stamp } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import {
+  TooltipProvider,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,7 +23,12 @@ const ActionButton = ({ icon: Icon, tooltip, onClick }) => (
   <TooltipProvider>
     <Tooltip>
       <TooltipTrigger asChild>
-        <Button variant="ghost" size="icon" onClick={onClick} className="h-8 w-8 p-0">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onClick}
+          className="h-8 w-8 p-0"
+        >
           <Icon className="h-4 w-4" />
         </Button>
       </TooltipTrigger>
@@ -34,7 +44,7 @@ const ActionButtons = ({ invoice, onViewDetails, onDelete, onStamp }) => (
     <ActionButton
       icon={Stamp}
       tooltip="Stamp"
-      onClick={onStamp}
+      onClick={() => onStamp(invoice)}
     />
     <ActionButton
       icon={FileText}
@@ -56,12 +66,15 @@ const ActionButtons = ({ invoice, onViewDetails, onDelete, onStamp }) => (
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete the invoice from the database.
+            This action cannot be undone. This will permanently delete the
+            invoice from the database.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={() => onDelete(invoice.id)}>Delete</AlertDialogAction>
+          <AlertDialogAction onClick={() => onDelete(invoice.id)}>
+            Delete
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

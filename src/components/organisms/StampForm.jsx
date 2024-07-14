@@ -61,7 +61,6 @@ const StampForm = ({ invoice, onClose }) => {
           ...formData,
           skonto: skontoValue,
         };
-        console.log("Updating invoice with data:", updatedInvoice); // Add this line for debugging
         await updateInvoiceMutation.mutateAsync(updatedInvoice);
         toast.success("Form submitted successfully");
         onClose();
