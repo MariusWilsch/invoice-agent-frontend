@@ -1,13 +1,13 @@
 import React from 'react';
 import { FileText, Eye, Trash, Stamp } from "lucide-react";
-import Button from '../atoms/Button';
+import { Button } from "@/components/ui/button";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
 const ActionButton = ({ icon: Icon, tooltip, onClick }) => (
   <TooltipProvider>
     <Tooltip>
       <TooltipTrigger asChild>
-        <Button variant="outline" size="sm" onClick={onClick}>
+        <Button variant="ghost" size="icon" onClick={onClick} className="h-8 w-8 p-0">
           <Icon className="h-4 w-4" />
         </Button>
       </TooltipTrigger>
@@ -19,7 +19,7 @@ const ActionButton = ({ icon: Icon, tooltip, onClick }) => (
 );
 
 const ActionButtons = ({ invoice, onViewDetails, onDelete, onStamp }) => (
-  <div className="flex space-x-2">
+  <div className="flex space-x-1">
     <ActionButton
       icon={FileText}
       tooltip="PDF"
