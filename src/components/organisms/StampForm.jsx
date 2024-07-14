@@ -44,7 +44,7 @@ const StampForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 h-full overflow-auto pr-4">
+    <form onSubmit={handleSubmit} className="space-y-6 h-full overflow-visible pr-4">
       <div className="grid grid-cols-2 gap-4">
         {/* Left Column */}
         <div className="space-y-4">
