@@ -8,6 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 
 const StampForm = ({ selectedInvoice }) => {
+  console.log("StampForm - selectedInvoice:", selectedInvoice); // Add this line for debugging
+
   const [skontoValue, setSkontoValue] = useState(0);
   const [formData, setFormData] = useState({
     eingegangen_am: null,
@@ -23,10 +25,19 @@ const StampForm = ({ selectedInvoice }) => {
 
   useEffect(() => {
     if (selectedInvoice) {
+      console.log("Setting form data with selectedInvoice:", selectedInvoice);
       setFormData(prevData => ({
         ...prevData,
         eingegangen_am: selectedInvoice.eingegangen_am ? new Date(selectedInvoice.eingegangen_am) : null,
+        faellig_am: selectedInvoice.faellig_am ? new Date(selectedInvoice.faellig_am) : null,
+        konto: selectedInvoice.konto || '',
+        ev_vp: selectedInvoice.ev_vp || '',
+        belegtext: selectedInvoice.belegtext || '',
+        kommentar: selectedInvoice.kommentar || '',
+        kostenstelle: selectedInvoice.kostenstelle || '',
+        vb: selectedInvoice.VB || '',
       }));
+      setSkontoValue(selectedInvoice.skonto || 0);
     }
   }, [selectedInvoice]);
 

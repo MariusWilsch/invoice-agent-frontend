@@ -30,6 +30,7 @@ const Index = () => {
   if (error) return <div>Error loading invoices: {error.message}</div>;
 
   const handleStampClick = (invoice) => {
+    console.log("Selected invoice for stamp:", invoice); // Add this line for debugging
     setSelectedInvoice(invoice);
     setIsStampSheetOpen(true);
   };
