@@ -27,21 +27,21 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Sender</TableHead>
-          <TableHead>Amount</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Actions</TableHead>
+          <TableHead className="w-1/4">Sender</TableHead>
+          <TableHead className="w-1/4">Amount</TableHead>
+          <TableHead className="w-1/4">Status</TableHead>
+          <TableHead className="w-1/4">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {invoices.map((invoice, index) => (
           <TableRow key={invoice.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-            <TableCell>{renderSender(invoice.sender)}</TableCell>
-            <TableCell>{invoice.amount}</TableCell>
-            <TableCell>
+            <TableCell className="w-1/4">{renderSender(invoice.sender)}</TableCell>
+            <TableCell className="w-1/4">{invoice.amount}</TableCell>
+            <TableCell className="w-1/4">
               <StatusBadge status={invoice.status} />
             </TableCell>
-            <TableCell>
+            <TableCell className="w-1/4">
               <ActionButtons
                 invoice={invoice}
                 onViewDetails={onViewDetails}
