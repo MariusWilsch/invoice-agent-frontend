@@ -25,7 +25,7 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
               <Field label="Amount" value={invoice.amount || "Leer"} />
               <Field label="Gebucht" value={invoice.gebucht || "Leer"} />
               <Field label="Sender" value={invoice.sender ? (Array.isArray(invoice.sender) ? invoice.sender.join(", ") : invoice.sender) : "Finance, finance@wph.onl"} />
-              <Field label="Skonto" value={invoice.skonto || "No"} />
+              <Field label="Skonto" value={invoice.skonto || "No"} withoutSeparator={true} />
             </div>
           ) : (
             <p>No invoice selected</p>
@@ -36,13 +36,13 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
   );
 };
 
-const Field = ({ label, value }) => (
+const Field = ({ label, value, withoutSeparator = false }) => (
   <div className="mb-4 w-full">
     <p className="text-sm font-medium text-gray-500 mb-1">{label}:</p>
     <div className="bg-gray-100 p-2 rounded-md">
       <p className="text-sm text-gray-800">{value}</p>
     </div>
-    <Separator className="mt-2" />
+    {!withoutSeparator && <Separator className="mt-2" />}
   </div>
 );
 
