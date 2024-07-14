@@ -15,7 +15,6 @@ import {
   Users2,
   MoreVertical,
   Edit,
-  Trash,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -47,12 +46,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Tooltip,
   TooltipContent,
@@ -105,7 +99,9 @@ const SharedLayout = () => {
             </SheetContent>
           </Sheet>
           <div className="flex items-center justify-between w-full">
-            <h1 className="text-lg font-semibold">Projektspezifische Tickets: [Ticket#18801]</h1>
+            <h1 className="text-lg font-semibold">
+              Projektspezifische Tickets: [Ticket#18801]
+            </h1>
             <div className="flex items-center gap-4">
               <div className="relative ml-auto flex-1 md:grow-0">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
