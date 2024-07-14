@@ -20,7 +20,12 @@ const InvoicePageTemplate = ({ invoices, statuses, onViewDetails, onDelete, onSt
         <div className="ml-auto flex items-center gap-2">
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="h-8 gap-1">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="h-8 gap-1 opacity-50 cursor-not-allowed" 
+                disabled={true}
+              >
                 <ListFilter className="h-3.5 w-3.5" />
                 <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
                   Filter
