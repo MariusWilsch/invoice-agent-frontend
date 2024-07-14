@@ -21,6 +21,11 @@ const ActionButton = ({ icon: Icon, tooltip, onClick }) => (
 const ActionButtons = ({ invoice, onViewDetails, onDelete, onStamp }) => (
   <div className="flex space-x-1">
     <ActionButton
+      icon={Stamp}
+      tooltip="Stamp"
+      onClick={onStamp}
+    />
+    <ActionButton
       icon={FileText}
       tooltip="PDF"
       onClick={() => window.open(invoice.public_url, "_blank")}
@@ -34,11 +39,6 @@ const ActionButtons = ({ invoice, onViewDetails, onDelete, onStamp }) => (
       icon={Trash}
       tooltip="Delete"
       onClick={() => onDelete(invoice.id)}
-    />
-    <ActionButton
-      icon={Stamp}
-      tooltip="Stamp"
-      onClick={onStamp}
     />
   </div>
 );
