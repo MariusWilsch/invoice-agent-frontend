@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { Button as UiButton } from "@/components/ui/button";
 
 const Button = ({ variant, size, onClick, children }) => (
