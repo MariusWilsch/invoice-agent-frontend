@@ -48,8 +48,8 @@ const StampForm = () => {
                 <Slider
                   id="skonto"
                   min={0}
-                  max={100}
-                  step={1}
+                  max={40}
+                  step={5}
                   value={[skontoValue]}
                   onValueChange={(newValue) => setSkontoValue(newValue[0])}
                   className="flex-grow"
