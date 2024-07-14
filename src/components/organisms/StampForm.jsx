@@ -21,17 +21,17 @@ const StampForm = () => {
     vb: "",
   });
 
-  const [kostenstelleOptions, setKostenstelleOptions] = useState([
+  const kostenstelleOptions = [
     { value: "option1", label: "Option 1" },
     { value: "option2", label: "Option 2" },
     { value: "option3", label: "Option 3" },
-  ]);
+  ];
 
-  const [vbOptions, setVbOptions] = useState([
+  const vbOptions = [
     { value: "option1", label: "Option 1" },
     { value: "option2", label: "Option 2" },
     { value: "option3", label: "Option 3" },
-  ]);
+  ];
 
   const handleInputChange = (field, value) => {
     setFormData((prevData) => ({
@@ -73,18 +73,6 @@ const StampForm = () => {
     });
     setSkontoValue(0);
     toast.info("Form cleared");
-  };
-
-  const handleCreateKostenstelle = (newOption) => {
-    const newValue = { value: newOption.toLowerCase(), label: newOption };
-    setKostenstelleOptions((prev) => [...prev, newValue]);
-    handleInputChange("kostenstelle", newValue.value);
-  };
-
-  const handleCreateVb = (newOption) => {
-    const newValue = { value: newOption.toLowerCase(), label: newOption };
-    setVbOptions((prev) => [...prev, newValue]);
-    handleInputChange("vb", newValue.value);
   };
 
   return (
@@ -175,7 +163,6 @@ const StampForm = () => {
               label="Kostenstelle"
               id="kostenstelle"
               options={kostenstelleOptions}
-              onCreateOption={handleCreateKostenstelle}
               value={formData.kostenstelle}
               onChange={(value) => handleInputChange("kostenstelle", value)}
             />
@@ -184,7 +171,6 @@ const StampForm = () => {
               label="VB"
               id="vb"
               options={vbOptions}
-              onCreateOption={handleCreateVb}
               value={formData.vb}
               onChange={(value) => handleInputChange("vb", value)}
             />
