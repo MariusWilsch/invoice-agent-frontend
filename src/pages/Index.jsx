@@ -1,84 +1,8 @@
 import React, { useState, useEffect } from "react";
-import {
-  File,
-  ListFilter,
-  PlusCircle,
-  FileText,
-  Eye,
-  Trash,
-  Stamp,
-} from "lucide-react";
-
-import { Badge } from "@/components/ui/badge";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { useInvoicesDev } from "@/integrations/supabase/index.js";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-  TooltipProvider,
-} from "@/components/ui/tooltip";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
+import InvoicePageTemplate from "../components/templates/InvoicePageTemplate";
 import StampSheet from "@/components/StampSheet";
 import InvoiceDetailsSheet from "@/components/InvoiceDetailsSheet";
-
-// Define a function to get the color variant based on the status
-const getStatusBadgeVariant = (status) => {
-  switch (status) {
-    case "Active":
-      return "success";
-    case "Draft":
-      return "warning";
-    case "Archived":
-      return "secondary";
-    default:
-      return "default";
-  }
-};
 
 const Index = () => {
   const { data: invoices, error, isLoading } = useInvoicesDev();
@@ -113,277 +37,21 @@ const Index = () => {
     console.log(`Delete invoice with ID: ${invoiceId}`);
   };
 
+  const handleAddInvoice = () => {
+    // Implement add invoice functionality here
+    console.log("Add new invoice");
+  };
+
   return (
-    <div className="p-4">
-      <Tabs defaultValue="all">
-        <div className="flex items-center">
-          <TabsList>
-            <TabsTrigger value="all">All</TabsTrigger>
-            {statuses.map((status) => (
-              <TabsTrigger key={status} value={status.toLowerCase()}>
-                {status}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-          <div className="ml-auto flex items-center gap-2">
-            <DropdownMenu modal={false}>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="h-8 gap-1">
-                  <ListFilter className="h-3.5 w-3.5" />
-                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                    Filter
-                  </span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Filter by</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {statuses.map((status) => (
-                  <DropdownMenuCheckboxItem key={status}>
-                    {status}
-                  </DropdownMenuCheckboxItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <Button size="sm" className="h-8 gap-1">
-              <PlusCircle className="h-3.5 w-3.5" />
-              <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                Add Invoice
-              </span>
-            </Button>
-          </div>
-        </div>
-        <TabsContent value="all">
-          <Card>
-            <CardHeader>
-              <CardTitle>Invoices</CardTitle>
-              <CardDescription>
-                Manage your invoices and view their details.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Sender</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {invoices.map((invoice, index) => (
-                    <TableRow key={invoice.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                      <TableCell>{invoice.sender}</TableCell>
-                      <TableCell>{invoice.amount}</TableCell>
-                      <TableCell>
-                        <Badge variant={getStatusBadgeVariant(invoice.status)}>
-                          {invoice.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex space-x-2">
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => window.open(invoice.public_url, "_blank")}
-                                >
-                                  <FileText className="h-4 w-4" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>PDF</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => handleViewDetails(invoice)}
-                                >
-                                  <Eye className="h-4 w-4" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>View</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => handleDelete(invoice.id)}
-                                >
-                                  <Trash className="h-4 w-4" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Delete</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={handleStampClick}
-                                >
-                                  <Stamp className="h-4 w-4" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Stamp</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-            <CardFooter>
-              <div className="text-xs text-muted-foreground">
-                Showing <strong>{invoices.length}</strong> invoices
-              </div>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-        {statuses.map((status) => (
-          <TabsContent key={status} value={status.toLowerCase()}>
-            <Card>
-              <CardHeader>
-                <CardTitle>{status} Invoices</CardTitle>
-                <CardDescription>
-                  Manage your {status.toLowerCase()} invoices and view their
-                  details.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Sender</TableHead>
-                      <TableHead>Amount</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {invoices
-                      .filter((invoice) => invoice.status === status)
-                      .map((invoice, index) => (
-                        <TableRow key={invoice.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                          <TableCell>{invoice.sender}</TableCell>
-                          <TableCell>{invoice.amount}</TableCell>
-                          <TableCell>
-                            <Badge
-                              variant={getStatusBadgeVariant(invoice.status)}
-                            >
-                              {invoice.status}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex space-x-2">
-                              <TooltipProvider>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <Button
-                                      variant="outline"
-                                      size="sm"
-                                      onClick={() => window.open(invoice.public_url, "_blank")}
-                                    >
-                                      <FileText className="h-4 w-4" />
-                                    </Button>
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    <p>PDF</p>
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
-                              <TooltipProvider>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <Button
-                                      variant="outline"
-                                      size="sm"
-                                      onClick={() => handleViewDetails(invoice)}
-                                    >
-                                      <Eye className="h-4 w-4" />
-                                    </Button>
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    <p>View</p>
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
-                              <TooltipProvider>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <Button
-                                      variant="outline"
-                                      size="sm"
-                                      onClick={() => handleDelete(invoice.id)}
-                                    >
-                                      <Trash className="h-4 w-4" />
-                                    </Button>
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    <p>Delete</p>
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
-                              <TooltipProvider>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <Button
-                                      variant="outline"
-                                      size="sm"
-                                      onClick={handleStampClick}
-                                    >
-                                      <Stamp className="h-4 w-4" />
-                                    </Button>
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    <p>Stamp</p>
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-              <CardFooter>
-                <div className="text-xs text-muted-foreground">
-                  Showing{" "}
-                  <strong>
-                    {
-                      invoices.filter((invoice) => invoice.status === status)
-                        .length
-                    }
-                  </strong>{" "}
-                  {status.toLowerCase()} invoices
-                </div>
-              </CardFooter>
-            </Card>
-          </TabsContent>
-        ))}
-      </Tabs>
+    <>
+      <InvoicePageTemplate
+        invoices={invoices}
+        statuses={statuses}
+        onViewDetails={handleViewDetails}
+        onDelete={handleDelete}
+        onStamp={handleStampClick}
+        onAddInvoice={handleAddInvoice}
+      />
 
       <StampSheet
         isOpen={isStampSheetOpen}
@@ -395,7 +63,7 @@ const Index = () => {
         onOpenChange={setIsDetailsSheetOpen}
         invoice={selectedInvoice}
       />
-    </div>
+    </>
   );
 };
 
