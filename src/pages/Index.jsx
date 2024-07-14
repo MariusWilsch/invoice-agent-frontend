@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useInvoicesDev, useDeleteInvoicesDev } from "@/integrations/supabase/index.js";
+import {
+  useInvoicesDev,
+  useDeleteInvoicesDev,
+} from "@/integrations/supabase/index.js";
 import InvoicePageTemplate from "../components/templates/InvoicePageTemplate";
 import StampSheet from "@/components/StampSheet";
 import InvoiceDetailsSheet from "@/components/InvoiceDetailsSheet";

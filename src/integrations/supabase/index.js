@@ -1,5 +1,11 @@
-import { createClient } from '@supabase/supabase-js';
-import { useQuery, useMutation, useQueryClient, QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { createClient } from "@supabase/supabase-js";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_PROJECT_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_API_KEY;
@@ -8,13 +14,17 @@ export const supabase = createClient(supabaseUrl, supabaseKey);
 import React from "react";
 export const queryClient = new QueryClient();
 export function SupabaseProvider({ children }) {
-    return React.createElement(QueryClientProvider, { client: queryClient }, children);
+  return React.createElement(
+    QueryClientProvider,
+    { client: queryClient },
+    children
+  );
 }
 
 const fromSupabase = async (query) => {
-    const { data, error } = await query;
-    if (error) throw new Error(error.message);
-    return data;
+  const { data, error } = await query;
+  if (error) throw new Error(error.message);
+  return data;
 };
 
 /* supabase integration types
@@ -47,37 +57,49 @@ const fromSupabase = async (query) => {
 */
 
 // Hooks for invoices_dev table
-export const useInvoicesDev = () => useQuery({
-    queryKey: ['invoices_dev'],
-    queryFn: () => fromSupabase(supabase.from('invoices_dev').select('*')),
-});
+export const useInvoicesDev = () =>
+  useQuery({
+    queryKey: ["invoices_dev"],
+    queryFn: () => fromSupabase(supabase.from("invoices_dev").select("*")),
+  });
 
 export const useAddInvoicesDev = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: (newEntry) => fromSupabase(supabase.from('invoices_dev').insert([newEntry])),
-        onSuccess: () => {
-            queryClient.invalidateQueries('invoices_dev');
-        },
-    });
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (newEntry) =>
+      fromSupabase(supabase.from("invoices_dev").insert([newEntry])),
+    onSuccess: () => {
+      queryClient.invalidateQueries("invoices_dev");
+    },
+  });
 };
 
 export const useUpdateInvoicesDev = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: (updatedEntry) => fromSupabase(supabase.from('invoices_dev').update(updatedEntry).eq('id', updatedEntry.id)),
-        onSuccess: () => {
-            queryClient.invalidateQueries('invoices_dev');
-        },
-    });
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (updatedEntry) =>
+      fromSupabase(
+        supabase
+          .from("invoices_dev")
+          .update(updatedEntry)
+          .eq("id", updatedEntry.id)
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries("invoices_dev");
+    },
+  });
 };
 
 export const useDeleteInvoicesDev = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: (id) => fromSupabase(supabase.from('invoices_dev').delete().eq('id', id)),
-        onSuccess: () => {
-            queryClient.invalidateQueries('invoices_dev');
-        },
-    });
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id) =>
+      fromSupabase(supabase.from("invoices_dev").delete().eq("id", id)),
+    onSuccess: () => {
+      queryClient.invalidateQueries("invoices_dev");
+    },
+    onError: (error) => {
+      console.error("Error deleting invoice:", error);
+    },
+  });
 };
