@@ -1,21 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { DatePickerDemo } from "@/components/ui/date-picker";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import SelectField from "../molecules/SelectField";
 import { toast } from "sonner";
 
-const StampForm = ({ selectedInvoice }) => {
-  console.log("StampForm - selectedInvoice:", selectedInvoice); // Add this line for debugging
-
+const StampForm = () => {
   const [skontoValue, setSkontoValue] = useState(0);
   const [formData, setFormData] = useState({
     eingegangen_am: null,
@@ -29,27 +21,17 @@ const StampForm = ({ selectedInvoice }) => {
     vb: "",
   });
 
-  useEffect(() => {
-    if (selectedInvoice) {
-      console.log("Setting form data with selectedInvoice:", selectedInvoice);
-      setFormData((prevData) => ({
-        ...prevData,
-        eingegangen_am: selectedInvoice.eingegangen_am
-          ? new Date(selectedInvoice.eingegangen_am)
-          : null,
-        faellig_am: selectedInvoice.faellig_am
-          ? new Date(selectedInvoice.faellig_am)
-          : null,
-        konto: selectedInvoice.konto || "",
-        ev_vp: selectedInvoice.ev_vp || "",
-        belegtext: selectedInvoice.belegtext || "",
-        kommentar: selectedInvoice.kommentar || "",
-        kostenstelle: selectedInvoice.kostenstelle || "",
-        vb: selectedInvoice.VB || "",
-      }));
-      setSkontoValue(selectedInvoice.skonto || 0);
-    }
-  }, [selectedInvoice]);
+  const [kostenstelleOptions, setKostenstelleOptions] = useState([
+    { value: "option1", label: "Option 1" },
+    { value: "option2", label: "Option 2" },
+    { value: "option3", label: "Option 3" },
+  ]);
+
+  const [vbOptions, setVbOptions] = useState([
+    { value: "option1", label: "Option 1" },
+    { value: "option2", label: "Option 2" },
+    { value: "option3", label: "Option 3" },
+  ]);
 
   const handleInputChange = (field, value) => {
     setFormData((prevData) => ({
@@ -91,6 +73,18 @@ const StampForm = ({ selectedInvoice }) => {
     });
     setSkontoValue(0);
     toast.info("Form cleared");
+  };
+
+  const handleCreateKostenstelle = (newOption) => {
+    const newValue = { value: newOption.toLowerCase(), label: newOption };
+    setKostenstelleOptions((prev) => [...prev, newValue]);
+    handleInputChange("kostenstelle", newValue.value);
+  };
+
+  const handleCreateVb = (newOption) => {
+    const newValue = { value: newOption.toLowerCase(), label: newOption };
+    setVbOptions((prev) => [...prev, newValue]);
+    handleInputChange("vb", newValue.value);
   };
 
   return (
@@ -177,39 +171,19 @@ const StampForm = ({ selectedInvoice }) => {
               </div>
             </FormField>
 
-            <FormField label="Kostenstelle" id="kostenstelle">
-              <Select
-                onValueChange={(value) =>
-                  handleInputChange("kostenstelle", value)
-                }
-                value={formData.kostenstelle}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select Kostenstelle" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="option1">Option 1</SelectItem>
-                  <SelectItem value="option2">Option 2</SelectItem>
-                  <SelectItem value="option3">Option 3</SelectItem>
-                </SelectContent>
-              </Select>
-            </FormField>
+            <SelectField
+              label="Kostenstelle"
+              id="kostenstelle"
+              options={kostenstelleOptions}
+              onCreateOption={handleCreateKostenstelle}
+            />
 
-            <FormField label="VB" id="vb">
-              <Select
-                onValueChange={(value) => handleInputChange("vb", value)}
-                value={formData.vb}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select VB" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="option1">Option 1</SelectItem>
-                  <SelectItem value="option2">Option 2</SelectItem>
-                  <SelectItem value="option3">Option 3</SelectItem>
-                </SelectContent>
-              </Select>
-            </FormField>
+            <SelectField
+              label="VB"
+              id="vb"
+              options={vbOptions}
+              onCreateOption={handleCreateVb}
+            />
           </div>
         </div>
       </div>
