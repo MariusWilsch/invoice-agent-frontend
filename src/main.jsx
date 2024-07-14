@@ -9,7 +9,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <SupabaseProvider>
       <App />
-      <Toaster />
+      <Toaster position="top-right" />
     </SupabaseProvider>
   </React.StrictMode>,
 )
