@@ -45,6 +45,22 @@ const StampForm = () => {
     }
   };
 
+  const handleClear = () => {
+    setFormData({
+      eingegangen_am: null,
+      faellig_am: null,
+      konto: '',
+      ev_vp: '',
+      belegtext: '',
+      ticket_number: '',
+      kommentar: '',
+      kostenstelle: '',
+      vb: '',
+    });
+    setSkontoValue(0);
+    toast.info('Form cleared');
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6 h-full overflow-visible pr-4">
       <div className="grid grid-cols-2 gap-4">
@@ -53,12 +69,14 @@ const StampForm = () => {
           <FormField label="Eingegangen am" id="eingegangen_am">
             <DatePickerDemo 
               onChange={(date) => handleInputChange('eingegangen_am', date)}
+              value={formData.eingegangen_am}
             />
           </FormField>
           
           <FormField label="Fällig am" id="faellig_am">
             <DatePickerDemo 
               onChange={(date) => handleInputChange('faellig_am', date)}
+              value={formData.faellig_am}
             />
           </FormField>
           
@@ -66,6 +84,7 @@ const StampForm = () => {
             <Input 
               placeholder="Enter Konto" 
               onChange={(e) => handleInputChange('konto', e.target.value)}
+              value={formData.konto}
             />
           </FormField>
           
@@ -73,6 +92,7 @@ const StampForm = () => {
             <Input 
               placeholder="Enter EV/VP" 
               onChange={(e) => handleInputChange('ev_vp', e.target.value)}
+              value={formData.ev_vp}
             />
           </FormField>
           
@@ -80,6 +100,7 @@ const StampForm = () => {
             <Input 
               placeholder="Enter Belegtext" 
               onChange={(e) => handleInputChange('belegtext', e.target.value)}
+              value={formData.belegtext}
             />
           </FormField>
 
@@ -87,6 +108,7 @@ const StampForm = () => {
             <Input 
               placeholder="Enter Ticket Number" 
               onChange={(e) => handleInputChange('ticket_number', e.target.value)}
+              value={formData.ticket_number}
             />
           </FormField>
         </div>
@@ -98,6 +120,7 @@ const StampForm = () => {
               placeholder="Enter Kommentar" 
               className="h-full" 
               onChange={(e) => handleInputChange('kommentar', e.target.value)}
+              value={formData.kommentar}
             />
           </FormField>
           
@@ -118,7 +141,10 @@ const StampForm = () => {
             </FormField>
             
             <FormField label="Kostenstelle" id="kostenstelle">
-              <Select onValueChange={(value) => handleInputChange('kostenstelle', value)}>
+              <Select 
+                onValueChange={(value) => handleInputChange('kostenstelle', value)}
+                value={formData.kostenstelle}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select Kostenstelle" />
                 </SelectTrigger>
@@ -131,7 +157,10 @@ const StampForm = () => {
             </FormField>
             
             <FormField label="VB" id="vb">
-              <Select onValueChange={(value) => handleInputChange('vb', value)}>
+              <Select 
+                onValueChange={(value) => handleInputChange('vb', value)}
+                value={formData.vb}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select VB" />
                 </SelectTrigger>
@@ -145,7 +174,10 @@ const StampForm = () => {
           </div>
         </div>
       </div>
-      <Button type="submit" className="w-full">Submit</Button>
+      <div className="flex justify-end space-x-4">
+        <Button type="button" variant="outline" onClick={handleClear}>Clear</Button>
+        <Button type="submit">Submit</Button>
+      </div>
     </form>
   );
 };
