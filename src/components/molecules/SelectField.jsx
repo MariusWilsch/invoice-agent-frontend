@@ -1,23 +1,30 @@
 import React from 'react';
 import FormLabel from '../atoms/FormLabel';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import CreatableSelect from 'react-select/creatable';
 
 const SelectField = ({ id, label, options, value, onChange }) => {
+  const selectOptions = options.map(option => ({
+    value: option.value,
+    label: option.label
+  }));
+
+  const handleChange = (selectedOption) => {
+    onChange(selectedOption ? selectedOption.value : null);
+  };
+
   return (
     <div className="flex flex-col mb-4 min-w-[200px]">
       <FormLabel htmlFor={id}>{label}</FormLabel>
-      <Select value={value} onValueChange={onChange}>
-        <SelectTrigger className="w-full">
-          <SelectValue placeholder={`Select ${label}...`} />
-        </SelectTrigger>
-        <SelectContent>
-          {options.map((option) => (
-            <SelectItem key={option.value} value={option.value}>
-              {option.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      <CreatableSelect
+        id={id}
+        options={selectOptions}
+        value={selectOptions.find(option => option.value === value) || null}
+        onChange={handleChange}
+        placeholder={`Select ${label}...`}
+        isClearable
+        className="react-select-container"
+        classNamePrefix="react-select"
+      />
     </div>
   );
 };
