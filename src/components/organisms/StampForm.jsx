@@ -36,55 +36,57 @@ const StampForm = () => {
         </div>
         
         {/* Right Column */}
-        <div className="space-y-4">
-          <FormField label="Kommentar" id="kommentar" className="col-span-2">
-            <Textarea placeholder="Enter Kommentar" className="h-[104px]" />
+        <div className="space-y-4 flex flex-col">
+          <FormField label="Kommentar" id="kommentar" className="flex-grow">
+            <Textarea placeholder="Enter Kommentar" className="h-full" />
           </FormField>
           
-          <FormField label="Skonto" id="skonto">
-            <div className="flex items-center space-x-4">
-              <span className="text-sm font-medium w-12">{skontoValue}%</span>
-              <Slider
-                id="skonto"
-                min={0}
-                max={100}
-                step={1}
-                value={[skontoValue]}
-                onValueChange={(newValue) => setSkontoValue(newValue[0])}
-                className="flex-grow"
-              />
-            </div>
-          </FormField>
-          
-          <FormField label="Kostenstelle" id="kostenstelle">
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Select Kostenstelle" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="option1">Option 1</SelectItem>
-                <SelectItem value="option2">Option 2</SelectItem>
-                <SelectItem value="option3">Option 3</SelectItem>
-              </SelectContent>
-            </Select>
-          </FormField>
-          
-          <FormField label="VB" id="vb">
-            <Select>
-              <SelectTrigger>
-                <SelectValue placeholder="Select VB" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="option1">Option 1</SelectItem>
-                <SelectItem value="option2">Option 2</SelectItem>
-                <SelectItem value="option3">Option 3</SelectItem>
-              </SelectContent>
-            </Select>
-          </FormField>
-          
-          <FormField label="Ticket Number" id="ticket_number">
-            <Input placeholder="Enter Ticket Number" />
-          </FormField>
+          <div>
+            <FormField label="Skonto" id="skonto">
+              <div className="flex items-center space-x-4">
+                <span className="text-sm font-medium w-12">{skontoValue}%</span>
+                <Slider
+                  id="skonto"
+                  min={0}
+                  max={100}
+                  step={1}
+                  value={[skontoValue]}
+                  onValueChange={(newValue) => setSkontoValue(newValue[0])}
+                  className="flex-grow"
+                />
+              </div>
+            </FormField>
+            
+            <FormField label="Kostenstelle" id="kostenstelle">
+              <Select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Kostenstelle" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="option1">Option 1</SelectItem>
+                  <SelectItem value="option2">Option 2</SelectItem>
+                  <SelectItem value="option3">Option 3</SelectItem>
+                </SelectContent>
+              </Select>
+            </FormField>
+            
+            <FormField label="VB" id="vb">
+              <Select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select VB" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="option1">Option 1</SelectItem>
+                  <SelectItem value="option2">Option 2</SelectItem>
+                  <SelectItem value="option3">Option 3</SelectItem>
+                </SelectContent>
+              </Select>
+            </FormField>
+            
+            <FormField label="Ticket Number" id="ticket_number">
+              <Input placeholder="Enter Ticket Number" />
+            </FormField>
+          </div>
         </div>
       </div>
       <Button type="submit" className="w-full">Submit</Button>
