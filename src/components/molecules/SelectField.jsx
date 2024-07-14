@@ -8,9 +8,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const SelectField = ({ id, label, options, onCreateOption }) => {
+const SelectField = ({ id, label, options, onCreateOption, value, onChange }) => {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
   const [searchValue, setSearchValue] = useState("");
   const [filteredOptions, setFilteredOptions] = useState(options);
 
@@ -28,14 +27,14 @@ const SelectField = ({ id, label, options, onCreateOption }) => {
   }, [searchValue, options]);
 
   const handleSelect = (currentValue) => {
-    setValue(currentValue === value ? "" : currentValue);
+    onChange(currentValue === value ? "" : currentValue);
     setOpen(false);
   };
 
   const handleCreateOption = () => {
     if (searchValue.trim()) {
       onCreateOption(searchValue.trim());
-      setValue(searchValue.trim());
+      onChange(searchValue.trim());
       setSearchValue("");
       setOpen(false);
     }
