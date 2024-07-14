@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useInvoicesDev } from "@/integrations/supabase/index.js";
+import { useInvoicesDev, useDeleteInvoicesDev } from "@/integrations/supabase/index.js";
 import InvoicePageTemplate from "../components/templates/InvoicePageTemplate";
 import StampSheet from "@/components/StampSheet";
 import InvoiceDetailsSheet from "@/components/InvoiceDetailsSheet";
+import { toast } from "sonner";
 
 const Index = () => {
   const { data: invoices, error, isLoading } = useInvoicesDev();
+  const deleteInvoiceMutation = useDeleteInvoicesDev();
   const [statuses, setStatuses] = useState([]);
   const [isStampSheetOpen, setIsStampSheetOpen] = useState(false);
   const [isDetailsSheetOpen, setIsDetailsSheetOpen] = useState(false);
@@ -32,9 +34,14 @@ const Index = () => {
     setIsDetailsSheetOpen(true);
   };
 
-  const handleDelete = (invoiceId) => {
-    // Implement delete functionality here
-    console.log(`Delete invoice with ID: ${invoiceId}`);
+  const handleDelete = async (invoiceId) => {
+    try {
+      await deleteInvoiceMutation.mutateAsync(invoiceId);
+      toast.success("Invoice deleted successfully");
+    } catch (error) {
+      console.error("Error deleting invoice:", error);
+      toast.error("Failed to delete invoice");
+    }
   };
 
   const handleAddInvoice = () => {
