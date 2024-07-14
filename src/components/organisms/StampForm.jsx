@@ -33,6 +33,10 @@ const StampForm = () => {
           <FormField label="Belegtext" id="belegtext">
             <Input placeholder="Enter Belegtext" />
           </FormField>
+
+          <FormField label="Ticket Number" id="ticket_number">
+            <Input placeholder="Enter Ticket Number" />
+          </FormField>
         </div>
         
         {/* Right Column */}
@@ -41,7 +45,7 @@ const StampForm = () => {
             <Textarea placeholder="Enter Kommentar" className="h-full" />
           </FormField>
           
-          <div>
+          <div className="space-y-4">
             <FormField label="Skonto" id="skonto">
               <div className="flex items-center space-x-4">
                 <span className="text-sm font-medium w-12">{skontoValue}%</span>
@@ -82,10 +86,6 @@ const StampForm = () => {
                 </SelectContent>
               </Select>
             </FormField>
-            
-            <FormField label="Ticket Number" id="ticket_number">
-              <Input placeholder="Enter Ticket Number" />
-            </FormField>
           </div>
         </div>
       </div>
@@ -95,7 +95,7 @@ const StampForm = () => {
 };
 
 const FormField = ({ label, id, children, className }) => (
-  <div className={className}>
+  <div className={`flex flex-col ${className}`}>
     <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">
       {label}
     </label>
