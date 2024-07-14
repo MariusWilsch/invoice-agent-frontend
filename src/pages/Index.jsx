@@ -56,7 +56,7 @@ const Index = () => {
   };
 
   return (
-    <>
+    <div className="px-6">
       <InvoicePageTemplate
         invoices={invoices}
         statuses={statuses}
@@ -76,7 +76,7 @@ const Index = () => {
         onOpenChange={setIsDetailsSheetOpen}
         invoice={selectedInvoice}
       />
-    </>
+    </div>
   );
 };
 

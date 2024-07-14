@@ -27,10 +27,10 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-1/2">Sender</TableHead>
-          <TableHead className="w-1/6">Amount</TableHead>
+          <TableHead className="w-1/2">Absender</TableHead>
+          <TableHead className="w-1/6">Betrag</TableHead>
           <TableHead className="w-1/6">Status</TableHead>
-          <TableHead className="w-1/6">Actions</TableHead>
+          <TableHead className="w-1/6">Aktionen</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
