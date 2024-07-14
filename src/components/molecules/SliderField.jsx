@@ -13,7 +13,7 @@ const SliderField = ({ id, label }) => {
           id={id}
           min={0}
           max={40}
-          step={1}
+          step={5}
           value={[value]}
           onValueChange={(newValue) => setValue(newValue[0])}
           className="w-full"
