@@ -1,5 +1,6 @@
 import React from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Separator } from "@/components/ui/separator";
 
 const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
   return (
@@ -37,11 +38,12 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
 };
 
 const Field = ({ label, value }) => (
-  <div className="mb-4">
+  <div className="mb-4 w-full">
     <p className="text-sm font-medium text-gray-500 mb-1">{label}:</p>
     <div className="bg-gray-100 p-2 rounded-md">
       <p className="text-sm text-gray-800">{value}</p>
     </div>
+    <Separator className="mt-2" />
   </div>
 );
 
