@@ -29,7 +29,8 @@ const Index = () => {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading invoices: {error.message}</div>;
 
-  const handleStampClick = () => {
+  const handleStampClick = (invoice) => {
+    setSelectedInvoice(invoice);
     setIsStampSheetOpen(true);
   };
 
@@ -73,6 +74,7 @@ const Index = () => {
       <StampSheet
         isOpen={isStampSheetOpen}
         onOpenChange={setIsStampSheetOpen}
+        selectedInvoice={selectedInvoice}
       />
 
       <InvoiceDetailsSheet
