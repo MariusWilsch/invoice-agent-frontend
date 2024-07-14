@@ -6,20 +6,23 @@ import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import SelectField from "../molecules/SelectField";
 import { toast } from "sonner";
+import { useUpdateInvoicesDev } from "@/integrations/supabase/index.js";
 
-const StampForm = () => {
-  const [skontoValue, setSkontoValue] = useState(0);
+const StampForm = ({ invoice, onClose }) => {
+  const [skontoValue, setSkontoValue] = useState(invoice?.skonto || 0);
   const [formData, setFormData] = useState({
-    eingegangen_am: null,
-    faellig_am: null,
-    konto: "",
-    ev_vp: "",
-    belegtext: "",
-    ticket_number: "",
-    kommentar: "",
-    kostenstelle: "",
-    vb: "",
+    eingegangen_am: invoice?.eingegangen_am || null,
+    faellig_am: invoice?.faellig_am || null,
+    konto: invoice?.konto || "",
+    ev_vp: invoice?.ev_vp || "",
+    belegtext: invoice?.belegtext || "",
+    ticket_number: invoice?.ticket_number || "",
+    kommentar: invoice?.kommentar || "",
+    kostenstelle: invoice?.kostenstelle || "",
+    vb: invoice?.VB || "",
   });
+
+  const updateInvoiceMutation = useUpdateInvoicesDev();
 
   const kostenstelleOptions = [
     { value: "option1", label: "Option 1" },
@@ -41,7 +44,6 @@ const StampForm = () => {
   };
 
   const isAnyFieldFilled = () => {
-    // ! Somehow date fields are not considered as filled
     return (
       Object.values(formData).some(
         (value) => value !== null && value !== "" && value !== undefined
@@ -49,12 +51,23 @@ const StampForm = () => {
     );
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (isAnyFieldFilled()) {
-      console.log("Form submitted:", { ...formData, skonto: skontoValue });
-      toast.success("Form submitted successfully");
+      try {
+        const updatedInvoice = {
+          id: invoice.id,
+          ...formData,
+          skonto: skontoValue,
+        };
+        await updateInvoiceMutation.mutateAsync(updatedInvoice);
+        toast.success("Form submitted successfully");
+        onClose();
+      } catch (error) {
+        console.error("Error updating invoice:", error);
+        toast.error("Failed to submit form");
+      }
     } else {
       toast.error("Please fill at least one field before submitting");
     }
