@@ -176,6 +176,8 @@ const StampForm = () => {
               id="kostenstelle"
               options={kostenstelleOptions}
               onCreateOption={handleCreateKostenstelle}
+              value={formData.kostenstelle}
+              onChange={(value) => handleInputChange("kostenstelle", value)}
             />
 
             <SelectField
@@ -183,6 +185,8 @@ const StampForm = () => {
               id="vb"
               options={vbOptions}
               onCreateOption={handleCreateVb}
+              value={formData.vb}
+              onChange={(value) => handleInputChange("vb", value)}
             />
           </div>
         </div>
