@@ -24,8 +24,8 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
   };
 
   const renderAmount = (amount) => {
-    if (typeof amount === 'object' && amount !== null && 'gross_amount' in amount) {
-      return amount.gross_amount;
+    if (typeof amount === 'object' && amount !== null && 'gross_amount' in amount && 'currency' in amount) {
+      return `${amount.gross_amount} ${amount.currency}`;
     }
     return amount || 'N/A';
   };
