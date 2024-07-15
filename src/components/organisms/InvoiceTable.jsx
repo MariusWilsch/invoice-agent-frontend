@@ -23,6 +23,13 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
     return Array.isArray(sender) ? sender.join(', ') : sender;
   };
 
+  const renderAmount = (amount) => {
+    if (typeof amount === 'object' && amount !== null && 'gross_amount' in amount) {
+      return amount.gross_amount;
+    }
+    return amount || 'N/A';
+  };
+
   return (
     <Table>
       <TableHeader>
@@ -37,7 +44,7 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
         {invoices.map((invoice, index) => (
           <TableRow key={invoice.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
             <TableCell className="w-1/2">{renderSender(invoice.sender)}</TableCell>
-            <TableCell className="w-1/6">{invoice.amount}</TableCell>
+            <TableCell className="w-1/6">{renderAmount(invoice.amount)}</TableCell>
             <TableCell className="w-1/6">
               <StatusBadge status={invoice.status} />
             </TableCell>
