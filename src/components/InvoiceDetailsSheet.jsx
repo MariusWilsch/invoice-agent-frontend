@@ -45,8 +45,8 @@ const Field = ({ label, value, withoutSeparator = false }) => (
 );
 
 const renderAmount = (amount) => {
-  if (typeof amount === 'object' && amount !== null && 'gross_amount' in amount && 'currency' in amount) {
-    return `${amount.gross_amount} ${amount.currency}`;
+  if (typeof amount === 'object' && amount !== null && 'gross_amount' in amount && 'net_amount' in amount && 'currency' in amount) {
+    return `NETTO: ${amount.net_amount} ${amount.currency} and BRUTTO: ${amount.gross_amount} ${amount.currency}`;
   }
   return 'N/A';
 };
