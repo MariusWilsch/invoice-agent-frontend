@@ -14,6 +14,8 @@ const getStatusBadgeVariant = (status) => {
       return "secondary";
     case "kontiert":
       return "info";
+    case "unkontiert":
+      return "default";
     case "pending":
     case "ausstehend":
       return "default";
@@ -28,7 +30,9 @@ const StatusBadge = ({ status }) => {
     "draft": "Entwurf",
     "archived": "Archiviert",
     "kontiert": "Kontiert",
-    "pending": "Ausstehend"
+    "unkontiert": "Unkontiert",
+    "pending": "Ausstehend",
+    "empfangen": "Unkontiert"
   }[status.toLowerCase()] || status;
 
   return (
