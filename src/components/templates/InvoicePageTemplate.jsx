@@ -13,7 +13,7 @@ const InvoicePageTemplate = ({ invoices, statuses, onViewDetails, onDelete, onSt
           <TabsTrigger value="all">All</TabsTrigger>
           {statuses.map((status) => (
             <TabsTrigger key={status} value={status.toLowerCase()}>
-              {status === "Empfangen" ? "Unkontiert" : status}
+              {status}
             </TabsTrigger>
           ))}
         </TabsList>
@@ -37,7 +37,7 @@ const InvoicePageTemplate = ({ invoices, statuses, onViewDetails, onDelete, onSt
               <DropdownMenuSeparator />
               {statuses.map((status) => (
                 <DropdownMenuCheckboxItem key={status}>
-                  {status === "Empfangen" ? "Unkontiert" : status}
+                  {status}
                 </DropdownMenuCheckboxItem>
               ))}
             </DropdownMenuContent>
@@ -57,8 +57,8 @@ const InvoicePageTemplate = ({ invoices, statuses, onViewDetails, onDelete, onSt
       {statuses.map((status) => (
         <TabsContent key={status} value={status.toLowerCase()}>
           <InvoiceCard
-            title={`${status === "Empfangen" ? "Unkontiert" : status} Invoices`}
-            description={`Manage your ${status.toLowerCase() === "empfangen" ? "unkontiert" : status.toLowerCase()} invoices and view their details.`}
+            title={`${status} Invoices`}
+            description={`Manage your ${status.toLowerCase()} invoices and view their details.`}
             invoices={invoices.filter((invoice) => invoice.status === status)}
             onViewDetails={onViewDetails}
             onDelete={onDelete}
