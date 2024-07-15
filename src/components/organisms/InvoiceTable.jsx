@@ -35,7 +35,7 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
       <TableHeader>
         <TableRow>
           <TableHead className="w-1/2">Absender</TableHead>
-          <TableHead className="w-1/6">Betrag</TableHead>
+          <TableHead className="w-1/6">Brutto</TableHead>
           <TableHead className="w-1/6">Status</TableHead>
           <TableHead className="w-1/6">Aktionen</TableHead>
         </TableRow>
