@@ -21,39 +21,28 @@ const fromSupabase = async (query) => {
 
 ### invoices_dev
 
-| name            | type                    | format | required |
-|-----------------|-------------------------|--------|----------|
-| id              | text                    | string | true     |
-| created_at      | timestamp with time zone| string | true     |
-| eingegangen_am  | timestamp with time zone| string | true     |
-| konto           | text                    | string | false    |
-| ev_vp           | text                    | string | false    |
-| belegtext       | text                    | string | false    |
-| kommentar       | text                    | string | false    |
-| fällig_am       | date                    | string | false    |
-| gebucht         | date                    | string | false    |
-| kostenstelle    | text                    | string | false    |
-| vb              | text                    | string | false    |
-| wer_geprüft     | text                    | string | false    |
-| wer_bezahlt     | text                    | string | false    |
-| status          | text                    | string | true     |
-| amount          | real                    | number | false    |
-| sender          | text[]                  | array  | false    |
-| email_body      | text                    | string | false    |
-| public_url      | text                    | string | false    |
-| faellig_am      | timestamp with time zone| string | false    |
-| skonto          | smallint                | number | false    |
-| ticket_number   | text                    | string | false    |
-
-### dropdown_options_invoices_dev
-
-| name       | type                    | format | required |
-|------------|-------------------------|--------|----------|
-| id         | uuid                    | string | true     |
-| field_type | text                    | string | true     |
-| label      | text                    | string | true     |
-| value      | text                    | string | true     |
-| created_at | timestamp with time zone| string | true     |
+| name           | type                | format | required |
+|----------------|---------------------|--------|----------|
+| id             | text                | string | true     |
+| created_at     | timestamp with time zone | string | true     |
+| eingegangen_am | timestamp with time zone | string | true     |
+| konto          | text                | string | false    |
+| ev_vp          | text                | string | false    |
+| belegtext      | text                | string | false    |
+| kommentar      | text                | string | false    |
+| faellig_am     | date                | string | false    |
+| gebucht        | date                | string | false    |
+| kostenstelle   | text                | string | false    |
+| vb             | text                | string | false    |
+| wer_geprüft    | text                | string | false    |
+| wer_bezahlt    | text                | string | false    |
+| status         | text                | string | true     |
+| sender         | text[]              | array  | false    |
+| email_body     | text                | string | false    |
+| public_url     | text                | string | false    |
+| skonto         | smallint            | number | false    |
+| ticket_number  | text                | string | false    |
+| amount         | jsonb               | object | false    |
 
 */
 
@@ -70,7 +59,7 @@ export const useInvoiceDevById = (id) => useQuery({
     enabled: !!id,
 });
 
-export const useAddInvoiceDev = () => {
+export const useAddInvoicesDev = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: (newInvoice) => fromSupabase(supabase.from('invoices_dev').insert([newInvoice])),
@@ -96,49 +85,6 @@ export const useDeleteInvoicesDev = () => {
         mutationFn: (id) => fromSupabase(supabase.from('invoices_dev').delete().eq('id', id)),
         onSuccess: () => {
             queryClient.invalidateQueries('invoices_dev');
-        },
-    });
-};
-
-// Hooks for dropdown_options_invoices_dev table
-
-export const useDropdownOptionsInvoicesDev = () => useQuery({
-    queryKey: ['dropdown_options_invoices_dev'],
-    queryFn: () => fromSupabase(supabase.from('dropdown_options_invoices_dev').select('*')),
-});
-
-export const useDropdownOptionInvoicesDevById = (id) => useQuery({
-    queryKey: ['dropdown_options_invoices_dev', id],
-    queryFn: () => fromSupabase(supabase.from('dropdown_options_invoices_dev').select('*').eq('id', id).single()),
-    enabled: !!id,
-});
-
-export const useAddDropdownOptionInvoicesDev = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: (newOption) => fromSupabase(supabase.from('dropdown_options_invoices_dev').insert([newOption])),
-        onSuccess: () => {
-            queryClient.invalidateQueries('dropdown_options_invoices_dev');
-        },
-    });
-};
-
-export const useUpdateDropdownOptionInvoicesDev = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: (updatedOption) => fromSupabase(supabase.from('dropdown_options_invoices_dev').update(updatedOption).eq('id', updatedOption.id)),
-        onSuccess: () => {
-            queryClient.invalidateQueries('dropdown_options_invoices_dev');
-        },
-    });
-};
-
-export const useDeleteDropdownOptionInvoicesDev = () => {
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn: (id) => fromSupabase(supabase.from('dropdown_options_invoices_dev').delete().eq('id', id)),
-        onSuccess: () => {
-            queryClient.invalidateQueries('dropdown_options_invoices_dev');
         },
     });
 };
