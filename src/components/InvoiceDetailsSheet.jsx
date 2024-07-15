@@ -21,7 +21,7 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
               <Field label="wer_bezahlt" value={invoice.wer_bezahlt || "Leer"} />
               <Field label="Kommentar" value={invoice.kommentar || "Leer"} />
               <Field label="Fällig_am" value={invoice.fällig_am || "Leer"} />
-              <Field label="Amount" value={invoice.amount || "Leer"} />
+              <Field label="Amount" value={renderAmount(invoice.amount)} />
               <Field label="Gebucht" value={invoice.gebucht || "Leer"} />
               <Field label="Sender" value={invoice.sender ? (Array.isArray(invoice.sender) ? invoice.sender.join(", ") : invoice.sender) : "Finance, finance@wph.onl"} withoutSeparator={true} />
               <Field label="Skonto" value={invoice.skonto || "No"} withoutSeparator={true} />
@@ -43,5 +43,12 @@ const Field = ({ label, value, withoutSeparator = false }) => (
     </div>
   </div>
 );
+
+const renderAmount = (amount) => {
+  if (typeof amount === 'object' && amount !== null && 'gross_amount' in amount && 'currency' in amount) {
+    return `${amount.gross_amount} ${amount.currency}`;
+  }
+  return 'N/A';
+};
 
 export default InvoiceDetailsSheet;
