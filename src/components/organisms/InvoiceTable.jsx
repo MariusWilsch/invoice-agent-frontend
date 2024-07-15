@@ -35,20 +35,24 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
       <TableHeader>
         <TableRow>
           <TableHead className="w-1/2">Absender</TableHead>
-          <TableHead className="w-1/6">Brutto</TableHead>
-          <TableHead className="w-1/6">Status</TableHead>
-          <TableHead className="w-1/6">Aktionen</TableHead>
+          <TableHead className="w-1/10">Ticket Nummer</TableHead>
+          <TableHead className="w-1/10">Fällig am</TableHead>
+          <TableHead className="w-1/10">Brutto</TableHead>
+          <TableHead className="w-1/10">Status</TableHead>
+          <TableHead className="w-1/10">Aktionen</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {invoices.map((invoice, index) => (
           <TableRow key={invoice.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
             <TableCell className="w-1/2">{renderSender(invoice.sender)}</TableCell>
-            <TableCell className="w-1/6">{renderAmount(invoice.amount)}</TableCell>
-            <TableCell className="w-1/6">
+            <TableCell className="w-1/10">{invoice.ticket_number || 'N/A'}</TableCell>
+            <TableCell className="w-1/10">{invoice.faellig_am || 'N/A'}</TableCell>
+            <TableCell className="w-1/10">{renderAmount(invoice.amount)}</TableCell>
+            <TableCell className="w-1/10">
               <StatusBadge status={invoice.status} />
             </TableCell>
-            <TableCell className="w-1/6">
+            <TableCell className="w-1/10">
               <ActionButtons
                 invoice={invoice}
                 onViewDetails={onViewDetails}
