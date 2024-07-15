@@ -20,7 +20,7 @@ const Index = () => {
   useEffect(() => {
     if (invoices) {
       const uniqueStatuses = Array.from(
-        new Set(invoices.map((invoice) => invoice.status))
+        new Set(invoices.map((invoice) => invoice.status === "Empfangen" ? "Unkontiert" : invoice.status))
       );
       setStatuses(uniqueStatuses);
     }
@@ -55,10 +55,15 @@ const Index = () => {
     }
   };
 
+  const updatedInvoices = invoices.map(invoice => ({
+    ...invoice,
+    status: invoice.status === "Empfangen" ? "Unkontiert" : invoice.status
+  }));
+
   return (
     <div>
       <InvoicePageTemplate
-        invoices={invoices}
+        invoices={updatedInvoices}
         statuses={statuses}
         onViewDetails={handleViewDetails}
         onDelete={handleDelete}
