@@ -30,6 +30,19 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
     return amount || 'N/A';
   };
 
+  const calculateTotalBrutto = () => {
+    return invoices.reduce((total, invoice) => {
+      const amount = invoice.amount;
+      if (typeof amount === 'object' && amount !== null && 'gross_amount' in amount) {
+        return total + parseFloat(amount.gross_amount);
+      }
+      return total;
+    }, 0);
+  };
+
+  const totalBruttoDh = calculateTotalBrutto();
+  const totalBruttoEur = totalBruttoDh / 10.69;
+
   return (
     <Table>
       <TableHeader>
@@ -62,6 +75,11 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
             </TableCell>
           </TableRow>
         ))}
+        <TableRow className="bg-gray-100 font-semibold">
+          <TableCell colSpan={3} className="text-right">Total Brutto:</TableCell>
+          <TableCell>{totalBruttoDh.toFixed(2)} DH</TableCell>
+          <TableCell colSpan={2}>{totalBruttoEur.toFixed(2)} EUR</TableCell>
+        </TableRow>
       </TableBody>
     </Table>
   );
