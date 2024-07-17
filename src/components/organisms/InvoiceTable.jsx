@@ -16,7 +16,7 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
       return (
         <div className="flex flex-col">
           <span>{sender[0]}</span>
-          <span className="text-sm text-gray-500">{sender.slice(1).join(', ')}</span>
+          <span className="text-sm text-gray-400 break-words">{sender.slice(1).join(', ')}</span>
         </div>
       );
     }
