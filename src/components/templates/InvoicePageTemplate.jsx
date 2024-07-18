@@ -5,7 +5,7 @@ import Button from '../atoms/Button';
 import { ListFilter } from "lucide-react";
 import InvoiceCard from '../organisms/InvoiceCard';
 
-const InvoicePageTemplate = ({ invoices, statuses, onViewDetails, onDelete, onStamp }) => (
+const InvoicePageTemplate = ({ invoices, allInvoices, statuses, onViewDetails, onDelete, onStamp }) => (
   <div>
     <Tabs defaultValue="all">
       <div className="flex items-center mb-4">
@@ -59,7 +59,7 @@ const InvoicePageTemplate = ({ invoices, statuses, onViewDetails, onDelete, onSt
           <InvoiceCard
             title={`${status === "Empfangen" ? "Unkontiert" : status} Invoices`}
             description={`Manage your ${status.toLowerCase() === "empfangen" ? "unkontiert" : status.toLowerCase()} invoices and view their details.`}
-            invoices={invoices.filter((invoice) => invoice.status === status)}
+            invoices={status === "Marius_TEST" ? allInvoices.filter((invoice) => invoice.status === status) : invoices.filter((invoice) => invoice.status === status)}
             onViewDetails={onViewDetails}
             onDelete={onDelete}
             onStamp={onStamp}

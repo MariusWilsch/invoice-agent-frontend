@@ -60,10 +60,13 @@ const Index = () => {
     status: invoice.status === "Empfangen" ? "Unkontiert" : invoice.status
   }));
 
+  const filteredInvoices = updatedInvoices.filter(invoice => invoice.status !== "Marius_TEST");
+
   return (
     <div>
       <InvoicePageTemplate
-        invoices={updatedInvoices}
+        invoices={filteredInvoices}
+        allInvoices={updatedInvoices}
         statuses={statuses}
         onViewDetails={handleViewDetails}
         onDelete={handleDelete}

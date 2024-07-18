@@ -16,6 +16,7 @@ import {
   MoreVertical,
   Edit,
   Trash,
+  User,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -59,6 +60,7 @@ import {
   TooltipTrigger,
   TooltipProvider,
 } from "@/components/ui/tooltip";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const SharedLayout = () => {
   const navigate = useNavigate();
@@ -118,17 +120,16 @@ const SharedLayout = () => {
               <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                   <Button
-                    variant="outline"
+                    variant="ghost"
                     size="icon"
-                    className="overflow-hidden rounded-full"
+                    className="relative h-8 w-8 rounded-full"
                   >
-                    <image
-                      src="/placeholder-user.jpg"
-                      width={36}
-                      height={36}
-                      alt="Avatar"
-                      className="overflow-hidden rounded-full"
-                    />
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src="/placeholder-user.jpg" alt="User avatar" />
+                      <AvatarFallback>
+                        <User className="h-4 w-4" />
+                      </AvatarFallback>
+                    </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
