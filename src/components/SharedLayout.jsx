@@ -18,6 +18,7 @@ import {
   Trash,
   User,
 } from "lucide-react";
+import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -107,7 +108,7 @@ const SharedLayout = () => {
             </SheetContent>
           </Sheet>
           <div className="flex items-center justify-between w-full">
-            <h1 className="text-lg font-semibold">Projektspezifische Tickets: [Ticket#18801]</h1>
+            <h1 className="text-lg font-semibold">Invoice Management</h1>
             <div className="flex items-center gap-4">
               <div className="relative ml-auto flex-1 md:grow-0">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -137,6 +138,9 @@ const SharedLayout = () => {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>Settings</DropdownMenuItem>
                   <DropdownMenuItem>Support</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => toast("Inquires to: [Ticket#18801]")}>
+                    Show Ticket Number
+                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>Logout</DropdownMenuItem>
                 </DropdownMenuContent>
