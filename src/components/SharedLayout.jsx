@@ -107,8 +107,7 @@ const SharedLayout = () => {
               </nav>
             </SheetContent>
           </Sheet>
-          <div className="flex items-center justify-between w-full">
-            <h1 className="text-lg font-semibold">Invoice Management</h1>
+          <div className="flex items-center justify-end w-full">
             <div className="flex items-center gap-4">
               <div className="relative ml-auto flex-1 md:grow-0">
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
