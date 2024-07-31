@@ -17,7 +17,7 @@ const LanguageSwitcher = ({ currentLanguage, onLanguageChange }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className="h-8 border-dashed">
+        <Button variant="outline" size="sm" className="h-9 px-3 border">
           <span className="mr-1">{currentLanguage === 'de' ? '🇩🇪' : '🇬🇧'}</span>
           {currentLanguage === 'de' ? 'DE' : 'EN'}
           <ChevronDown className="ml-2 h-4 w-4" />
