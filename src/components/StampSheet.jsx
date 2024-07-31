@@ -5,7 +5,7 @@ import { useLanguage } from "../contexts/LanguageContext";
 
 const StampSheet = ({ isOpen, onOpenChange, invoice }) => {
   const { language } = useLanguage();
-  const title = language === 'de' ? "Kontierungsstempel" : "Accounting Stamp";
+  const title = language === "de" ? "Kontierungsstempel" : "Accounting Stamp";
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange} modal={false}>
@@ -18,17 +18,17 @@ const StampSheet = ({ isOpen, onOpenChange, invoice }) => {
           <div className="font-semibold text-lg mb-4">{title}</div>
           <div className="flex-grow flex overflow-hidden">
             <div className="w-1/2 overflow-y-auto pr-2">
-              <StampForm 
-                invoice={invoice} 
+              <StampForm
+                invoice={invoice}
                 onClose={() => onOpenChange(false)}
               />
             </div>
             <div className="w-1/2 overflow-hidden pl-2">
               {invoice && invoice.public_url && (
                 <iframe
-                  src={invoice.public_url}
+                  src={`${invoice.public_url}#view=FitW&pagemode=none&toolbar=0&statusbar=0&navpanes=0`}
                   title="Invoice PDF"
-                  className="w-full h-auto min-h-full border-0 aspect-[3/4]"
+                  className="w-full h-auto min-h-full"
                 />
               )}
             </div>
