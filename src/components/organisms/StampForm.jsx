@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { useUpdateInvoicesDev } from "@/integrations/supabase/index.js";
 import { useLanguage } from "../../contexts/LanguageContext";
 
-const StampForm = ({ invoice, onClose, onViewInvoice }) => {
+const StampForm = ({ invoice, onClose }) => {
   const { language } = useLanguage();
   const [skontoValue, setSkontoValue] = useState(invoice?.skonto || 0);
   const [isViewingInvoice, setIsViewingInvoice] = useState(false);
@@ -60,6 +60,7 @@ const StampForm = ({ invoice, onClose, onViewInvoice }) => {
       enter: "Eingeben",
       select: "Auswählen",
       seeInvoice: "Rechnung ansehen",
+      hideInvoice: "Rechnung ausblenden",
     },
     en: {
       title: "Accounting Stamp",
@@ -79,6 +80,7 @@ const StampForm = ({ invoice, onClose, onViewInvoice }) => {
       enter: "Enter",
       select: "Select",
       seeInvoice: "See Invoice",
+      hideInvoice: "Hide Invoice",
     }
   };
 
@@ -140,129 +142,142 @@ const StampForm = ({ invoice, onClose, onViewInvoice }) => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-6 h-full overflow-visible pr-4"
-    >
-      <div className="grid grid-cols-2 gap-4">
-        {/* Left Column */}
-        <div className="space-y-4">
-          <FormField label={t.receivedOn} id="eingegangen_am">
-            <DatePickerDemo
-              onChange={(date) => handleInputChange("eingegangen_am", date)}
-              value={formData.eingegangen_am}
-              placeholder={t.pickDate}
-            />
-          </FormField>
-
-          <FormField label={t.dueOn} id="faellig_am">
-            <DatePickerDemo
-              onChange={(date) => handleInputChange("faellig_am", date)}
-              value={formData.faellig_am}
-              placeholder={t.pickDate}
-            />
-          </FormField>
-
-          <FormField label={t.account} id="konto">
-            <Input
-              placeholder={`${t.enter} ${t.account}`}
-              onChange={(e) => handleInputChange("konto", e.target.value)}
-              value={formData.konto}
-            />
-          </FormField>
-
-          <FormField label={t.evVp} id="ev_vp">
-            <Input
-              placeholder={`${t.enter} ${t.evVp}`}
-              onChange={(e) => handleInputChange("ev_vp", e.target.value)}
-              value={formData.ev_vp}
-            />
-          </FormField>
-
-          <FormField label={t.documentText} id="belegtext">
-            <Input
-              placeholder={`${t.enter} ${t.documentText}`}
-              onChange={(e) => handleInputChange("belegtext", e.target.value)}
-              value={formData.belegtext}
-            />
-          </FormField>
-
-          <FormField label={t.ticketNumber} id="ticket_number">
-            <Input
-              placeholder={`${t.enter} ${t.ticketNumber}`}
-              onChange={(e) =>
-                handleInputChange("ticket_number", e.target.value)
-              }
-              value={formData.ticket_number}
-            />
-          </FormField>
-        </div>
-
-        {/* Right Column */}
-        <div className="space-y-4 flex flex-col">
-          <FormField label={t.comment} id="kommentar" className="flex-grow">
-            <Textarea
-              placeholder={`${t.enter} ${t.comment}`}
-              className="h-full"
-              onChange={(e) => handleInputChange("kommentar", e.target.value)}
-              value={formData.kommentar}
-            />
-          </FormField>
-
+    <div className="flex flex-col h-full">
+      <form onSubmit={handleSubmit} className="space-y-6 overflow-y-auto flex-grow">
+        <div className={`grid ${isViewingInvoice ? 'grid-cols-2' : 'grid-cols-1'} gap-4`}>
+          {/* Form Fields */}
           <div className="space-y-4">
-            <FormField label={t.discount} id="skonto">
-              <div className="flex items-center space-x-4">
-                <span className="text-sm font-medium w-12">{skontoValue}%</span>
-                <Slider
-                  id="skonto"
-                  min={0}
-                  max={40}
-                  step={5}
-                  value={[skontoValue]}
-                  onValueChange={(newValue) => setSkontoValue(newValue[0])}
-                  className="flex-grow"
+            <div className="grid grid-cols-2 gap-4">
+              {/* Left Column */}
+              <div className="space-y-4">
+                <FormField label={t.receivedOn} id="eingegangen_am">
+                  <DatePickerDemo
+                    onChange={(date) => handleInputChange("eingegangen_am", date)}
+                    value={formData.eingegangen_am}
+                    placeholder={t.pickDate}
+                  />
+                </FormField>
+
+                <FormField label={t.dueOn} id="faellig_am">
+                  <DatePickerDemo
+                    onChange={(date) => handleInputChange("faellig_am", date)}
+                    value={formData.faellig_am}
+                    placeholder={t.pickDate}
+                  />
+                </FormField>
+
+                <FormField label={t.account} id="konto">
+                  <Input
+                    placeholder={`${t.enter} ${t.account}`}
+                    onChange={(e) => handleInputChange("konto", e.target.value)}
+                    value={formData.konto}
+                  />
+                </FormField>
+
+                <FormField label={t.evVp} id="ev_vp">
+                  <Input
+                    placeholder={`${t.enter} ${t.evVp}`}
+                    onChange={(e) => handleInputChange("ev_vp", e.target.value)}
+                    value={formData.ev_vp}
+                  />
+                </FormField>
+
+                <FormField label={t.documentText} id="belegtext">
+                  <Input
+                    placeholder={`${t.enter} ${t.documentText}`}
+                    onChange={(e) => handleInputChange("belegtext", e.target.value)}
+                    value={formData.belegtext}
+                  />
+                </FormField>
+
+                <FormField label={t.ticketNumber} id="ticket_number">
+                  <Input
+                    placeholder={`${t.enter} ${t.ticketNumber}`}
+                    onChange={(e) =>
+                      handleInputChange("ticket_number", e.target.value)
+                    }
+                    value={formData.ticket_number}
+                  />
+                </FormField>
+              </div>
+
+              {/* Right Column */}
+              <div className="space-y-4">
+                <FormField label={t.comment} id="kommentar">
+                  <Textarea
+                    placeholder={`${t.enter} ${t.comment}`}
+                    className="h-32"
+                    onChange={(e) => handleInputChange("kommentar", e.target.value)}
+                    value={formData.kommentar}
+                  />
+                </FormField>
+
+                <FormField label={t.discount} id="skonto">
+                  <div className="flex items-center space-x-4">
+                    <span className="text-sm font-medium w-12">{skontoValue}%</span>
+                    <Slider
+                      id="skonto"
+                      min={0}
+                      max={40}
+                      step={5}
+                      value={[skontoValue]}
+                      onValueChange={(newValue) => setSkontoValue(newValue[0])}
+                      className="flex-grow"
+                    />
+                  </div>
+                </FormField>
+
+                <SelectField
+                  label={t.costCenter}
+                  id="kostenstelle"
+                  options={kostenstelleOptions}
+                  value={formData.kostenstelle}
+                  onChange={(value) => handleInputChange("kostenstelle", value)}
+                  placeholder={`${t.select} ${t.costCenter}`}
+                />
+
+                <SelectField
+                  label={t.vb}
+                  id="vb"
+                  options={vbOptions}
+                  value={formData.vb}
+                  onChange={(value) => handleInputChange("vb", value)}
+                  placeholder={`${t.select} ${t.vb}`}
                 />
               </div>
-            </FormField>
-
-            <SelectField
-              label={t.costCenter}
-              id="kostenstelle"
-              options={kostenstelleOptions}
-              value={formData.kostenstelle}
-              onChange={(value) => handleInputChange("kostenstelle", value)}
-              placeholder={`${t.select} ${t.costCenter}`}
-            />
-
-            <SelectField
-              label={t.vb}
-              id="vb"
-              options={vbOptions}
-              value={formData.vb}
-              onChange={(value) => handleInputChange("vb", value)}
-              placeholder={`${t.select} ${t.vb}`}
-            />
+            </div>
           </div>
+
+          {/* PDF Viewer */}
+          {isViewingInvoice && (
+            <div className="h-full">
+              <iframe
+                src={invoice.public_url}
+                title="Invoice PDF"
+                className="w-full h-full border-0"
+              />
+            </div>
+          )}
         </div>
-      </div>
-      <div className="flex justify-end space-x-4">
+      </form>
+
+      {/* Action Buttons */}
+      <div className="flex justify-end space-x-4 mt-4">
         <Button type="button" variant="outline" onClick={handleClear}>
           {t.clear}
         </Button>
         <Button 
           type="button" 
           variant="secondary" 
-          onClick={() => {
-            onViewInvoice();
-          }}
+          onClick={() => setIsViewingInvoice(!isViewingInvoice)}
         >
-          {t.seeInvoice}
+          {isViewingInvoice ? t.hideInvoice : t.seeInvoice}
         </Button>
-        <Button type="submit" variant="default" className="bg-primary text-primary-foreground hover:bg-primary/90">
+        <Button type="submit" variant="default" className="bg-primary text-primary-foreground hover:bg-primary/90" onClick={handleSubmit}>
           {t.submit}
         </Button>
       </div>
-    </form>
+    </div>
   );
 };
 
