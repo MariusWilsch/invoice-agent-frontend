@@ -7,8 +7,10 @@ import { Slider } from "@/components/ui/slider";
 import SelectField from "../molecules/SelectField";
 import { toast } from "sonner";
 import { useUpdateInvoicesDev } from "@/integrations/supabase/index.js";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 const StampForm = ({ invoice, onClose }) => {
+  const { language } = useLanguage();
   const [skontoValue, setSkontoValue] = useState(invoice?.skonto || 0);
   const [formData, setFormData] = useState({
     id: invoice?.id,
@@ -21,22 +23,63 @@ const StampForm = ({ invoice, onClose }) => {
     kommentar: invoice?.kommentar || "",
     kostenstelle: invoice?.kostenstelle || "",
     vb: invoice?.VB || "",
-    status: "Kontiert", // Set the status to "Kontiert"
+    status: "Kontiert",
   });
 
   const updateInvoiceMutation = useUpdateInvoicesDev();
 
   const kostenstelleOptions = [
-    { value: "option1", label: "Option 1" },
-    { value: "option2", label: "Option 2" },
-    { value: "option3", label: "Option 3" },
+    { value: "option1", label: language === 'de' ? "Option 1" : "Option 1" },
+    { value: "option2", label: language === 'de' ? "Option 2" : "Option 2" },
+    { value: "option3", label: language === 'de' ? "Option 3" : "Option 3" },
   ];
 
   const vbOptions = [
-    { value: "option1", label: "Option 1" },
-    { value: "option2", label: "Option 2" },
-    { value: "option3", label: "Option 3" },
+    { value: "option1", label: language === 'de' ? "Option 1" : "Option 1" },
+    { value: "option2", label: language === 'de' ? "Option 2" : "Option 2" },
+    { value: "option3", label: language === 'de' ? "Option 3" : "Option 3" },
   ];
+
+  const translations = {
+    de: {
+      title: "Kontierungsstempel",
+      receivedOn: "Eingegangen am",
+      dueOn: "Fällig am",
+      account: "Konto",
+      evVp: "EV/VP",
+      documentText: "Belegtext",
+      ticketNumber: "Ticket Number",
+      comment: "Kommentar",
+      discount: "Skonto",
+      costCenter: "Kostenstelle",
+      vb: "VB",
+      clear: "Löschen",
+      submit: "Absenden",
+      pickDate: "Datum auswählen",
+      enter: "Eingeben",
+      select: "Auswählen",
+    },
+    en: {
+      title: "Accounting Stamp",
+      receivedOn: "Received on",
+      dueOn: "Due on",
+      account: "Account",
+      evVp: "EV/VP",
+      documentText: "Document Text",
+      ticketNumber: "Ticket Number",
+      comment: "Comment",
+      discount: "Discount",
+      costCenter: "Cost Center",
+      vb: "VB",
+      clear: "Clear",
+      submit: "Submit",
+      pickDate: "Pick a date",
+      enter: "Enter",
+      select: "Select",
+    }
+  };
+
+  const t = translations[language];
 
   const handleInputChange = (field, value) => {
     setFormData((prevData) => ({
@@ -98,50 +141,53 @@ const StampForm = ({ invoice, onClose }) => {
       onSubmit={handleSubmit}
       className="space-y-6 h-full overflow-visible pr-4"
     >
+      <h2 className="text-2xl font-bold mb-6">{t.title}</h2>
       <div className="grid grid-cols-2 gap-4">
         {/* Left Column */}
         <div className="space-y-4">
-          <FormField label="Eingegangen am" id="eingegangen_am">
+          <FormField label={t.receivedOn} id="eingegangen_am">
             <DatePickerDemo
               onChange={(date) => handleInputChange("eingegangen_am", date)}
               value={formData.eingegangen_am}
+              placeholder={t.pickDate}
             />
           </FormField>
 
-          <FormField label="Fällig am" id="faellig_am">
+          <FormField label={t.dueOn} id="faellig_am">
             <DatePickerDemo
               onChange={(date) => handleInputChange("faellig_am", date)}
               value={formData.faellig_am}
+              placeholder={t.pickDate}
             />
           </FormField>
 
-          <FormField label="Konto" id="konto">
+          <FormField label={t.account} id="konto">
             <Input
-              placeholder="Enter Konto"
+              placeholder={`${t.enter} ${t.account}`}
               onChange={(e) => handleInputChange("konto", e.target.value)}
               value={formData.konto}
             />
           </FormField>
 
-          <FormField label="EV/VP" id="ev_vp">
+          <FormField label={t.evVp} id="ev_vp">
             <Input
-              placeholder="Enter EV/VP"
+              placeholder={`${t.enter} ${t.evVp}`}
               onChange={(e) => handleInputChange("ev_vp", e.target.value)}
               value={formData.ev_vp}
             />
           </FormField>
 
-          <FormField label="Belegtext" id="belegtext">
+          <FormField label={t.documentText} id="belegtext">
             <Input
-              placeholder="Enter Belegtext"
+              placeholder={`${t.enter} ${t.documentText}`}
               onChange={(e) => handleInputChange("belegtext", e.target.value)}
               value={formData.belegtext}
             />
           </FormField>
 
-          <FormField label="Ticket Number" id="ticket_number">
+          <FormField label={t.ticketNumber} id="ticket_number">
             <Input
-              placeholder="Enter Ticket Number"
+              placeholder={`${t.enter} ${t.ticketNumber}`}
               onChange={(e) =>
                 handleInputChange("ticket_number", e.target.value)
               }
@@ -152,9 +198,9 @@ const StampForm = ({ invoice, onClose }) => {
 
         {/* Right Column */}
         <div className="space-y-4 flex flex-col">
-          <FormField label="Kommentar" id="kommentar" className="flex-grow">
+          <FormField label={t.comment} id="kommentar" className="flex-grow">
             <Textarea
-              placeholder="Enter Kommentar"
+              placeholder={`${t.enter} ${t.comment}`}
               className="h-full"
               onChange={(e) => handleInputChange("kommentar", e.target.value)}
               value={formData.kommentar}
@@ -162,7 +208,7 @@ const StampForm = ({ invoice, onClose }) => {
           </FormField>
 
           <div className="space-y-4">
-            <FormField label="Skonto" id="skonto">
+            <FormField label={t.discount} id="skonto">
               <div className="flex items-center space-x-4">
                 <span className="text-sm font-medium w-12">{skontoValue}%</span>
                 <Slider
@@ -178,28 +224,30 @@ const StampForm = ({ invoice, onClose }) => {
             </FormField>
 
             <SelectField
-              label="Kostenstelle"
+              label={t.costCenter}
               id="kostenstelle"
               options={kostenstelleOptions}
               value={formData.kostenstelle}
               onChange={(value) => handleInputChange("kostenstelle", value)}
+              placeholder={`${t.select} ${t.costCenter}`}
             />
 
             <SelectField
-              label="VB"
+              label={t.vb}
               id="vb"
               options={vbOptions}
               value={formData.vb}
               onChange={(value) => handleInputChange("vb", value)}
+              placeholder={`${t.select} ${t.vb}`}
             />
           </div>
         </div>
       </div>
       <div className="flex justify-end space-x-4">
         <Button type="button" variant="outline" onClick={handleClear}>
-          Clear
+          {t.clear}
         </Button>
-        <Button type="submit">Submit</Button>
+        <Button type="submit">{t.submit}</Button>
       </div>
     </form>
   );
