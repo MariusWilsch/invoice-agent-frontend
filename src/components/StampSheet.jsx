@@ -16,12 +16,12 @@ const StampSheet = ({ isOpen, onOpenChange, invoice }) => {
     <Sheet open={isOpen} onOpenChange={onOpenChange} modal={false}>
       <SheetContent
         side="right"
-        className="w-[90vw] h-[90vh] max-w-none overflow-y-auto"
+        className={`w-[90vw] min-w-[90vw] overflow-visible transition-all duration-300`}
         onPointerDownOutside={(e) => e.preventDefault()}
       >
-        <div className="h-full flex flex-col">
+        <div className="p-4 h-full overflow-visible">
           <div className="font-semibold text-lg mb-4">{title}</div>
-          <div className="flex-grow overflow-y-auto">
+          <div className="h-[calc(100%-2rem)] overflow-visible">
             <StampForm 
               invoice={invoice} 
               onClose={() => onOpenChange(false)} 
