@@ -6,13 +6,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import SelectField from "../molecules/SelectField";
 import { toast } from "sonner";
-import { useUpdateInvoicesDev } from "@/integrations/supabase/index.js";
+import { useUpdateInvoicesDev, useAddDropdownOptionInvoicesDev } from "@/integrations/supabase/index.js";
 import { useLanguage } from "../../contexts/LanguageContext";
 
 const StampForm = ({ invoice, onClose, onViewInvoice }) => {
   const { language } = useLanguage();
   const [skontoValue, setSkontoValue] = useState(invoice?.skonto || 0);
   const [isViewingInvoice, setIsViewingInvoice] = useState(false);
+  const addDropdownOptionMutation = useAddDropdownOptionInvoicesDev();
   const [formData, setFormData] = useState({
     id: invoice?.id,
     eingegangen_am: invoice?.eingegangen_am || null,
@@ -82,11 +83,26 @@ const StampForm = ({ invoice, onClose, onViewInvoice }) => {
 
   const t = translations[language];
 
-  const handleInputChange = (field, value) => {
+  const handleInputChange = async (field, value) => {
     setFormData((prevData) => ({
       ...prevData,
       [field]: value,
     }));
+
+    // If it's a new option for kostenstelle or vb, add it to the dropdown options
+    if ((field === 'kostenstelle' || field === 'vb') && !kostenstelleOptions.find(option => option.value === value)) {
+      try {
+        await addDropdownOptionMutation.mutateAsync({
+          field_type: field,
+          value: value,
+          label: value // Ensure label is set to the same value
+        });
+        toast.success(`New ${field} option added successfully`);
+      } catch (error) {
+        console.error(`Error adding new ${field} option:`, error);
+        toast.error(`Failed to add new ${field} option`);
+      }
+    }
   };
 
   const isAnyFieldFilled = () => {
