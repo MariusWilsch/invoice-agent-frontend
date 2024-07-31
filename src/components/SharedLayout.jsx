@@ -80,6 +80,7 @@ const SharedLayout = () => {
           <Outlet />
         </main>
       </div>
+    </div>
     </LanguageProvider>
   );
 };
