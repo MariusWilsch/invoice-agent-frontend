@@ -1,36 +1,86 @@
 import React from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { useLanguage } from "../contexts/LanguageContext";
 
 const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
+  const { language } = useLanguage();
+
+  const translations = {
+    en: {
+      title: "Data Overview",
+      receivedOn: "Received on",
+      costCenter: "Cost Center",
+      account: "Account",
+      vb: "VB",
+      evVp: "EV/VP",
+      checkedBy: "Checked by",
+      documentText: "Document Text",
+      paidBy: "Paid by",
+      comment: "Comment",
+      dueDate: "Due Date",
+      gross: "Gross",
+      booked: "Booked",
+      sender: "Sender",
+      discount: "Discount",
+      emailBody: "Email Body",
+      noInvoice: "No invoice selected",
+      empty: "Empty",
+      no: "No",
+    },
+    de: {
+      title: "Datenübersicht",
+      receivedOn: "Eingegangen am",
+      costCenter: "Kostenstelle",
+      account: "Konto",
+      vb: "VB",
+      evVp: "EV/VP",
+      checkedBy: "Geprüft von",
+      documentText: "Belegtext",
+      paidBy: "Bezahlt von",
+      comment: "Kommentar",
+      dueDate: "Fällig am",
+      gross: "Brutto",
+      booked: "Gebucht",
+      sender: "Absender",
+      discount: "Skonto",
+      emailBody: "E-Mail-Text",
+      noInvoice: "Keine Rechnung ausgewählt",
+      empty: "Leer",
+      no: "Nein",
+    },
+  };
+
+  const t = translations[language];
+
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="w-[60vw] sm:w-[60vw] min-w-[50vw] overflow-y-auto">
         <SheetHeader>
-          <SheetTitle className="text-2xl font-bold mb-6">Datenübersicht</SheetTitle>
+          <SheetTitle className="text-2xl font-bold mb-6">{t.title}</SheetTitle>
         </SheetHeader>
         <div className="mt-6">
           {invoice ? (
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                <Field label="Eingegangen_am" value={invoice.eingegangen_am || "2024-06-11T05:42:51+00:00"} />
-                <Field label="Kostenstelle" value={invoice.kostenstelle || "Leer"} />
-                <Field label="Konto" value={invoice.konto || "Leer"} />
-                <Field label="VB" value={invoice.VB || "Leer"} />
-                <Field label="Ev/Vp" value={invoice.ev_vp || "Leer"} />
-                <Field label="wer_geprüft" value={invoice.wer_geprüft || "Leer"} />
-                <Field label="Belegtext" value={invoice.belegtext || "Leer"} />
-                <Field label="wer_bezahlt" value={invoice.wer_bezahlt || "Leer"} />
-                <Field label="Kommentar" value={invoice.kommentar || "Leer"} />
-                <Field label="Fällig_am" value={invoice.fällig_am || "Leer"} />
-                <Field label="Brutto" value={renderAmount(invoice.amount)} />
-                <Field label="Gebucht" value={invoice.gebucht || "Leer"} />
-                <Field label="Sender" value={invoice.sender ? (Array.isArray(invoice.sender) ? invoice.sender.join(", ") : invoice.sender) : "Finance, finance@wph.onl"} />
-                <Field label="Skonto" value={invoice.skonto || "No"} />
+                <Field label={t.receivedOn} value={invoice.eingegangen_am || "2024-06-11T05:42:51+00:00"} />
+                <Field label={t.costCenter} value={invoice.kostenstelle || t.empty} />
+                <Field label={t.account} value={invoice.konto || t.empty} />
+                <Field label={t.vb} value={invoice.VB || t.empty} />
+                <Field label={t.evVp} value={invoice.ev_vp || t.empty} />
+                <Field label={t.checkedBy} value={invoice.wer_geprüft || t.empty} />
+                <Field label={t.documentText} value={invoice.belegtext || t.empty} />
+                <Field label={t.paidBy} value={invoice.wer_bezahlt || t.empty} />
+                <Field label={t.comment} value={invoice.kommentar || t.empty} />
+                <Field label={t.dueDate} value={invoice.fällig_am || t.empty} />
+                <Field label={t.gross} value={renderAmount(invoice.amount, language)} />
+                <Field label={t.booked} value={invoice.gebucht || t.empty} />
+                <Field label={t.sender} value={invoice.sender ? (Array.isArray(invoice.sender) ? invoice.sender.join(", ") : invoice.sender) : "Finance, finance@wph.onl"} />
+                <Field label={t.discount} value={invoice.skonto || t.no} />
               </div>
-              <Field label="Email Body" value={invoice.email_body || "Leer"} fullWidth />
+              <Field label={t.emailBody} value={invoice.email_body || t.empty} fullWidth />
             </div>
           ) : (
-            <p>No invoice selected</p>
+            <p>{t.noInvoice}</p>
           )}
         </div>
       </SheetContent>
@@ -47,9 +97,11 @@ const Field = ({ label, value, fullWidth = false }) => (
   </div>
 );
 
-const renderAmount = (amount) => {
+const renderAmount = (amount, language) => {
   if (typeof amount === 'object' && amount !== null && 'gross_amount' in amount && 'net_amount' in amount && 'currency' in amount) {
-    return `NETTO: ${amount.net_amount} ${amount.currency} and BRUTTO: ${amount.gross_amount} ${amount.currency}`;
+    return language === 'de'
+      ? `NETTO: ${amount.net_amount} ${amount.currency} und BRUTTO: ${amount.gross_amount} ${amount.currency}`
+      : `NET: ${amount.net_amount} ${amount.currency} and GROSS: ${amount.gross_amount} ${amount.currency}`;
   }
   return 'N/A';
 };
