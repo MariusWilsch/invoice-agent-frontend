@@ -20,7 +20,11 @@ const Index = () => {
   useEffect(() => {
     if (invoices) {
       const uniqueStatuses = Array.from(
-        new Set(invoices.map((invoice) => invoice.status === "Empfangen" ? "Unkontiert" : invoice.status))
+        new Set(invoices.map((invoice) => {
+          if (invoice.status === "Empfangen") return "Unchecked";
+          if (invoice.status === "Kontiert") return "Checked";
+          return invoice.status;
+        }))
       );
       setStatuses(uniqueStatuses);
     }
@@ -57,7 +61,9 @@ const Index = () => {
 
   const updatedInvoices = invoices.map(invoice => ({
     ...invoice,
-    status: invoice.status === "Empfangen" ? "Unkontiert" : invoice.status
+    status: invoice.status === "Empfangen" ? "Unchecked" : 
+            invoice.status === "Kontiert" ? "Checked" : 
+            invoice.status
   }));
 
   const filteredInvoices = updatedInvoices.filter(invoice => invoice.status !== "Marius_TEST");

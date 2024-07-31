@@ -34,12 +34,12 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-1/2">Absender</TableHead>
-          <TableHead className="w-1/10">Ticketnummer</TableHead>
-          <TableHead className="w-1/10">Fälligkeitsdatum</TableHead>
-          <TableHead className="w-1/10">Bruttobetrag</TableHead>
+          <TableHead className="w-1/2">Sender</TableHead>
+          <TableHead className="w-1/10">Ticket Number</TableHead>
+          <TableHead className="w-1/10">Due Date</TableHead>
+          <TableHead className="w-1/10">Gross Amount</TableHead>
           <TableHead className="w-1/10">Status</TableHead>
-          <TableHead className="w-1/10">Aktionen</TableHead>
+          <TableHead className="w-1/10">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
