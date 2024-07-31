@@ -1,38 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import { useState } from "react";
 import {
-  File,
-  LineChart,
-  ListFilter,
-  Package,
-  Package2,
-  PanelLeft,
-  PlusCircle,
   Search,
-  Settings,
-  ShoppingCart,
-  Users2,
-  MoreVertical,
-  Edit,
-  Trash,
   User,
 } from "lucide-react";
 import { toast } from "sonner";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -40,35 +16,20 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-  TooltipProvider,
-} from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import LanguageSwitcher from "./molecules/LanguageSwitcher";
 
 const SharedLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [currentLanguage, setCurrentLanguage] = useState('de');
 
-  const statuses = ["Pending", "Completed", "Cancelled"];
+  const handleLanguageChange = (langCode) => {
+    setCurrentLanguage(langCode);
+    // Here you would typically update your app's language context or state
+    console.log(`Language changed to ${langCode}`);
+  };
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -84,6 +45,10 @@ const SharedLayout = () => {
                   className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
                 />
               </div>
+              <LanguageSwitcher
+                currentLanguage={currentLanguage}
+                onLanguageChange={handleLanguageChange}
+              />
               <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                   <Button
