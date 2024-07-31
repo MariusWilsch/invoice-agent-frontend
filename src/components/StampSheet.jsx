@@ -7,6 +7,7 @@ const StampSheet = ({ isOpen, onOpenChange, invoice }) => {
   const { language } = useLanguage();
   const title = language === "de" ? "Kontierungsstempel" : "Accounting Stamp";
 
+  // test comment
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange} modal={false}>
       <SheetContent
