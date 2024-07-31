@@ -7,8 +7,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Check, ChevronDown } from 'lucide-react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
-const LanguageSwitcher = ({ currentLanguage, onLanguageChange }) => {
+const LanguageSwitcher = () => {
+  const { language, toggleLanguage } = useLanguage();
+
   const languages = [
     { code: 'de', name: 'Deutsch' },
     { code: 'en', name: 'English' },
@@ -18,8 +21,8 @@ const LanguageSwitcher = ({ currentLanguage, onLanguageChange }) => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm" className="h-9 px-3 border">
-          <span className="mr-1">{currentLanguage === 'de' ? '🇩🇪' : '🇬🇧'}</span>
-          {currentLanguage === 'de' ? 'DE' : 'EN'}
+          <span className="mr-1">{language === 'de' ? '🇩🇪' : '🇬🇧'}</span>
+          {language === 'de' ? 'DE' : 'EN'}
           <ChevronDown className="ml-2 h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
@@ -27,11 +30,11 @@ const LanguageSwitcher = ({ currentLanguage, onLanguageChange }) => {
         {languages.map((lang) => (
           <DropdownMenuItem
             key={lang.code}
-            onSelect={() => onLanguageChange(lang.code)}
+            onSelect={() => toggleLanguage()}
           >
             <span className="mr-2">{lang.code === 'de' ? '🇩🇪' : '🇬🇧'}</span>
             {lang.name}
-            {currentLanguage === lang.code && (
+            {language === lang.code && (
               <Check className="ml-2 h-4 w-4" />
             )}
           </DropdownMenuItem>

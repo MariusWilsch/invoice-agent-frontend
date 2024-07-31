@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import {
-  Search,
-  User,
-} from "lucide-react";
+import { Search, User } from "lucide-react";
 import { toast } from "sonner";
+import { LanguageProvider } from "../contexts/LanguageContext";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -27,12 +25,11 @@ const SharedLayout = () => {
 
   const handleLanguageChange = (langCode) => {
     setCurrentLanguage(langCode);
-    // Here you would typically update your app's language context or state
-    console.log(`Language changed to ${langCode}`);
   };
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
+    <LanguageProvider initialLanguage={currentLanguage}>
+      <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <div className="flex flex-col sm:gap-4 sm:py-4">
         <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
           <div className="flex items-center justify-end w-full">
@@ -83,7 +80,7 @@ const SharedLayout = () => {
           <Outlet />
         </main>
       </div>
-    </div>
+    </LanguageProvider>
   );
 };
 
