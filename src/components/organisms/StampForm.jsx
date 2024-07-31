@@ -141,7 +141,6 @@ const StampForm = ({ invoice, onClose }) => {
       onSubmit={handleSubmit}
       className="space-y-6 h-full overflow-visible pr-4"
     >
-      <h2 className="text-2xl font-bold mb-6">{t.title}</h2>
       <div className="grid grid-cols-2 gap-4">
         {/* Left Column */}
         <div className="space-y-4">
