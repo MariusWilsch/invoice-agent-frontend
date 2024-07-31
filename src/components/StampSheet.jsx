@@ -28,7 +28,7 @@ const StampSheet = ({ isOpen, onOpenChange, invoice }) => {
                 <iframe
                   src={invoice.public_url}
                   title="Invoice PDF"
-                  className="w-full h-full border-0"
+                  className="w-full h-auto min-h-full border-0 aspect-[3/4]"
                 />
               )}
             </div>
