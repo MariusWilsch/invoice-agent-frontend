@@ -21,42 +21,41 @@ const fromSupabase = async (query) => {
 
 ### invoices_dev
 
-| name           | type                | format | required |
-|----------------|---------------------|--------|----------|
-| id             | text                | string | true     |
-| created_at     | timestamp with time zone | string | true     |
-| eingegangen_am | timestamp with time zone | string | true     |
-| konto          | text                | string | false    |
-| ev_vp          | text                | string | false    |
-| belegtext      | text                | string | false    |
-| kommentar      | text                | string | false    |
-| faellig_am     | date                | string | false    |
-| gebucht        | date                | string | false    |
-| kostenstelle   | text                | string | false    |
-| vb             | text                | string | false    |
-| wer_geprüft    | text                | string | false    |
-| wer_bezahlt    | text                | string | false    |
-| status         | text                | string | true     |
-| sender         | text[]              | array  | false    |
-| email_body     | text                | string | false    |
-| public_url     | text                | string | false    |
-| skonto         | smallint            | number | false    |
-| ticket_number  | text                | string | false    |
-| amount         | jsonb               | object | false    |
+| name           | type                    | format | required |
+|----------------|-------------------------|--------|----------|
+| id             | text                    | string | true     |
+| created_at     | timestamp with time zone| string | true     |
+| eingegangen_am | timestamp with time zone| string | true     |
+| konto          | text                    | string | false    |
+| ev_vp          | text                    | string | false    |
+| belegtext      | text                    | string | false    |
+| kommentar      | text                    | string | false    |
+| faellig_am     | date                    | string | false    |
+| gebucht        | date                    | string | false    |
+| kostenstelle   | text                    | string | false    |
+| vb             | text                    | string | false    |
+| wer_geprüft    | text                    | string | false    |
+| wer_bezahlt    | text                    | string | false    |
+| status         | text                    | string | true     |
+| sender         | text[]                  | array  | false    |
+| email_body     | text                    | string | false    |
+| public_url     | text                    | string | false    |
+| skonto         | smallint                | number | false    |
+| ticket_number  | text                    | string | false    |
+| amount         | jsonb                   | object | false    |
+| vat_rate       | smallint                | number | false    |
+| vat_id         | text                    | string | false    |
+| vat_amount     | smallint                | number | false    |
+| invoice_num    | text                    | string | false    |
+| invoice_date   | date                    | string | false    |
 
 */
 
-// Hooks for invoices_dev table
+// Hooks for invoices_dev
 
 export const useInvoicesDev = () => useQuery({
     queryKey: ['invoices_dev'],
     queryFn: () => fromSupabase(supabase.from('invoices_dev').select('*')),
-});
-
-export const useInvoiceDevById = (id) => useQuery({
-    queryKey: ['invoices_dev', id],
-    queryFn: () => fromSupabase(supabase.from('invoices_dev').select('*').eq('id', id).single()),
-    enabled: !!id,
 });
 
 export const useAddInvoicesDev = () => {
@@ -88,3 +87,9 @@ export const useDeleteInvoicesDev = () => {
         },
     });
 };
+
+export const useInvoiceDevById = (id) => useQuery({
+    queryKey: ['invoices_dev', id],
+    queryFn: () => fromSupabase(supabase.from('invoices_dev').select('*').eq('id', id).single()),
+    enabled: !!id,
+});
