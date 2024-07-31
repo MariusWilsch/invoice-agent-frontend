@@ -58,6 +58,7 @@ const StampForm = ({ invoice, onClose }) => {
       pickDate: "Datum auswählen",
       enter: "Eingeben",
       select: "Auswählen",
+      seeInvoice: "Rechnung ansehen",
     },
     en: {
       title: "Accounting Stamp",
@@ -76,6 +77,7 @@ const StampForm = ({ invoice, onClose }) => {
       pickDate: "Pick a date",
       enter: "Enter",
       select: "Select",
+      seeInvoice: "See Invoice",
     }
   };
 
@@ -245,6 +247,9 @@ const StampForm = ({ invoice, onClose }) => {
       <div className="flex justify-end space-x-4">
         <Button type="button" variant="outline" onClick={handleClear}>
           {t.clear}
+        </Button>
+        <Button type="button" variant="secondary" onClick={() => {}}>
+          {t.seeInvoice}
         </Button>
         <Button type="submit">{t.submit}</Button>
       </div>
