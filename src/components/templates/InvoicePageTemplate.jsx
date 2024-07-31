@@ -1,8 +1,5 @@
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import Button from '../atoms/Button';
-import { ListFilter } from "lucide-react";
 import InvoiceCard from '../organisms/InvoiceCard';
 
 const InvoicePageTemplate = ({ invoices, allInvoices, statuses, onViewDetails, onDelete, onStamp }) => (
@@ -17,32 +14,6 @@ const InvoicePageTemplate = ({ invoices, allInvoices, statuses, onViewDetails, o
             </TabsTrigger>
           ))}
         </TabsList>
-        <div className="ml-auto flex items-center gap-2">
-          <DropdownMenu modal={false}>
-            <DropdownMenuTrigger asChild>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="h-8 gap-1 opacity-50 cursor-not-allowed" 
-                disabled={true}
-              >
-                <ListFilter className="h-3.5 w-3.5" />
-                <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                  Filter
-                </span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Filter by</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {statuses.map((status) => (
-                <DropdownMenuCheckboxItem key={status}>
-                  {status === "Empfangen" ? "Unkontiert" : status}
-                </DropdownMenuCheckboxItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
       </div>
       <TabsContent value="all">
         <InvoiceCard
