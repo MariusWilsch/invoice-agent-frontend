@@ -144,7 +144,7 @@ const StampForm = ({ invoice, onClose }) => {
   return (
     <div className="flex flex-col h-full">
       <form onSubmit={handleSubmit} className="space-y-6 overflow-y-auto flex-grow">
-        <div className={`grid ${isViewingInvoice ? 'grid-cols-2' : 'grid-cols-1'} gap-4`}>
+        <div className={`grid ${isViewingInvoice ? 'grid-cols-2' : 'grid-cols-1'} gap-4 h-full`}>
           {/* Form Fields */}
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
@@ -262,7 +262,7 @@ const StampForm = ({ invoice, onClose }) => {
       </form>
 
       {/* Action Buttons */}
-      <div className="flex justify-end space-x-4 mt-4">
+      <div className="flex justify-end space-x-4 mt-4 pt-4 border-t">
         <Button type="button" variant="outline" onClick={handleClear}>
           {t.clear}
         </Button>
