@@ -116,3 +116,56 @@ export const useInvoiceDevById = (id) =>
       ),
     enabled: !!id,
   });
+
+// Hooks for dropdown_options_invoices_dev
+
+export const useDropdownOptionsInvoicesDev = (fieldType) =>
+  useQuery({
+    queryKey: ["dropdown_options_invoices_dev", fieldType],
+    queryFn: () =>
+      fromSupabase(
+        supabase
+          .from("dropdown_options_invoices_dev")
+          .select("*")
+          .eq("field_type", fieldType)
+      ),
+    enabled: !!fieldType,
+  });
+
+export const useAddDropdownOptionInvoicesDev = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (newOption) =>
+      fromSupabase(supabase.from("dropdown_options_invoices_dev").insert([newOption])),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries(["dropdown_options_invoices_dev", variables.field_type]);
+    },
+  });
+};
+
+export const useUpdateDropdownOptionInvoicesDev = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (updatedOption) =>
+      fromSupabase(
+        supabase
+          .from("dropdown_options_invoices_dev")
+          .update(updatedOption)
+          .eq("id", updatedOption.id)
+      ),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries(["dropdown_options_invoices_dev", variables.field_type]);
+    },
+  });
+};
+
+export const useDeleteDropdownOptionInvoicesDev = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id) =>
+      fromSupabase(supabase.from("dropdown_options_invoices_dev").delete().eq("id", id)),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries(["dropdown_options_invoices_dev"]);
+    },
+  });
+};
