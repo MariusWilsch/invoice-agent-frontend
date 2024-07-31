@@ -18,6 +18,28 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useLanguage } from "../../contexts/LanguageContext";
+
+const translations = {
+  de: {
+    stamp: "Stempel",
+    pdf: "PDF",
+    view: "Ansehen",
+    delete: "Löschen",
+    areYouSure: "Sind Sie sicher?",
+    deleteWarning: "Diese Aktion kann nicht rückgängig gemacht werden. Die Rechnung wird dauerhaft aus der Datenbank gelöscht.",
+    cancel: "Abbrechen",
+  },
+  en: {
+    stamp: "Stamp",
+    pdf: "PDF",
+    view: "View",
+    delete: "Delete",
+    areYouSure: "Are you sure?",
+    deleteWarning: "This action cannot be undone. The invoice will be permanently deleted from the database.",
+    cancel: "Cancel",
+  },
+};
 
 const ActionButton = ({ icon: Icon, tooltip, onClick }) => (
   <TooltipProvider>
@@ -39,45 +61,50 @@ const ActionButton = ({ icon: Icon, tooltip, onClick }) => (
   </TooltipProvider>
 );
 
-const ActionButtons = ({ invoice, onViewDetails, onDelete, onStamp }) => (
-  <div className="flex space-x-1">
-    <ActionButton
-      icon={Stamp}
-      tooltip="Stempel"
-      onClick={() => onStamp(invoice)}
-    />
-    <ActionButton
-      icon={FileText}
-      tooltip="PDF"
-      onClick={() => window.open(invoice.public_url, "_blank")}
-    />
-    <ActionButton
-      icon={Eye}
-      tooltip="Ansehen"
-      onClick={() => onViewDetails(invoice)}
-    />
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
-          <Trash className="h-4 w-4" />
-        </Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Sind Sie sicher?</AlertDialogTitle>
-          <AlertDialogDescription>
-            Diese Aktion kann nicht rückgängig gemacht werden. Die Rechnung wird dauerhaft aus der Datenbank gelöscht.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Abbrechen</AlertDialogCancel>
-          <AlertDialogAction onClick={() => onDelete(invoice.id)}>
-            Löschen
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  </div>
-);
+const ActionButtons = ({ invoice, onViewDetails, onDelete, onStamp }) => {
+  const { language } = useLanguage();
+  const t = translations[language];
+
+  return (
+    <div className="flex space-x-1">
+      <ActionButton
+        icon={Stamp}
+        tooltip={t.stamp}
+        onClick={() => onStamp(invoice)}
+      />
+      <ActionButton
+        icon={FileText}
+        tooltip={t.pdf}
+        onClick={() => window.open(invoice.public_url, "_blank")}
+      />
+      <ActionButton
+        icon={Eye}
+        tooltip={t.view}
+        onClick={() => onViewDetails(invoice)}
+      />
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
+            <Trash className="h-4 w-4" />
+          </Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t.areYouSure}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t.deleteWarning}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t.cancel}</AlertDialogCancel>
+            <AlertDialogAction onClick={() => onDelete(invoice.id)}>
+              {t.delete}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+};
 
 export default ActionButtons;
