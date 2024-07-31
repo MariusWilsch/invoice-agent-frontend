@@ -253,7 +253,6 @@ const StampForm = ({ invoice, onClose, onViewInvoice }) => {
           type="button" 
           variant="secondary" 
           onClick={() => {
-            setIsViewingInvoice(true);
             onViewInvoice();
           }}
         >

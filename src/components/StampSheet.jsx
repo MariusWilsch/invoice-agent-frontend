@@ -16,7 +16,7 @@ const StampSheet = ({ isOpen, onOpenChange, invoice }) => {
     <Sheet open={isOpen} onOpenChange={onOpenChange} modal={false}>
       <SheetContent
         side="right"
-        className={`${isViewingInvoice ? 'w-[90vw]' : 'w-[45vw]'} min-w-[50vw] overflow-visible transition-all duration-300`}
+        className={`w-[90vw] min-w-[90vw] overflow-visible transition-all duration-300`}
         onPointerDownOutside={(e) => e.preventDefault()}
       >
         <div className="p-4 h-full overflow-visible">
