@@ -259,7 +259,9 @@ const StampForm = ({ invoice, onClose, onViewInvoice }) => {
         >
           {t.seeInvoice}
         </Button>
-        <Button type="submit">{t.submit}</Button>
+        <Button type="submit" variant="default" className="bg-primary text-primary-foreground hover:bg-primary/90">
+          {t.submit}
+        </Button>
       </div>
     </form>
   );
