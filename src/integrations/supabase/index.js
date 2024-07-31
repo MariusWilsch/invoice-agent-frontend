@@ -56,7 +56,7 @@ const fromSupabase = async (query) => {
 | vat_rate       | smallint                | number | false    |
 | vat_id         | text                    | string | false    |
 | vat_amount     | smallint                | number | false    |
-| invoice_num    | text                    | string | false    |
+| invoice_number | text                    | string | false    |
 | invoice_date   | date                    | string | false    |
 
 */
