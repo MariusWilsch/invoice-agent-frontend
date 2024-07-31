@@ -9,9 +9,10 @@ import { toast } from "sonner";
 import { useUpdateInvoicesDev } from "@/integrations/supabase/index.js";
 import { useLanguage } from "../../contexts/LanguageContext";
 
-const StampForm = ({ invoice, onClose }) => {
+const StampForm = ({ invoice, onClose, onViewInvoice }) => {
   const { language } = useLanguage();
   const [skontoValue, setSkontoValue] = useState(invoice?.skonto || 0);
+  const [isViewingInvoice, setIsViewingInvoice] = useState(false);
   const [formData, setFormData] = useState({
     id: invoice?.id,
     eingegangen_am: invoice?.eingegangen_am || null,
@@ -248,7 +249,14 @@ const StampForm = ({ invoice, onClose }) => {
         <Button type="button" variant="outline" onClick={handleClear}>
           {t.clear}
         </Button>
-        <Button type="button" variant="secondary" onClick={() => {}}>
+        <Button 
+          type="button" 
+          variant="secondary" 
+          onClick={() => {
+            setIsViewingInvoice(true);
+            onViewInvoice();
+          }}
+        >
           {t.seeInvoice}
         </Button>
         <Button type="submit">{t.submit}</Button>
