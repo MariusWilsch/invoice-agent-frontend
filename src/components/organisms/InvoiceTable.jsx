@@ -9,8 +9,31 @@ import {
 } from "@/components/ui/table";
 import StatusBadge from '../molecules/StatusBadge';
 import ActionButtons from '../molecules/ActionButtons';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
+  const { language } = useLanguage();
+
+  const translations = {
+    en: {
+      sender: 'Sender',
+      ticketNumber: 'Ticket Number',
+      dueDate: 'Due Date',
+      grossAmount: 'Gross Amount',
+      status: 'Status',
+      actions: 'Actions',
+    },
+    de: {
+      sender: 'Absender',
+      ticketNumber: 'Ticketnummer',
+      dueDate: 'Fälligkeitsdatum',
+      grossAmount: 'Bruttobetrag',
+      status: 'Status',
+      actions: 'Aktionen',
+    },
+  };
+
+  const t = translations[language];
   const renderSender = (sender) => {
     if (Array.isArray(sender) && sender.length > 1) {
       return (
@@ -34,12 +57,12 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-1/2">Sender</TableHead>
-          <TableHead className="w-1/10">Ticket Number</TableHead>
-          <TableHead className="w-1/10">Due Date</TableHead>
-          <TableHead className="w-1/10">Gross Amount</TableHead>
-          <TableHead className="w-1/10">Status</TableHead>
-          <TableHead className="w-1/10">Actions</TableHead>
+          <TableHead className="w-1/2">{t.sender}</TableHead>
+          <TableHead className="w-1/10">{t.ticketNumber}</TableHead>
+          <TableHead className="w-1/10">{t.dueDate}</TableHead>
+          <TableHead className="w-1/10">{t.grossAmount}</TableHead>
+          <TableHead className="w-1/10">{t.status}</TableHead>
+          <TableHead className="w-1/10">{t.actions}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
