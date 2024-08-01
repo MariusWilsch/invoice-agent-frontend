@@ -156,11 +156,11 @@ const StampForm = ({ invoice, onClose, onViewInvoice }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-6 h-full overflow-visible pr-4"
+      className="space-y-6 h-full overflow-visible w-full"
     >
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Left Column */}
-        <div className="space-y-4">
+        <div className="space-y-4 w-full">
           <FormField label={t.receivedOn} id="eingegangen_am">
             <DatePickerDemo
               onChange={(date) => handleInputChange("eingegangen_am", date)}
@@ -213,17 +213,17 @@ const StampForm = ({ invoice, onClose, onViewInvoice }) => {
         </div>
 
         {/* Right Column */}
-        <div className="space-y-4 flex flex-col">
+        <div className="space-y-4 flex flex-col w-full">
           <FormField label={t.comment} id="kommentar" className="flex-grow">
             <Textarea
               placeholder={`${t.enter} ${t.comment}`}
-              className="h-full"
+              className="h-32 md:h-full"
               onChange={(e) => handleInputChange("kommentar", e.target.value)}
               value={formData.kommentar}
             />
           </FormField>
 
-          <div className="space-y-4">
+          <div className="space-y-4 w-full">
             <FormField label={t.discount} id="skonto">
               <div className="flex items-center space-x-4">
                 <span className="text-sm font-medium w-12">{skontoValue}%</span>
@@ -272,14 +272,14 @@ const StampForm = ({ invoice, onClose, onViewInvoice }) => {
 };
 
 const FormField = ({ label, id, children, className }) => (
-  <div className={`flex flex-col ${className}`}>
+  <div className={`flex flex-col w-full ${className}`}>
     <label
       htmlFor={id}
       className="block text-sm font-medium text-gray-700 mb-1"
     >
       {label}
     </label>
-    {children}
+    <div className="w-full">{children}</div>
   </div>
 );
 
