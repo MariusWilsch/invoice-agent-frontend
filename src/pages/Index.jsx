@@ -36,7 +36,7 @@ const Index = () => {
   useEffect(() => {
     if (initialInvoices) {
       const sortedInvoices = [...initialInvoices].sort((a, b) => 
-        new Date(b.invoice_date) - new Date(a.invoice_date)
+        new Date(a.invoice_date) - new Date(b.invoice_date)
       );
       setInvoices(sortedInvoices);
       updateStatuses(sortedInvoices);
