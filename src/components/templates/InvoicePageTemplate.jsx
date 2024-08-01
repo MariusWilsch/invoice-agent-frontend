@@ -39,6 +39,7 @@ const InvoicePageTemplate = ({
   onFilter,
   onClearFilter,
   isFilterActive,
+  dateFilter,
 }) => {
   const { language } = useLanguage();
   const t = translations[language];

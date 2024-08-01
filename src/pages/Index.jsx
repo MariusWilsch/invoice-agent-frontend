@@ -155,6 +155,7 @@ const Index = () => {
         onClearFilter={handleClearFilter}
         isFilterActive={isFilterActive}
         dateFilter={dateFilter}
+        dateFilter={dateFilter}
       />
 
       <StampSheet
