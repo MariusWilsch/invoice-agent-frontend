@@ -67,6 +67,8 @@ const Index = () => {
         icon: <CheckCircle className="h-5 w-5 text-green-500" />,
         className: "text-green-500",
       });
+      // This is a dirty fix to ensure the page is updated after a manual run
+      window.location.reload();
     } catch (error) {
       console.error("Error initiating manual run:", error);
       toast.error("Failed to initiate manual run", {
