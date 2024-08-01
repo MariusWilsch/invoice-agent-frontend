@@ -9,12 +9,16 @@ const translations = {
     invoices: "Rechnungen",
     manage: "Verwalten Sie Ihre Rechnungen und sehen Sie deren Details ein.",
     unchecked: "Unkontiert",
+    showing: "Zeige",
+    invoicesCount: "Rechnungen",
   },
   en: {
     all: "All",
     invoices: "Invoices",
     manage: "Manage your invoices and view their details.",
     unchecked: "Unchecked",
+    showing: "Showing",
+    invoicesCount: "invoices",
   },
 };
 
