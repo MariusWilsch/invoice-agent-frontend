@@ -22,6 +22,7 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
       dueDate: 'Due Date',
       invoiceNumber: 'Invoice Number',
       grossAmount: 'Gross Amount',
+      vatAmount: 'VAT Amount',
       status: 'Status',
       actions: 'Actions',
       total: 'Total',
@@ -32,6 +33,7 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
       dueDate: 'Fälligkeitsdatum',
       invoiceNumber: 'Rechnungsnummer',
       grossAmount: 'Bruttobetrag',
+      vatAmount: 'Umsatzsteuer',
       status: 'Status',
       actions: 'Aktionen',
       total: 'Gesamt',
@@ -51,23 +53,29 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
     return Array.isArray(sender) ? sender.join(', ') : sender;
   };
 
-  const renderAmount = (amount) => {
-    if (typeof amount === 'object' && amount !== null && 'gross_amount' in amount && 'currency' in amount) {
+  const renderAmount = (amount, field) => {
+    if (typeof amount === 'object' && amount !== null && field in amount && 'currency' in amount) {
       return new Intl.NumberFormat('de-DE', {
         style: 'currency',
         currency: amount.currency
-      }).format(amount.gross_amount);
+      }).format(amount[field]);
     }
-    return amount || 'N/A';
+    return 'N/A';
   };
 
-  const totalGrossAmount = useMemo(() => {
-    return invoices.reduce((total, invoice) => {
-      const amount = invoice.amount && invoice.amount.gross_amount
+  const totals = useMemo(() => {
+    return invoices.reduce((acc, invoice) => {
+      const grossAmount = invoice.amount && invoice.amount.gross_amount
         ? parseFloat(invoice.amount.gross_amount)
         : 0;
-      return total + amount;
-    }, 0);
+      const vatAmount = invoice.amount && invoice.amount.vat_amount
+        ? parseFloat(invoice.amount.vat_amount)
+        : 0;
+      return {
+        grossAmount: acc.grossAmount + grossAmount,
+        vatAmount: acc.vatAmount + vatAmount
+      };
+    }, { grossAmount: 0, vatAmount: 0 });
   }, [invoices]);
 
   return (
@@ -79,6 +87,7 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
           <TableHead className="w-1/8 whitespace-nowrap text-left">{t.dueDate}</TableHead>
           <TableHead className="w-1/8 whitespace-nowrap text-left">{t.invoiceNumber}</TableHead>
           <TableHead className="w-1/8 whitespace-nowrap text-left">{t.grossAmount}</TableHead>
+          <TableHead className="w-1/8 whitespace-nowrap text-left">{t.vatAmount}</TableHead>
           <TableHead className="w-1/8 text-left">{t.status}</TableHead>
           <TableHead className="w-1/8 text-left">{t.actions}</TableHead>
         </TableRow>
@@ -93,7 +102,8 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
             <TableCell className="w-1/8 whitespace-nowrap">{invoice.invoice_date || 'N/A'}</TableCell>
             <TableCell className="w-1/8 whitespace-nowrap">{invoice.faellig_am || 'N/A'}</TableCell>
             <TableCell className="w-1/8 whitespace-nowrap">{invoice.invoice_number || 'N/A'}</TableCell>
-            <TableCell className="w-1/8 whitespace-nowrap">{renderAmount(invoice.amount)}</TableCell>
+            <TableCell className="w-1/8 whitespace-nowrap">{renderAmount(invoice.amount, 'gross_amount')}</TableCell>
+            <TableCell className="w-1/8 whitespace-nowrap">{renderAmount(invoice.amount, 'vat_amount')}</TableCell>
             <TableCell className="w-1/8">
               <StatusBadge status={invoice.status} />
             </TableCell>
@@ -115,7 +125,13 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
             {new Intl.NumberFormat(language === 'de' ? 'de-DE' : 'en-US', {
               style: 'currency',
               currency: invoices[0]?.amount?.currency || 'EUR'
-            }).format(totalGrossAmount)}
+            }).format(totals.grossAmount)}
+          </TableCell>
+          <TableCell className="whitespace-nowrap font-medium">
+            {new Intl.NumberFormat(language === 'de' ? 'de-DE' : 'en-US', {
+              style: 'currency',
+              currency: invoices[0]?.amount?.currency || 'EUR'
+            }).format(totals.vatAmount)}
           </TableCell>
           <TableCell colSpan={2} />
         </TableRow>
