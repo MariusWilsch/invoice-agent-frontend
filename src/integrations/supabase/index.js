@@ -53,11 +53,13 @@ const fromSupabase = async (query) => {
 | skonto         | smallint                | number | false    |
 | ticket_number  | text                    | string | false    |
 | amount         | jsonb                   | object | false    |
-| vat_rate       | smallint                | number | false    |
+| vat_rate       | text                    | string | false    |
 | vat_id         | text                    | string | false    |
-| vat_amount     | smallint                | number | false    |
+| vat_amount     | float                   | number | false    |
 | invoice_number | text                    | string | false    |
 | invoice_date   | date                    | string | false    |
+| payment_terms  | text                    | string | false    |
+| cost_of_run    | float                   | number | false    |
 
 */
 
@@ -136,9 +138,14 @@ export const useAddDropdownOptionInvoicesDev = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (newOption) =>
-      fromSupabase(supabase.from("dropdown_options_invoices_dev").insert([newOption])),
+      fromSupabase(
+        supabase.from("dropdown_options_invoices_dev").insert([newOption])
+      ),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries(["dropdown_options_invoices_dev", variables.field_type]);
+      queryClient.invalidateQueries([
+        "dropdown_options_invoices_dev",
+        variables.field_type,
+      ]);
     },
   });
 };
@@ -154,7 +161,10 @@ export const useUpdateDropdownOptionInvoicesDev = () => {
           .eq("id", updatedOption.id)
       ),
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries(["dropdown_options_invoices_dev", variables.field_type]);
+      queryClient.invalidateQueries([
+        "dropdown_options_invoices_dev",
+        variables.field_type,
+      ]);
     },
   });
 };
@@ -163,7 +173,9 @@ export const useDeleteDropdownOptionInvoicesDev = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id) =>
-      fromSupabase(supabase.from("dropdown_options_invoices_dev").delete().eq("id", id)),
+      fromSupabase(
+        supabase.from("dropdown_options_invoices_dev").delete().eq("id", id)
+      ),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries(["dropdown_options_invoices_dev"]);
     },
