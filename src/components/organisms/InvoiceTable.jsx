@@ -79,9 +79,9 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
   }, [invoices]);
 
   return (
-    <Table>
+    <Table className="border-collapse">
       <TableHeader>
-        <TableRow>
+        <TableRow className="border-b border-gray-200">
           <TableHead className="w-1/4 text-left">{t.vendorName}</TableHead>
           <TableHead className="w-1/8 whitespace-nowrap text-left">{t.dateIssued}</TableHead>
           <TableHead className="w-1/8 whitespace-nowrap text-left">{t.dueDate}</TableHead>
@@ -96,7 +96,7 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
         {invoices.map((invoice, index) => (
           <TableRow 
             key={invoice.id} 
-            className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} transition-all duration-200 hover:shadow-md hover:-translate-y-1 hover:bg-gray-100`}
+            className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} transition-all duration-200 hover:shadow-md hover:-translate-y-1 hover:bg-gray-100 border-b border-gray-200 hover:border-transparent`}
           >
             <TableCell className="w-1/4">{renderSender(invoice.sender)}</TableCell>
             <TableCell className="w-1/8 whitespace-nowrap">{invoice.invoice_date || 'N/A'}</TableCell>
