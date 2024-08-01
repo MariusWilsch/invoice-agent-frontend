@@ -85,7 +85,10 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
       </TableHeader>
       <TableBody>
         {invoices.map((invoice, index) => (
-          <TableRow key={invoice.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+          <TableRow 
+            key={invoice.id} 
+            className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} transition-all duration-200 hover:shadow-md hover:-translate-y-1 hover:bg-gray-100`}
+          >
             <TableCell className="w-1/4">{renderSender(invoice.sender)}</TableCell>
             <TableCell className="w-1/8 whitespace-nowrap">{invoice.invoice_date || 'N/A'}</TableCell>
             <TableCell className="w-1/8 whitespace-nowrap">{invoice.faellig_am || 'N/A'}</TableCell>
