@@ -33,7 +33,7 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
       sender: "Sender",
       vatId: "VAT ID",
       emailBody: "Email Body",
-      grossAmount: "Gross Amount",
+      grossAmount: "test",
       netAmount: "Net Amount",
       vatAmount: "VAT Amount",
       noInvoice: "No invoice selected",
@@ -89,14 +89,29 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
                   <CardTitle>{t.stampFields}</CardTitle>
                 </CardHeader>
                 <CardContent className="grid grid-cols-2 gap-4">
-                  <Field label={t.costCenter} value={invoice.kostenstelle || t.empty} />
+                  <Field
+                    label={t.costCenter}
+                    value={invoice.kostenstelle || t.empty}
+                  />
                   <Field label={t.account} value={invoice.konto || t.empty} />
                   <Field label={t.vb} value={invoice.VB || t.empty} />
                   <Field label={t.evVp} value={invoice.ev_vp || t.empty} />
-                  <Field label={t.checkedBy} value={invoice.wer_geprüft || t.empty} />
-                  <Field label={t.documentText} value={invoice.belegtext || t.empty} />
-                  <Field label={t.paidBy} value={invoice.wer_bezahlt || t.empty} />
-                  <Field label={t.comment} value={invoice.kommentar || t.empty} />
+                  <Field
+                    label={t.checkedBy}
+                    value={invoice.wer_geprüft || t.empty}
+                  />
+                  <Field
+                    label={t.documentText}
+                    value={invoice.belegtext || t.empty}
+                  />
+                  <Field
+                    label={t.paidBy}
+                    value={invoice.wer_bezahlt || t.empty}
+                  />
+                  <Field
+                    label={t.comment}
+                    value={invoice.kommentar || t.empty}
+                  />
                   <Field label={t.booked} value={invoice.gebucht || t.empty} />
                   <Field label={t.discount} value={invoice.skonto || t.no} />
                 </CardContent>
@@ -107,9 +122,18 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
                   <CardTitle>{t.invoiceDetails}</CardTitle>
                 </CardHeader>
                 <CardContent className="grid grid-cols-2 gap-4">
-                  <Field label={t.invoiceNumber} value={invoice.invoice_number || t.empty} />
-                  <Field label={t.dateIssued} value={invoice.invoice_date || t.empty} />
-                  <Field label={t.dueDate} value={invoice.fällig_am || t.empty} />
+                  <Field
+                    label={t.invoiceNumber}
+                    value={invoice.invoice_number || t.empty}
+                  />
+                  <Field
+                    label={t.dateIssued}
+                    value={invoice.invoice_date || t.empty}
+                  />
+                  <Field
+                    label={t.dueDate}
+                    value={invoice.fällig_am || t.empty}
+                  />
                   <Field
                     label={t.sender}
                     value={
@@ -121,7 +145,11 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
                     }
                   />
                   <Field label={t.vatId} value={invoice.vat_id || t.empty} />
-                  <Field label={t.emailBody} value={invoice.email_body || t.empty} fullWidth />
+                  <Field
+                    label={t.emailBody}
+                    value={invoice.email_body || t.empty}
+                    fullWidth
+                  />
                 </CardContent>
               </Card>
 
@@ -132,15 +160,19 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
                 <CardContent className="grid grid-cols-2 gap-4">
                   <Field
                     label={t.grossAmount}
-                    value={renderAmount(invoice.amount, 'gross_amount', language)}
+                    value={renderAmount(
+                      invoice.amount,
+                      "gross_amount",
+                      language
+                    )}
                   />
                   <Field
                     label={t.netAmount}
-                    value={renderAmount(invoice.amount, 'net_amount', language)}
+                    value={renderAmount(invoice.amount, "net_amount", language)}
                   />
                   <Field
                     label={t.vatAmount}
-                    value={renderAmount(invoice.amount, 'vat_amount', language)}
+                    value={renderAmount(invoice.amount, "vat_amount", language)}
                   />
                 </CardContent>
               </Card>
@@ -174,9 +206,9 @@ const renderAmount = (amount, field, language) => {
     field in amount &&
     "currency" in amount
   ) {
-    return new Intl.NumberFormat(language === 'de' ? 'de-DE' : 'en-US', {
-      style: 'currency',
-      currency: amount.currency
+    return new Intl.NumberFormat(language === "de" ? "de-DE" : "en-US", {
+      style: "currency",
+      currency: amount.currency,
     }).format(amount[field]);
   }
   return "N/A";
