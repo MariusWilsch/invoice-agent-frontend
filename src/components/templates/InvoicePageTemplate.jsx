@@ -2,6 +2,7 @@ import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import InvoiceCard from "../organisms/InvoiceCard";
 import { useLanguage } from "../../contexts/LanguageContext";
+import { Button } from "@/components/ui/button";
 
 const translations = {
   de: {
@@ -11,6 +12,7 @@ const translations = {
     unchecked: "Unkontiert",
     showing: "Zeige",
     invoicesCount: "Rechnungen",
+    manualRun: "Manueller Lauf",
   },
   en: {
     all: "All",
@@ -19,6 +21,7 @@ const translations = {
     unchecked: "Unchecked",
     showing: "Showing",
     invoicesCount: "invoices",
+    manualRun: "Manual Run",
   },
 };
 
@@ -29,6 +32,7 @@ const InvoicePageTemplate = ({
   onViewDetails,
   onDelete,
   onStamp,
+  onManualRun,
 }) => {
   const { language } = useLanguage();
   const t = translations[language];
@@ -36,7 +40,7 @@ const InvoicePageTemplate = ({
   return (
     <div>
       <Tabs defaultValue="all">
-        <div className="flex items-center mb-4">
+        <div className="flex items-center justify-between mb-4">
           <TabsList>
             <TabsTrigger value="all">{t.all}</TabsTrigger>
             {statuses.map((status) => (
@@ -45,6 +49,7 @@ const InvoicePageTemplate = ({
               </TabsTrigger>
             ))}
           </TabsList>
+          <Button onClick={onManualRun}>{t.manualRun}</Button>
         </div>
         <TabsContent value="all">
           <InvoiceCard

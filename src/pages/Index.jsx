@@ -8,6 +8,7 @@ import StampSheet from "@/components/StampSheet";
 import InvoiceDetailsSheet from "@/components/InvoiceDetailsSheet";
 import { toast } from "sonner";
 import { CheckCircle, XCircle } from "lucide-react";
+import axios from "axios";
 
 const Index = () => {
   const { data: invoices, error, isLoading } = useInvoicesDev();
@@ -59,6 +60,22 @@ const Index = () => {
     }
   };
 
+  const handleManualRun = async () => {
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/run", { manual_run: true });
+      toast.success("Manual run initiated successfully", {
+        icon: <CheckCircle className="h-5 w-5 text-green-500" />,
+        className: "text-green-500",
+      });
+    } catch (error) {
+      console.error("Error initiating manual run:", error);
+      toast.error("Failed to initiate manual run", {
+        icon: <XCircle className="h-5 w-5 text-red-500" />,
+        className: "text-red-500",
+      });
+    }
+  };
+
   const updatedInvoices = invoices.map(invoice => ({
     ...invoice,
     status: invoice.status === "Empfangen" ? "Unchecked" : 
@@ -77,6 +94,7 @@ const Index = () => {
         onViewDetails={handleViewDetails}
         onDelete={handleDelete}
         onStamp={handleStampClick}
+        onManualRun={handleManualRun}
       />
 
       <StampSheet
