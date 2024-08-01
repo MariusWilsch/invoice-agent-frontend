@@ -115,15 +115,27 @@ const Index = () => {
               invoice.status
     })).filter(invoice => invoice.status !== "Marius_TEST");
 
-    if (dateFilter.from && dateFilter.to) {
-      filtered = filtered.filter(invoice => {
-        const invoiceDate = new Date(invoice.invoice_date);
-        return isWithinInterval(invoiceDate, { start: dateFilter.from, end: dateFilter.to });
-      });
-    }
-
     return filtered;
-  }, [invoices, dateFilter]);
+  }, [invoices]);
+
+  useEffect(() => {
+    const fetchFilteredInvoices = async () => {
+      if (dateFilter.from && dateFilter.to) {
+        const { data, error } = await supabase
+          .from('invoices_dev')
+          .select()
+          .rangeGt('invoice_date', `[${format(dateFilter.from, 'yyyy-MM-dd')},${format(dateFilter.to, 'yyyy-MM-dd')}]`);
+
+        if (error) {
+          console.error('Error fetching filtered invoices:', error);
+        } else {
+          setInvoices(data);
+        }
+      }
+    };
+
+    fetchFilteredInvoices();
+  }, [dateFilter]);
 
   const isFilterActive = dateFilter.from !== null && dateFilter.to !== null;
 

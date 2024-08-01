@@ -6,41 +6,36 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useInvoicesDev } from "@/integrations/supabase/index.js";
+import { supabase } from "@/integrations/supabase/index.js";
 import { format } from "date-fns";
 import { useLanguage } from "../../contexts/LanguageContext";
 
 const ExportButton = () => {
   const [dateRange, setDateRange] = useState({ from: null, to: null });
   const [isOpen, setIsOpen] = useState(false);
-  const { data: invoices } = useInvoicesDev();
   const { language } = useLanguage();
 
-  const handleExport = () => {
+  const handleExport = async () => {
     if (!dateRange.from || !dateRange.to) {
       alert(language === 'de' ? 'Bitte wählen Sie einen Datumsbereich aus.' : 'Please select a date range.');
       return;
     }
 
-    const filteredInvoices = invoices.filter(invoice => {
-      const invoiceDate = new Date(invoice.invoice_date);
-      return invoiceDate >= dateRange.from && invoiceDate <= dateRange.to;
-    });
+    try {
+      const { data, error } = await supabase
+        .from('invoices_dev')
+        .select()
+        .rangeGt('invoice_date', `[${format(dateRange.from, 'yyyy-MM-dd')},${format(dateRange.to, 'yyyy-MM-dd')}]`)
+        .csv();
 
-    const csvContent = generateCSV(filteredInvoices);
-    downloadCSV(csvContent);
-    setIsOpen(false);
-  };
+      if (error) throw error;
 
-  const generateCSV = (data) => {
-    const headers = ['Ausstellungsdatum', 'Rechnungsnummer', 'Absender', 'Bruttobetrag'];
-    const rows = data.map(invoice => [
-      invoice.invoice_date,
-      invoice.invoice_number,
-      Array.isArray(invoice.sender) ? invoice.sender.join(', ') : invoice.sender,
-      invoice.amount?.gross_amount || ''
-    ]);
-    return [headers, ...rows].map(row => row.join(',')).join('\n');
+      downloadCSV(data);
+      setIsOpen(false);
+    } catch (error) {
+      console.error('Error exporting CSV:', error);
+      alert(language === 'de' ? 'Fehler beim Exportieren der CSV-Datei.' : 'Error exporting CSV file.');
+    }
   };
 
   const downloadCSV = (content) => {
