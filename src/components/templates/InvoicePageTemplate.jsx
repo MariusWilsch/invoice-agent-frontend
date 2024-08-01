@@ -4,6 +4,7 @@ import InvoiceCard from "../organisms/InvoiceCard";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import FilterButton from "../molecules/FilterButton";
+import ExportButton from "../molecules/ExportButton";
 
 const translations = {
   de: {
@@ -60,6 +61,7 @@ const InvoicePageTemplate = ({
               onClearFilter={onClearFilter}
               isFilterActive={isFilterActive}
             />
+            <ExportButton />
             <Button onClick={onManualRun}>{t.manualRun}</Button>
           </div>
         </div>
