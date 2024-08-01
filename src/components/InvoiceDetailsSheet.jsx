@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -7,6 +7,8 @@ import {
 } from "@/components/ui/sheet";
 import { useLanguage } from "../contexts/LanguageContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Copy, Check } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
   const { language } = useLanguage();
@@ -36,6 +38,8 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
       grossAmount: "test",
       netAmount: "Net Amount",
       vatAmount: "VAT Amount",
+      paymentTerms: "Payment Terms",
+      vatRate: "VAT Rate",
       noInvoice: "No invoice selected",
       empty: "Empty",
       no: "No",
@@ -64,6 +68,8 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
       grossAmount: "Bruttobetrag",
       netAmount: "Nettobetrag",
       vatAmount: "Umsatzsteuerbetrag",
+      paymentTerms: "Zahlungsbedingungen",
+      vatRate: "Umsatzsteuersatz",
       noInvoice: "Keine Rechnung ausgewählt",
       empty: "Leer",
       no: "Nein",
@@ -122,18 +128,10 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
                   <CardTitle>{t.invoiceDetails}</CardTitle>
                 </CardHeader>
                 <CardContent className="grid grid-cols-2 gap-4">
-                  <Field
-                    label={t.invoiceNumber}
-                    value={invoice.invoice_number || t.empty}
-                  />
-                  <Field
-                    label={t.dateIssued}
-                    value={invoice.invoice_date || t.empty}
-                  />
-                  <Field
-                    label={t.dueDate}
-                    value={invoice.fällig_am || t.empty}
-                  />
+                  <Field label={t.invoiceNumber} value={invoice.invoice_number || t.empty} />
+                  <Field label={t.dateIssued} value={invoice.invoice_date || t.empty} />
+                  <Field label={t.dueDate} value={invoice.fällig_am || t.empty} />
+                  <Field label={t.paymentTerms} value={invoice.payment_terms || t.empty} />
                   <Field
                     label={t.sender}
                     value={
@@ -172,7 +170,11 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
                   />
                   <Field
                     label={t.vatAmount}
-                    value={renderAmount(invoice.amount, "vat_amount", language)}
+                    value={renderAmount(invoice, 'vat_amount', language)}
+                  />
+                  <Field
+                    label={t.vatRate}
+                    value={invoice.vat_rate ? `${invoice.vat_rate.replace(/%/g, '')}%` : t.empty}
                   />
                 </CardContent>
               </Card>
@@ -186,30 +188,62 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
   );
 };
 
-const Field = ({ label, value, fullWidth = false }) => (
-  <div className={`mb-4 ${fullWidth ? "col-span-2" : ""}`}>
-    <p className="text-sm font-medium text-gray-500 mb-1">{label}:</p>
-    <div
-      className={`bg-gray-100 p-2 rounded-md ${
-        fullWidth ? "min-h-[100px] overflow-y-auto" : ""
-      }`}
-    >
-      <p className="text-sm text-gray-800 whitespace-pre-wrap">{value}</p>
-    </div>
-  </div>
-);
+const CopyButton = ({ value }) => {
+  const [copied, setCopied] = useState(false);
 
-const renderAmount = (amount, field, language) => {
-  if (
-    typeof amount === "object" &&
-    amount !== null &&
-    field in amount &&
-    "currency" in amount
-  ) {
-    return new Intl.NumberFormat(language === "de" ? "de-DE" : "en-US", {
-      style: "currency",
-      currency: amount.currency,
-    }).format(amount[field]);
+  const handleCopy = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
+  };
+
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      className="h-6 w-6 text-gray-500 hover:text-gray-700"
+      onClick={handleCopy}
+    >
+      {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+    </Button>
+  );
+};
+
+const Field = ({ label, value, fullWidth = false }) => {
+  const isValidValue = value && value !== 'N/A' && value !== 'Empty' && value !== 'Leer';
+
+  return (
+    <div className={`mb-4 ${fullWidth ? "col-span-2" : ""}`}>
+      <p className="text-sm font-medium text-gray-500 mb-1">{label}:</p>
+      <div
+        className={`bg-gray-100 p-2 rounded-md shadow-md transform hover:translate-y-[-2px] transition-all duration-200 ${
+          fullWidth ? "min-h-[100px] overflow-y-auto" : ""
+        } flex justify-between items-center`}
+      >
+        <p className="text-sm text-gray-800 whitespace-pre-wrap flex-grow">{value}</p>
+        {isValidValue && <CopyButton value={value} />}
+      </div>
+    </div>
+  );
+};
+
+const renderAmount = (invoice, field, language) => {
+  if (invoice && invoice.amount && typeof invoice.amount === "object" && field in invoice.amount) {
+    return new Intl.NumberFormat(language === 'de' ? 'de-DE' : 'en-US', {
+      style: 'currency',
+      currency: invoice.amount.currency || 'EUR'
+    }).format(invoice.amount[field]);
+  } else if (invoice && field in invoice) {
+    return new Intl.NumberFormat(language === 'de' ? 'de-DE' : 'en-US', {
+      style: 'currency',
+      currency: 'EUR'
+    }).format(invoice[field]);
   }
   return "N/A";
 };
