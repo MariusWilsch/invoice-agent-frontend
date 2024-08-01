@@ -122,7 +122,8 @@ const Index = () => {
         const { data, error } = await supabase
           .from('invoices_dev')
           .select()
-          .rangeGt('invoice_date', `[${format(dateFilter.from, 'yyyy-MM-dd')},${format(dateFilter.to, 'yyyy-MM-dd')}]`);
+          .gte('invoice_date', format(dateFilter.from, 'yyyy-MM-dd'))
+          .lte('invoice_date', format(dateFilter.to, 'yyyy-MM-dd'));
 
         if (error) {
           console.error('Error fetching filtered invoices:', error);

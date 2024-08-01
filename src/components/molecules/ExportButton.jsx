@@ -25,7 +25,8 @@ const ExportButton = () => {
       const { data, error } = await supabase
         .from('invoices_dev')
         .select()
-        .rangeGt('invoice_date', `[${format(dateRange.from, 'yyyy-MM-dd')},${format(dateRange.to, 'yyyy-MM-dd')}]`)
+        .gte('invoice_date', format(dateRange.from, 'yyyy-MM-dd'))
+        .lte('invoice_date', format(dateRange.to, 'yyyy-MM-dd'))
         .csv();
 
       if (error) throw error;
