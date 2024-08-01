@@ -167,7 +167,7 @@ const Field = ({ label, value, fullWidth = false }) => (
   <div className={`mb-4 ${fullWidth ? "col-span-2" : ""}`}>
     <p className="text-sm font-medium text-gray-500 mb-1">{label}:</p>
     <div
-      className={`bg-gray-100 p-2 rounded-md ${
+      className={`bg-gray-100 p-2 rounded-md shadow-md transform hover:translate-y-[-2px] transition-all duration-200 ${
         fullWidth ? "min-h-[100px] overflow-y-auto" : ""
       }`}
     >
