@@ -149,7 +149,7 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
                   />
                   <Field
                     label={t.vatRate}
-                    value={invoice.vat_rate ? `${invoice.vat_rate}%` : t.empty}
+                    value={invoice.vat_rate ? `${invoice.vat_rate.replace(/%/g, '')}%` : t.empty}
                   />
                 </CardContent>
               </Card>
