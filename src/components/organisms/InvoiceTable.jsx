@@ -25,7 +25,7 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
       actions: 'Actions',
     },
     de: {
-      vendorName: 'Lieferant/Name / E-Mail',
+      vendorName: 'Absender',
       dateIssued: 'Ausstellungsdatum',
       dueDate: 'Fälligkeitsdatum',
       invoiceNumber: 'Rechnungsnummer',
