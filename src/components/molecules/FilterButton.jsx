@@ -48,9 +48,12 @@ const FilterButton = ({ onFilter, onClearFilter, isFilterActive }) => {
     <div className="flex items-center space-x-2">
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
-          <Button variant="outline">
+          <Button variant={isFilterActive ? "secondary" : "outline"} className="relative">
             <Filter className="mr-2 h-4 w-4" />
             {t.filter}
+            {isFilterActive && (
+              <span className="absolute top-0 right-0 -mt-1 -mr-1 h-3 w-3 bg-primary rounded-full" />
+            )}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="end">
@@ -60,26 +63,16 @@ const FilterButton = ({ onFilter, onClearFilter, isFilterActive }) => {
             onSelect={setDateRange}
             numberOfMonths={2}
           />
-          <div className="p-3 border-t">
-            <Button onClick={handleFilter} className="w-full">
+          <div className="p-3 border-t flex justify-between">
+            <Button onClick={handleClearFilter} variant="outline" className="mr-2">
+              {t.clearFilter}
+            </Button>
+            <Button onClick={handleFilter}>
               {t.applyFilter}
             </Button>
           </div>
         </PopoverContent>
       </Popover>
-      {isFilterActive && (
-        <Badge variant="secondary" className="flex items-center">
-          {t.filterActive}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-4 w-4 ml-2 p-0"
-            onClick={handleClearFilter}
-          >
-            <X className="h-3 w-3" />
-          </Button>
-        </Badge>
-      )}
     </div>
   );
 };
