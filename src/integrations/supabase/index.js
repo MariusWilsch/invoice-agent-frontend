@@ -118,7 +118,7 @@ const fromSupabase = async (query) => {
 export const useInvoicesDev = () =>
   useQuery({
     queryKey: ["invoices_dev"],
-    queryFn: () => fromSupabase(supabase.from("invoices_dev").select("*")),
+    queryFn: () => fromSupabase(supabase.from("invoices_dev").select("*").order('invoice_date', { ascending: false })),
   });
 
 export const useAddInvoicesDev = () => {
