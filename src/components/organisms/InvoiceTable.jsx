@@ -53,7 +53,10 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
 
   const renderAmount = (amount) => {
     if (typeof amount === 'object' && amount !== null && 'gross_amount' in amount && 'currency' in amount) {
-      return `${amount.gross_amount} ${amount.currency}`;
+      return new Intl.NumberFormat('de-DE', {
+        style: 'currency',
+        currency: amount.currency
+      }).format(amount.gross_amount);
     }
     return amount || 'N/A';
   };
@@ -87,7 +90,7 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
             <TableCell className="w-1/8 whitespace-nowrap">{invoice.invoice_date || 'N/A'}</TableCell>
             <TableCell className="w-1/8 whitespace-nowrap">{invoice.faellig_am || 'N/A'}</TableCell>
             <TableCell className="w-1/8 whitespace-nowrap">{invoice.invoice_number || 'N/A'}</TableCell>
-            <TableCell className="w-1/8 whitespace-nowrap">{renderAmount(invoice.amount)}</TableCell>
+            <TableCell className="w-1/8 whitespace-nowrap text-right">{renderAmount(invoice.amount)}</TableCell>
             <TableCell className="w-1/8">
               <StatusBadge status={invoice.status} />
             </TableCell>
@@ -105,7 +108,7 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
       <TableFooter>
         <TableRow className="bg-muted/50 font-medium">
           <TableCell colSpan={4}>{t.total}</TableCell>
-          <TableCell className="text-right">
+          <TableCell className="text-right whitespace-nowrap">
             {new Intl.NumberFormat(language === 'de' ? 'de-DE' : 'en-US', {
               style: 'currency',
               currency: invoices[0]?.amount?.currency || 'EUR'
