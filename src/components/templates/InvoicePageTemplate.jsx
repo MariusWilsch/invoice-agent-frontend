@@ -6,7 +6,7 @@ import { useLanguage } from "../../contexts/LanguageContext";
 const translations = {
   de: {
     all: "Alle",
-    invoices: " Please work",
+    invoices: "Rechnungen",
     manage: "Verwalten Sie Ihre Rechnungen und sehen Sie deren Details ein.",
     unchecked: "Unkontiert",
   },
