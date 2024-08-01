@@ -168,37 +168,46 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
 const CopyButton = ({ value }) => {
   const [copied, setCopied] = useState(false);
 
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(value);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleCopy = async (e) => {
+    e.stopPropagation();
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    }
   };
 
   return (
     <Button
       variant="ghost"
       size="icon"
-      className="h-4 w-4 text-gray-500 hover:text-gray-700"
+      className="h-6 w-6 text-gray-500 hover:text-gray-700"
       onClick={handleCopy}
     >
-      {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+      {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
     </Button>
   );
 };
 
-const Field = ({ label, value, fullWidth = false }) => (
-  <div className={`mb-4 ${fullWidth ? "col-span-2" : ""}`}>
-    <p className="text-sm font-medium text-gray-500 mb-1">{label}:</p>
-    <div
-      className={`bg-gray-100 p-2 rounded-md shadow-md transform hover:translate-y-[-2px] transition-all duration-200 ${
-        fullWidth ? "min-h-[100px] overflow-y-auto" : ""
-      } flex justify-between items-center`}
-    >
-      <p className="text-sm text-gray-800 whitespace-pre-wrap flex-grow">{value}</p>
-      {value && value !== 'N/A' && <CopyButton value={value} />}
+const Field = ({ label, value, fullWidth = false }) => {
+  const isValidValue = value && value !== 'N/A' && value !== 'Empty' && value !== 'Leer';
+
+  return (
+    <div className={`mb-4 ${fullWidth ? "col-span-2" : ""}`}>
+      <p className="text-sm font-medium text-gray-500 mb-1">{label}:</p>
+      <div
+        className={`bg-gray-100 p-2 rounded-md shadow-md transform hover:translate-y-[-2px] transition-all duration-200 ${
+          fullWidth ? "min-h-[100px] overflow-y-auto" : ""
+        } flex justify-between items-center`}
+      >
+        <p className="text-sm text-gray-800 whitespace-pre-wrap flex-grow">{value}</p>
+        {isValidValue && <CopyButton value={value} />}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const renderAmount = (invoice, field, language) => {
   if (invoice && invoice.amount && typeof invoice.amount === "object" && field in invoice.amount) {
