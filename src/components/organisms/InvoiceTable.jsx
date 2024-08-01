@@ -16,17 +16,19 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
 
   const translations = {
     en: {
-      sender: 'Sender',
-      ticketNumber: 'Ticket Number',
+      vendorName: 'Vendor/Supplier Name / Email',
+      dateIssued: 'Date Issued',
       dueDate: 'Due Date',
+      invoiceNumber: 'Invoice Number',
       grossAmount: 'Gross Amount',
       status: 'Status',
       actions: 'Actions',
     },
     de: {
-      sender: 'Absender',
-      ticketNumber: 'Ticketnummer',
+      vendorName: 'Lieferant/Name / E-Mail',
+      dateIssued: 'Ausstellungsdatum',
       dueDate: 'Fälligkeitsdatum',
+      invoiceNumber: 'Rechnungsnummer',
       grossAmount: 'Bruttobetrag',
       status: 'Status',
       actions: 'Aktionen',
@@ -57,25 +59,27 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-1/2">{t.sender}</TableHead>
-          <TableHead className="w-1/10 whitespace-nowrap">{t.ticketNumber}</TableHead>
-          <TableHead className="w-1/10 whitespace-nowrap">{t.dueDate}</TableHead>
-          <TableHead className="w-1/10 whitespace-nowrap">{t.grossAmount}</TableHead>
-          <TableHead className="w-1/10">{t.status}</TableHead>
-          <TableHead className="w-1/10">{t.actions}</TableHead>
+          <TableHead className="w-1/4">{t.vendorName}</TableHead>
+          <TableHead className="w-1/8 whitespace-nowrap">{t.dateIssued}</TableHead>
+          <TableHead className="w-1/8 whitespace-nowrap">{t.dueDate}</TableHead>
+          <TableHead className="w-1/8 whitespace-nowrap">{t.invoiceNumber}</TableHead>
+          <TableHead className="w-1/8 whitespace-nowrap">{t.grossAmount}</TableHead>
+          <TableHead className="w-1/8">{t.status}</TableHead>
+          <TableHead className="w-1/8">{t.actions}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {invoices.map((invoice, index) => (
           <TableRow key={invoice.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-            <TableCell className="w-1/2">{renderSender(invoice.sender)}</TableCell>
-            <TableCell className="w-1/10 whitespace-nowrap">{invoice.ticket_number || 'N/A'}</TableCell>
-            <TableCell className="w-1/10 whitespace-nowrap">{invoice.faellig_am || 'N/A'}</TableCell>
-            <TableCell className="w-1/10 whitespace-nowrap">{renderAmount(invoice.amount)}</TableCell>
-            <TableCell className="w-1/10">
+            <TableCell className="w-1/4">{renderSender(invoice.sender)}</TableCell>
+            <TableCell className="w-1/8 whitespace-nowrap">{invoice.invoice_date || 'N/A'}</TableCell>
+            <TableCell className="w-1/8 whitespace-nowrap">{invoice.faellig_am || 'N/A'}</TableCell>
+            <TableCell className="w-1/8 whitespace-nowrap">{invoice.invoice_number || 'N/A'}</TableCell>
+            <TableCell className="w-1/8 whitespace-nowrap">{renderAmount(invoice.amount)}</TableCell>
+            <TableCell className="w-1/8">
               <StatusBadge status={invoice.status} />
             </TableCell>
-            <TableCell className="w-1/10">
+            <TableCell className="w-1/8">
               <ActionButtons
                 invoice={invoice}
                 onViewDetails={onViewDetails}
