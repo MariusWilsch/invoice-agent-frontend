@@ -103,6 +103,10 @@ const Index = () => {
     setDateFilter(dateRange);
   };
 
+  const handleClearFilter = () => {
+    setDateFilter({ from: null, to: null });
+  };
+
   const filteredInvoices = useMemo(() => {
     let filtered = invoices.map(invoice => ({
       ...invoice,
@@ -121,6 +125,8 @@ const Index = () => {
     return filtered;
   }, [invoices, dateFilter]);
 
+  const isFilterActive = dateFilter.from !== null && dateFilter.to !== null;
+
   return (
     <div>
       <InvoicePageTemplate
@@ -132,6 +138,8 @@ const Index = () => {
         onStamp={handleStampClick}
         onManualRun={handleManualRun}
         onFilter={handleFilter}
+        onClearFilter={handleClearFilter}
+        isFilterActive={isFilterActive}
       />
 
       <StampSheet

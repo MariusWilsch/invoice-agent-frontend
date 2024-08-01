@@ -36,6 +36,8 @@ const InvoicePageTemplate = ({
   onStamp,
   onManualRun,
   onFilter,
+  onClearFilter,
+  isFilterActive,
 }) => {
   const { language } = useLanguage();
   const t = translations[language];
@@ -53,7 +55,11 @@ const InvoicePageTemplate = ({
             ))}
           </TabsList>
           <div className="flex space-x-2">
-            <FilterButton onFilter={onFilter} />
+            <FilterButton 
+              onFilter={onFilter} 
+              onClearFilter={onClearFilter}
+              isFilterActive={isFilterActive}
+            />
             <Button onClick={onManualRun}>{t.manualRun}</Button>
           </div>
         </div>
