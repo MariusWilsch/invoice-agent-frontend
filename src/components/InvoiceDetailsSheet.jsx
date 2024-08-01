@@ -35,7 +35,7 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
       sender: "Sender",
       vatId: "VAT ID",
       emailBody: "Email Body",
-      grossAmount: "test",
+      grossAmount: "Gross Amount",
       netAmount: "Net Amount",
       vatAmount: "VAT Amount",
       paymentTerms: "Payment Terms",
@@ -128,10 +128,22 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
                   <CardTitle>{t.invoiceDetails}</CardTitle>
                 </CardHeader>
                 <CardContent className="grid grid-cols-2 gap-4">
-                  <Field label={t.invoiceNumber} value={invoice.invoice_number || t.empty} />
-                  <Field label={t.dateIssued} value={invoice.invoice_date || t.empty} />
-                  <Field label={t.dueDate} value={invoice.fällig_am || t.empty} />
-                  <Field label={t.paymentTerms} value={invoice.payment_terms || t.empty} />
+                  <Field
+                    label={t.invoiceNumber}
+                    value={invoice.invoice_number || t.empty}
+                  />
+                  <Field
+                    label={t.dateIssued}
+                    value={invoice.invoice_date || t.empty}
+                  />
+                  <Field
+                    label={t.dueDate}
+                    value={invoice.fällig_am || t.empty}
+                  />
+                  <Field
+                    label={t.paymentTerms}
+                    value={invoice.payment_terms || t.empty}
+                  />
                   <Field
                     label={t.sender}
                     value={
@@ -170,11 +182,15 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
                   />
                   <Field
                     label={t.vatAmount}
-                    value={renderAmount(invoice, 'vat_amount', language)}
+                    value={renderAmount(invoice, "vat_amount", language)}
                   />
                   <Field
                     label={t.vatRate}
-                    value={invoice.vat_rate ? `${invoice.vat_rate.replace(/%/g, '')}%` : t.empty}
+                    value={
+                      invoice.vat_rate
+                        ? `${invoice.vat_rate.replace(/%/g, "")}%`
+                        : t.empty
+                    }
                   />
                 </CardContent>
               </Card>
@@ -199,7 +215,7 @@ const CopyButton = ({ value }) => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error('Failed to copy text: ', err);
+      console.error("Failed to copy text: ", err);
     }
   };
 
@@ -216,7 +232,8 @@ const CopyButton = ({ value }) => {
 };
 
 const Field = ({ label, value, fullWidth = false }) => {
-  const isValidValue = value && value !== 'N/A' && value !== 'Empty' && value !== 'Leer';
+  const isValidValue =
+    value && value !== "N/A" && value !== "Empty" && value !== "Leer";
 
   return (
     <div className={`mb-4 ${fullWidth ? "col-span-2" : ""}`}>
@@ -226,7 +243,9 @@ const Field = ({ label, value, fullWidth = false }) => {
           fullWidth ? "min-h-[100px] overflow-y-auto" : ""
         } flex justify-between items-center`}
       >
-        <p className="text-sm text-gray-800 whitespace-pre-wrap flex-grow">{value}</p>
+        <p className="text-sm text-gray-800 whitespace-pre-wrap flex-grow">
+          {value}
+        </p>
         {isValidValue && <CopyButton value={value} />}
       </div>
     </div>
@@ -234,15 +253,20 @@ const Field = ({ label, value, fullWidth = false }) => {
 };
 
 const renderAmount = (invoice, field, language) => {
-  if (invoice && invoice.amount && typeof invoice.amount === "object" && field in invoice.amount) {
-    return new Intl.NumberFormat(language === 'de' ? 'de-DE' : 'en-US', {
-      style: 'currency',
-      currency: invoice.amount.currency || 'EUR'
+  if (
+    invoice &&
+    invoice.amount &&
+    typeof invoice.amount === "object" &&
+    field in invoice.amount
+  ) {
+    return new Intl.NumberFormat(language === "de" ? "de-DE" : "en-US", {
+      style: "currency",
+      currency: invoice.amount.currency || "EUR",
     }).format(invoice.amount[field]);
   } else if (invoice && field in invoice) {
-    return new Intl.NumberFormat(language === 'de' ? 'de-DE' : 'en-US', {
-      style: 'currency',
-      currency: 'EUR'
+    return new Intl.NumberFormat(language === "de" ? "de-DE" : "en-US", {
+      style: "currency",
+      currency: "EUR",
     }).format(invoice[field]);
   }
   return "N/A";

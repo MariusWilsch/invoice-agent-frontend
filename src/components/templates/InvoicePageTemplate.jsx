@@ -1,24 +1,31 @@
-import React from 'react';
+import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import InvoiceCard from '../organisms/InvoiceCard';
-import { useLanguage } from '../../contexts/LanguageContext';
+import InvoiceCard from "../organisms/InvoiceCard";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 const translations = {
   de: {
-    all: 'Alle',
-    invoices: 'Rechnungen',
-    manage: 'Verwalten Sie Ihre Rechnungen und sehen Sie deren Details ein.',
-    unchecked: 'Unkontiert',
+    all: "Alle",
+    invoices: " Please work",
+    manage: "Verwalten Sie Ihre Rechnungen und sehen Sie deren Details ein.",
+    unchecked: "Unkontiert",
   },
   en: {
-    all: 'All',
-    invoices: 'Invoices',
-    manage: 'Manage your invoices and view their details.',
-    unchecked: 'Unchecked',
-  }
+    all: "All",
+    invoices: "Invoices",
+    manage: "Manage your invoices and view their details.",
+    unchecked: "Unchecked",
+  },
 };
 
-const InvoicePageTemplate = ({ invoices, allInvoices, statuses, onViewDetails, onDelete, onStamp }) => {
+const InvoicePageTemplate = ({
+  invoices,
+  allInvoices,
+  statuses,
+  onViewDetails,
+  onDelete,
+  onStamp,
+}) => {
   const { language } = useLanguage();
   const t = translations[language];
 
@@ -48,9 +55,15 @@ const InvoicePageTemplate = ({ invoices, allInvoices, statuses, onViewDetails, o
         {statuses.map((status) => (
           <TabsContent key={status} value={status.toLowerCase()}>
             <InvoiceCard
-              title={`${status === "Empfangen" ? t.unchecked : status} ${t.invoices}`}
+              title={`${status === "Empfangen" ? t.unchecked : status} ${
+                t.invoices
+              }`}
               description={t.manage}
-              invoices={status === "Marius_TEST" ? allInvoices.filter((invoice) => invoice.status === status) : invoices.filter((invoice) => invoice.status === status)}
+              invoices={
+                status === "Marius_TEST"
+                  ? allInvoices.filter((invoice) => invoice.status === status)
+                  : invoices.filter((invoice) => invoice.status === status)
+              }
               onViewDetails={onViewDetails}
               onDelete={onDelete}
               onStamp={onStamp}
