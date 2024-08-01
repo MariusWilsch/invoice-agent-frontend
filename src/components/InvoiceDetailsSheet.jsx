@@ -6,6 +6,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { useLanguage } from "../contexts/LanguageContext";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
   const { language } = useLanguage();
@@ -13,7 +14,9 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
   const translations = {
     en: {
       title: "Data Overview",
-      receivedOn: "Received on",
+      stampFields: "Stamp Fields",
+      invoiceDetails: "Invoice Details",
+      financialDetails: "Financial Details",
       costCenter: "Cost Center",
       account: "Account",
       vb: "VB",
@@ -22,23 +25,26 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
       documentText: "Document Text",
       paidBy: "Paid by",
       comment: "Comment",
-      dueDate: "Due Date",
-      gross: "Gross",
       booked: "Booked",
-      sender: "Sender",
       discount: "Discount",
+      invoiceNumber: "Invoice Number",
+      dateIssued: "Date Issued",
+      dueDate: "Due Date",
+      sender: "Sender",
+      vatId: "VAT ID",
       emailBody: "Email Body",
+      grossAmount: "Gross Amount",
+      netAmount: "Net Amount",
+      vatAmount: "VAT Amount",
       noInvoice: "No invoice selected",
       empty: "Empty",
       no: "No",
-      invoiceNumber: "Invoice Number",
-      invoiceDate: "Invoice Date",
-      vat_rate: "VAT Rate",
-      vat_id: "VAT ID",
     },
     de: {
       title: "Datenübersicht",
-      receivedOn: "Eingegangen am",
+      stampFields: "Stempelfelder",
+      invoiceDetails: "Rechnungsdetails",
+      financialDetails: "Finanzielle Details",
       costCenter: "Kostenstelle",
       account: "Konto",
       vb: "VB",
@@ -47,19 +53,20 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
       documentText: "Belegtext",
       paidBy: "Bezahlt von",
       comment: "Kommentar",
-      dueDate: "Fällig am",
-      gross: "Brutto",
       booked: "Gebucht",
-      sender: "Absender",
       discount: "Skonto",
+      invoiceNumber: "Rechnungsnummer",
+      dateIssued: "Ausstellungsdatum",
+      dueDate: "Fälligkeitsdatum",
+      sender: "Absender",
+      vatId: "Umsatzsteuer-ID",
       emailBody: "E-Mail-Text",
+      grossAmount: "Bruttobetrag",
+      netAmount: "Nettobetrag",
+      vatAmount: "Umsatzsteuerbetrag",
       noInvoice: "Keine Rechnung ausgewählt",
       empty: "Leer",
       no: "Nein",
-      invoiceNumber: "Rechnungsnummer",
-      invoiceDate: "Rechnungsdatum",
-      vat_rate: "Umsatzsteuersatz",
-      vat_id: "Umsatzsteuer-ID",
     },
   };
 
@@ -74,68 +81,70 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
         <SheetHeader>
           <SheetTitle className="text-2xl font-bold mb-6">{t.title}</SheetTitle>
         </SheetHeader>
-        <div className="mt-6">
+        <div className="mt-6 space-y-6">
           {invoice ? (
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <Field
-                  label={t.receivedOn}
-                  value={invoice.eingegangen_am || "2024-06-11T05:42:51+00:00"}
-                />
-                <Field
-                  label={t.costCenter}
-                  value={invoice.kostenstelle || t.empty}
-                />
-                <Field label={t.account} value={invoice.konto || t.empty} />
-                <Field label={t.vb} value={invoice.VB || t.empty} />
-                <Field label={t.evVp} value={invoice.ev_vp || t.empty} />
-                <Field
-                  label={t.checkedBy}
-                  value={invoice.wer_geprüft || t.empty}
-                />
-                <Field
-                  label={t.documentText}
-                  value={invoice.belegtext || t.empty}
-                />
-                <Field
-                  label={t.paidBy}
-                  value={invoice.wer_bezahlt || t.empty}
-                />
-                <Field label={t.comment} value={invoice.kommentar || t.empty} />
-                <Field label={t.dueDate} value={invoice.fällig_am || t.empty} />
-                <Field
-                  label={t.gross}
-                  value={renderAmount(invoice.amount, language)}
-                />
-                <Field label={t.booked} value={invoice.gebucht || t.empty} />
-                <Field
-                  label={t.sender}
-                  value={
-                    invoice.sender
-                      ? Array.isArray(invoice.sender)
-                        ? invoice.sender.join(", ")
-                        : invoice.sender
-                      : "Finance, finance@wph.onl"
-                  }
-                />
-                <Field label={t.discount} value={invoice.skonto || t.no} />
-                <Field
-                  label={t.invoiceNumber}
-                  value={invoice.invoice_number || t.empty}
-                />
-                <Field
-                  label={t.invoiceDate}
-                  value={invoice.invoice_date || t.empty}
-                />
-                <Field label={t.vat_rate} value={invoice.vat_rate || t.empty} />
-                <Field label={t.vat_id} value={invoice.vat_id || t.empty} />
-              </div>
-              <Field
-                label={t.emailBody}
-                value={invoice.email_body || t.empty}
-                fullWidth
-              />
-            </div>
+            <>
+              <Card>
+                <CardHeader>
+                  <CardTitle>{t.stampFields}</CardTitle>
+                </CardHeader>
+                <CardContent className="grid grid-cols-2 gap-4">
+                  <Field label={t.costCenter} value={invoice.kostenstelle || t.empty} />
+                  <Field label={t.account} value={invoice.konto || t.empty} />
+                  <Field label={t.vb} value={invoice.VB || t.empty} />
+                  <Field label={t.evVp} value={invoice.ev_vp || t.empty} />
+                  <Field label={t.checkedBy} value={invoice.wer_geprüft || t.empty} />
+                  <Field label={t.documentText} value={invoice.belegtext || t.empty} />
+                  <Field label={t.paidBy} value={invoice.wer_bezahlt || t.empty} />
+                  <Field label={t.comment} value={invoice.kommentar || t.empty} />
+                  <Field label={t.booked} value={invoice.gebucht || t.empty} />
+                  <Field label={t.discount} value={invoice.skonto || t.no} />
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>{t.invoiceDetails}</CardTitle>
+                </CardHeader>
+                <CardContent className="grid grid-cols-2 gap-4">
+                  <Field label={t.invoiceNumber} value={invoice.invoice_number || t.empty} />
+                  <Field label={t.dateIssued} value={invoice.invoice_date || t.empty} />
+                  <Field label={t.dueDate} value={invoice.fällig_am || t.empty} />
+                  <Field
+                    label={t.sender}
+                    value={
+                      invoice.sender
+                        ? Array.isArray(invoice.sender)
+                          ? invoice.sender.join(", ")
+                          : invoice.sender
+                        : "Finance, finance@wph.onl"
+                    }
+                  />
+                  <Field label={t.vatId} value={invoice.vat_id || t.empty} />
+                  <Field label={t.emailBody} value={invoice.email_body || t.empty} fullWidth />
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>{t.financialDetails}</CardTitle>
+                </CardHeader>
+                <CardContent className="grid grid-cols-2 gap-4">
+                  <Field
+                    label={t.grossAmount}
+                    value={renderAmount(invoice.amount, 'gross_amount', language)}
+                  />
+                  <Field
+                    label={t.netAmount}
+                    value={renderAmount(invoice.amount, 'net_amount', language)}
+                  />
+                  <Field
+                    label={t.vatAmount}
+                    value={renderAmount(invoice.amount, 'vat_amount', language)}
+                  />
+                </CardContent>
+              </Card>
+            </>
           ) : (
             <p>{t.noInvoice}</p>
           )}
@@ -158,17 +167,17 @@ const Field = ({ label, value, fullWidth = false }) => (
   </div>
 );
 
-const renderAmount = (amount, language) => {
+const renderAmount = (amount, field, language) => {
   if (
     typeof amount === "object" &&
     amount !== null &&
-    "gross_amount" in amount &&
-    "net_amount" in amount &&
+    field in amount &&
     "currency" in amount
   ) {
-    return language === "de"
-      ? `NETTO: ${amount.net_amount} ${amount.currency} und BRUTTO: ${amount.gross_amount} ${amount.currency}`
-      : `NET: ${amount.net_amount} ${amount.currency} and GROSS: ${amount.gross_amount} ${amount.currency}`;
+    return new Intl.NumberFormat(language === 'de' ? 'de-DE' : 'en-US', {
+      style: 'currency',
+      currency: amount.currency
+    }).format(amount[field]);
   }
   return "N/A";
 };
