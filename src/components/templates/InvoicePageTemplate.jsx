@@ -61,7 +61,7 @@ const InvoicePageTemplate = ({
               onClearFilter={onClearFilter}
               isFilterActive={isFilterActive}
             />
-            <ExportButton />
+            <ExportButton dateFilter={dateFilter} />
             <Button onClick={onManualRun}>{t.manualRun}</Button>
           </div>
         </div>
