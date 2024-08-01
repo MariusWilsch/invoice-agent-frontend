@@ -170,15 +170,11 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
                 <CardContent className="grid grid-cols-2 gap-4">
                   <Field
                     label={t.grossAmount}
-                    value={renderAmount(
-                      invoice.amount,
-                      "gross_amount",
-                      language
-                    )}
+                    value={renderAmount(invoice, "gross_amount", language)}
                   />
                   <Field
                     label={t.netAmount}
-                    value={renderAmount(invoice.amount, "net_amount", language)}
+                    value={renderAmount(invoice, "net_amount", language)}
                   />
                   <Field
                     label={t.vatAmount}
@@ -253,19 +249,25 @@ const Field = ({ label, value, fullWidth = false }) => {
 };
 
 const renderAmount = (invoice, field, language) => {
-  if (invoice && invoice.amount && typeof invoice.amount === "object") {
-    if (field === "vat_amount" && "vat_amount" in invoice) {
-      return new Intl.NumberFormat(language === "de" ? "de-DE" : "en-US", {
-        style: "currency",
-        currency: invoice.amount.currency || "EUR",
-      }).format(invoice.vat_amount);
-    } else if (field in invoice.amount) {
-      return new Intl.NumberFormat(language === "de" ? "de-DE" : "en-US", {
-        style: "currency",
-        currency: invoice.amount.currency || "EUR",
-      }).format(invoice.amount[field]);
-    }
+  const formatCurrency = (value, currency) => {
+    return new Intl.NumberFormat(language === "de" ? "de-DE" : "en-US", {
+      style: "currency",
+      currency: currency || "EUR",
+    }).format(value);
+  };
+
+  if (!invoice) return "N/A";
+
+  if (field === "vat_amount" && "vat_amount" in invoice) {
+    return formatCurrency(invoice.vat_amount, invoice.amount?.currency);
   }
+
+  if (!invoice.amount || typeof invoice.amount !== "object") return "N/A";
+
+  if (field in invoice.amount) {
+    return formatCurrency(invoice.amount[field], invoice.amount.currency);
+  }
+
   return "N/A";
 };
 

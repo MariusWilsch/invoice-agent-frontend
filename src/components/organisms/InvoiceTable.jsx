@@ -55,18 +55,30 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
     return Array.isArray(sender) ? sender.join(", ") : sender;
   };
 
-  const renderAmount = (amount, field) => {
-    if (
-      typeof amount === "object" &&
-      amount !== null &&
-      field in amount &&
-      "currency" in amount
-    ) {
+  const renderAmount = (invoice, field) => {
+    if (!invoice) return "N/A";
+
+    const formatCurrency = (value, currency) => {
       return new Intl.NumberFormat("de-DE", {
         style: "currency",
-        currency: amount.currency,
-      }).format(amount[field]);
+        currency: currency || "EUR",
+      }).format(value);
+    };
+
+    if (
+      field === "vat_amount" &&
+      "vat_amount" in invoice &&
+      invoice.vat_amount != 0.0
+    ) {
+      return formatCurrency(invoice.vat_amount, invoice.amount?.currency);
     }
+
+    if (invoice.amount && typeof invoice.amount === "object") {
+      if (field in invoice.amount) {
+        return formatCurrency(invoice.amount[field], invoice.amount.currency);
+      }
+    }
+
     return "N/A";
   };
 
@@ -78,8 +90,8 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
             ? parseFloat(invoice.amount.gross_amount)
             : 0;
         const vatAmount =
-          invoice.amount && invoice.amount.vat_amount
-            ? parseFloat(invoice.amount.vat_amount)
+          invoice.amount && invoice.vat_amount
+            ? parseFloat(invoice.vat_amount)
             : 0;
         return {
           grossAmount: acc.grossAmount + grossAmount,
@@ -135,10 +147,10 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
               {invoice.invoice_number || "N/A"}
             </TableCell>
             <TableCell className="w-1/8 whitespace-nowrap">
-              {renderAmount(invoice.amount, "gross_amount")}
+              {renderAmount(invoice, "gross_amount")}
             </TableCell>
             <TableCell className="w-1/8 whitespace-nowrap">
-              {invoice.vat_amount}
+              {renderAmount(invoice, "vat_amount")}
             </TableCell>
             <TableCell className="w-1/8">
               <StatusBadge status={invoice.status} />
