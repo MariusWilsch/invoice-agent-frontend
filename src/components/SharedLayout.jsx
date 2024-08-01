@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import LanguageSwitcher from "./molecules/LanguageSwitcher";
+import ExportButton from "./molecules/ExportButton";
 
 const SharedLayout = () => {
   const navigate = useNavigate();
@@ -46,6 +47,7 @@ const SharedLayout = () => {
                 currentLanguage={currentLanguage}
                 onLanguageChange={handleLanguageChange}
               />
+              <ExportButton />
               <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                   <Button
