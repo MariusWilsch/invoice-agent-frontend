@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import InvoiceTable from './InvoiceTable';
 
-const InvoiceCard = ({ title, description, invoices, onViewDetails, onDelete, onStamp }) => (
+const InvoiceCard = ({ title, description, invoices, onViewDetails, onDelete, onStamp, showingText }) => (
   <Card>
     <CardHeader>
       <CardTitle>{title}</CardTitle>
@@ -25,7 +25,7 @@ const InvoiceCard = ({ title, description, invoices, onViewDetails, onDelete, on
     </CardContent>
     <CardFooter>
       <div className="text-xs text-muted-foreground">
-        Showing <strong>{invoices.length}</strong> invoices
+        {showingText}
       </div>
     </CardFooter>
   </Card>

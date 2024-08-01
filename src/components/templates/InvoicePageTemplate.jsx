@@ -50,6 +50,7 @@ const InvoicePageTemplate = ({
             onViewDetails={onViewDetails}
             onDelete={onDelete}
             onStamp={onStamp}
+            showingText={`${t.showing} ${invoices.length} ${t.invoicesCount}`}
           />
         </TabsContent>
         {statuses.map((status) => (
