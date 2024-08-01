@@ -74,13 +74,13 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-1/4">{t.vendorName}</TableHead>
-          <TableHead className="w-1/8 whitespace-nowrap">{t.dateIssued}</TableHead>
-          <TableHead className="w-1/8 whitespace-nowrap">{t.dueDate}</TableHead>
-          <TableHead className="w-1/8 whitespace-nowrap">{t.invoiceNumber}</TableHead>
-          <TableHead className="w-1/8 whitespace-nowrap">{t.grossAmount}</TableHead>
-          <TableHead className="w-1/8">{t.status}</TableHead>
-          <TableHead className="w-1/8">{t.actions}</TableHead>
+          <TableHead className="w-1/4 text-left">{t.vendorName}</TableHead>
+          <TableHead className="w-1/8 whitespace-nowrap text-left">{t.dateIssued}</TableHead>
+          <TableHead className="w-1/8 whitespace-nowrap text-left">{t.dueDate}</TableHead>
+          <TableHead className="w-1/8 whitespace-nowrap text-left">{t.invoiceNumber}</TableHead>
+          <TableHead className="w-1/8 whitespace-nowrap text-left">{t.grossAmount}</TableHead>
+          <TableHead className="w-1/8 text-left">{t.status}</TableHead>
+          <TableHead className="w-1/8 text-left">{t.actions}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -90,7 +90,7 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
             <TableCell className="w-1/8 whitespace-nowrap">{invoice.invoice_date || 'N/A'}</TableCell>
             <TableCell className="w-1/8 whitespace-nowrap">{invoice.faellig_am || 'N/A'}</TableCell>
             <TableCell className="w-1/8 whitespace-nowrap">{invoice.invoice_number || 'N/A'}</TableCell>
-            <TableCell className="w-1/8 whitespace-nowrap text-right">{renderAmount(invoice.amount)}</TableCell>
+            <TableCell className="w-1/8 whitespace-nowrap">{renderAmount(invoice.amount)}</TableCell>
             <TableCell className="w-1/8">
               <StatusBadge status={invoice.status} />
             </TableCell>
@@ -107,8 +107,8 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
       </TableBody>
       <TableFooter>
         <TableRow className="bg-muted/50 font-medium">
-          <TableCell colSpan={4}>{t.total}</TableCell>
-          <TableCell className="text-right whitespace-nowrap">
+          <TableCell colSpan={4} className="font-medium">{t.total}</TableCell>
+          <TableCell className="whitespace-nowrap font-medium">
             {new Intl.NumberFormat(language === 'de' ? 'de-DE' : 'en-US', {
               style: 'currency',
               currency: invoices[0]?.amount?.currency || 'EUR'
