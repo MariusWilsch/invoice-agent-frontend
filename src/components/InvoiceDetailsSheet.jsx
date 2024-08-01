@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -7,6 +7,8 @@ import {
 } from "@/components/ui/sheet";
 import { useLanguage } from "../contexts/LanguageContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Copy, Check } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
   const { language } = useLanguage();
@@ -163,15 +165,37 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
   );
 };
 
+const CopyButton = ({ value }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(value);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      className="h-4 w-4 text-gray-500 hover:text-gray-700"
+      onClick={handleCopy}
+    >
+      {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+    </Button>
+  );
+};
+
 const Field = ({ label, value, fullWidth = false }) => (
   <div className={`mb-4 ${fullWidth ? "col-span-2" : ""}`}>
     <p className="text-sm font-medium text-gray-500 mb-1">{label}:</p>
     <div
       className={`bg-gray-100 p-2 rounded-md shadow-md transform hover:translate-y-[-2px] transition-all duration-200 ${
         fullWidth ? "min-h-[100px] overflow-y-auto" : ""
-      }`}
+      } flex justify-between items-center`}
     >
-      <p className="text-sm text-gray-800 whitespace-pre-wrap">{value}</p>
+      <p className="text-sm text-gray-800 whitespace-pre-wrap flex-grow">{value}</p>
+      {value && value !== 'N/A' && <CopyButton value={value} />}
     </div>
   </div>
 );
