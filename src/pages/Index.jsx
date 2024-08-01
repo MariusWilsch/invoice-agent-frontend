@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
   useInvoicesDev,
   useDeleteInvoicesDev,
   supabase,
 } from "@/integrations/supabase/index.js";
 import InvoicePageTemplate from "../components/templates/InvoicePageTemplate";
-import { isWithinInterval } from "date-fns";
+import { format } from "date-fns";
 import StampSheet from "@/components/StampSheet";
 import InvoiceDetailsSheet from "@/components/InvoiceDetailsSheet";
 import { toast } from "sonner";
@@ -22,28 +22,7 @@ const Index = () => {
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [dateFilter, setDateFilter] = useState({ from: null, to: null });
 
-  useEffect(() => {
-    if (initialInvoices) {
-      setInvoices(initialInvoices);
-      updateStatuses(initialInvoices);
-    }
-  }, [initialInvoices]);
-
-  useEffect(() => {
-    const channel = supabase
-      .channel('invoices_changes')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'invoices_dev' }, payload => {
-        setInvoices(currentInvoices => [...currentInvoices, payload.new]);
-        updateStatuses([...invoices, payload.new]);
-      })
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [invoices]);
-
-  const updateStatuses = (invoicesList) => {
+  const updateStatuses = useCallback((invoicesList) => {
     const uniqueStatuses = Array.from(
       new Set(invoicesList.map((invoice) => {
         if (invoice.status === "Empfangen") return "Unchecked";
@@ -52,22 +31,43 @@ const Index = () => {
       }))
     );
     setStatuses(uniqueStatuses);
-  };
+  }, []);
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error loading invoices: {error.message}</div>;
+  useEffect(() => {
+    if (initialInvoices) {
+      setInvoices(initialInvoices);
+      updateStatuses(initialInvoices);
+    }
+  }, [initialInvoices, updateStatuses]);
 
-  const handleStampClick = (invoice) => {
+  useEffect(() => {
+    const channel = supabase
+      .channel('invoices_changes')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'invoices_dev' }, payload => {
+        setInvoices(currentInvoices => {
+          const newInvoices = [...currentInvoices, payload.new];
+          updateStatuses(newInvoices);
+          return newInvoices;
+        });
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [updateStatuses]);
+
+  const handleStampClick = useCallback((invoice) => {
     setSelectedInvoice(invoice);
     setIsStampSheetOpen(true);
-  };
+  }, []);
 
-  const handleViewDetails = (invoice) => {
+  const handleViewDetails = useCallback((invoice) => {
     setSelectedInvoice(invoice);
     setIsDetailsSheetOpen(true);
-  };
+  }, []);
 
-  const handleDelete = async (invoiceId) => {
+  const handleDelete = useCallback(async (invoiceId) => {
     try {
       await deleteInvoiceMutation.mutateAsync(invoiceId);
       toast.success("Invoice deleted successfully", {
@@ -81,11 +81,11 @@ const Index = () => {
         className: "text-red-500",
       });
     }
-  };
+  }, [deleteInvoiceMutation]);
 
-  const handleManualRun = async () => {
+  const handleManualRun = useCallback(async () => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/run", { manual_run: true });
+      await axios.post("http://127.0.0.1:8000/run", { manual_run: true });
       toast.success("Manual run initiated successfully", {
         icon: <CheckCircle className="h-5 w-5 text-green-500" />,
         className: "text-green-500",
@@ -97,25 +97,23 @@ const Index = () => {
         className: "text-red-500",
       });
     }
-  };
+  }, []);
 
-  const handleFilter = (dateRange) => {
+  const handleFilter = useCallback((dateRange) => {
     setDateFilter(dateRange);
-  };
+  }, []);
 
-  const handleClearFilter = () => {
+  const handleClearFilter = useCallback(() => {
     setDateFilter({ from: null, to: null });
-  };
+  }, []);
 
   const filteredInvoices = useMemo(() => {
-    let filtered = invoices.map(invoice => ({
+    return invoices.map(invoice => ({
       ...invoice,
       status: invoice.status === "Empfangen" ? "Unchecked" : 
               invoice.status === "Kontiert" ? "Checked" : 
               invoice.status
     })).filter(invoice => invoice.status !== "Marius_TEST");
-
-    return filtered;
   }, [invoices]);
 
   useEffect(() => {
@@ -137,7 +135,10 @@ const Index = () => {
     fetchFilteredInvoices();
   }, [dateFilter]);
 
-  const isFilterActive = dateFilter.from !== null && dateFilter.to !== null;
+  const isFilterActive = useMemo(() => dateFilter.from !== null && dateFilter.to !== null, [dateFilter]);
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading invoices: {error.message}</div>;
 
   return (
     <div>
