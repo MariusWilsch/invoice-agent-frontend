@@ -36,6 +36,8 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
       grossAmount: "Gross Amount",
       netAmount: "Net Amount",
       vatAmount: "VAT Amount",
+      paymentTerms: "Payment Terms",
+      vatRate: "VAT Rate",
       noInvoice: "No invoice selected",
       empty: "Empty",
       no: "No",
@@ -64,6 +66,8 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
       grossAmount: "Bruttobetrag",
       netAmount: "Nettobetrag",
       vatAmount: "Umsatzsteuerbetrag",
+      paymentTerms: "Zahlungsbedingungen",
+      vatRate: "Umsatzsteuersatz",
       noInvoice: "Keine Rechnung ausgewählt",
       empty: "Leer",
       no: "Nein",
@@ -110,6 +114,7 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
                   <Field label={t.invoiceNumber} value={invoice.invoice_number || t.empty} />
                   <Field label={t.dateIssued} value={invoice.invoice_date || t.empty} />
                   <Field label={t.dueDate} value={invoice.fällig_am || t.empty} />
+                  <Field label={t.paymentTerms} value={invoice.payment_terms || t.empty} />
                   <Field
                     label={t.sender}
                     value={
@@ -140,7 +145,11 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
                   />
                   <Field
                     label={t.vatAmount}
-                    value={renderAmount(invoice.amount, 'vat_amount', language)}
+                    value={renderAmount(invoice, 'vat_amount', language)}
+                  />
+                  <Field
+                    label={t.vatRate}
+                    value={invoice.vat_rate ? `${invoice.vat_rate}%` : t.empty}
                   />
                 </CardContent>
               </Card>
@@ -167,17 +176,17 @@ const Field = ({ label, value, fullWidth = false }) => (
   </div>
 );
 
-const renderAmount = (amount, field, language) => {
-  if (
-    typeof amount === "object" &&
-    amount !== null &&
-    field in amount &&
-    "currency" in amount
-  ) {
+const renderAmount = (invoice, field, language) => {
+  if (invoice && invoice.amount && typeof invoice.amount === "object" && field in invoice.amount) {
     return new Intl.NumberFormat(language === 'de' ? 'de-DE' : 'en-US', {
       style: 'currency',
-      currency: amount.currency
-    }).format(amount[field]);
+      currency: invoice.amount.currency || 'EUR'
+    }).format(invoice.amount[field]);
+  } else if (invoice && field in invoice) {
+    return new Intl.NumberFormat(language === 'de' ? 'de-DE' : 'en-US', {
+      style: 'currency',
+      currency: 'EUR'
+    }).format(invoice[field]);
   }
   return "N/A";
 };
