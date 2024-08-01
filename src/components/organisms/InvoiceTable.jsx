@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   Table,
   TableBody,
@@ -6,6 +6,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  TableFooter,
 } from "@/components/ui/table";
 import StatusBadge from '../molecules/StatusBadge';
 import ActionButtons from '../molecules/ActionButtons';
@@ -23,6 +24,7 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
       grossAmount: 'Gross Amount',
       status: 'Status',
       actions: 'Actions',
+      total: 'Total',
     },
     de: {
       vendorName: 'Absender',
@@ -32,6 +34,7 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
       grossAmount: 'Bruttobetrag',
       status: 'Status',
       actions: 'Aktionen',
+      total: 'Gesamt',
     },
   };
 
@@ -54,6 +57,15 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
     }
     return amount || 'N/A';
   };
+
+  const totalGrossAmount = useMemo(() => {
+    return invoices.reduce((total, invoice) => {
+      const amount = invoice.amount && invoice.amount.gross_amount
+        ? parseFloat(invoice.amount.gross_amount)
+        : 0;
+      return total + amount;
+    }, 0);
+  }, [invoices]);
 
   return (
     <Table>
@@ -90,6 +102,18 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
           </TableRow>
         ))}
       </TableBody>
+      <TableFooter>
+        <TableRow className="bg-muted/50 font-medium">
+          <TableCell colSpan={4}>{t.total}</TableCell>
+          <TableCell className="text-right">
+            {new Intl.NumberFormat(language === 'de' ? 'de-DE' : 'en-US', {
+              style: 'currency',
+              currency: invoices[0]?.amount?.currency || 'EUR'
+            }).format(totalGrossAmount)}
+          </TableCell>
+          <TableCell colSpan={2} />
+        </TableRow>
+      </TableFooter>
     </Table>
   );
 };
