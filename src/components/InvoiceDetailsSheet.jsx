@@ -253,21 +253,18 @@ const Field = ({ label, value, fullWidth = false }) => {
 };
 
 const renderAmount = (invoice, field, language) => {
-  if (
-    invoice &&
-    invoice.amount &&
-    typeof invoice.amount === "object" &&
-    field in invoice.amount
-  ) {
-    return new Intl.NumberFormat(language === "de" ? "de-DE" : "en-US", {
-      style: "currency",
-      currency: invoice.amount.currency || "EUR",
-    }).format(invoice.amount[field]);
-  } else if (invoice && field in invoice) {
-    return new Intl.NumberFormat(language === "de" ? "de-DE" : "en-US", {
-      style: "currency",
-      currency: "EUR",
-    }).format(invoice[field]);
+  if (invoice && invoice.amount && typeof invoice.amount === "object") {
+    if (field === "vat_amount" && "vat_amount" in invoice) {
+      return new Intl.NumberFormat(language === "de" ? "de-DE" : "en-US", {
+        style: "currency",
+        currency: invoice.amount.currency || "EUR",
+      }).format(invoice.vat_amount);
+    } else if (field in invoice.amount) {
+      return new Intl.NumberFormat(language === "de" ? "de-DE" : "en-US", {
+        style: "currency",
+        currency: invoice.amount.currency || "EUR",
+      }).format(invoice.amount[field]);
+    }
   }
   return "N/A";
 };
