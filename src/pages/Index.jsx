@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   useInvoicesDev,
   useDeleteInvoicesDev,
+  supabase,
 } from "@/integrations/supabase/index.js";
 import InvoicePageTemplate from "../components/templates/InvoicePageTemplate";
 import StampSheet from "@/components/StampSheet";
@@ -11,25 +12,45 @@ import { CheckCircle, XCircle } from "lucide-react";
 import axios from "axios";
 
 const Index = () => {
-  const { data: invoices, error, isLoading } = useInvoicesDev();
+  const { data: initialInvoices, error, isLoading } = useInvoicesDev();
   const deleteInvoiceMutation = useDeleteInvoicesDev();
+  const [invoices, setInvoices] = useState([]);
   const [statuses, setStatuses] = useState([]);
   const [isStampSheetOpen, setIsStampSheetOpen] = useState(false);
   const [isDetailsSheetOpen, setIsDetailsSheetOpen] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
 
   useEffect(() => {
-    if (invoices) {
-      const uniqueStatuses = Array.from(
-        new Set(invoices.map((invoice) => {
-          if (invoice.status === "Empfangen") return "Unchecked";
-          if (invoice.status === "Kontiert") return "Checked";
-          return invoice.status;
-        }))
-      );
-      setStatuses(uniqueStatuses);
+    if (initialInvoices) {
+      setInvoices(initialInvoices);
+      updateStatuses(initialInvoices);
     }
+  }, [initialInvoices]);
+
+  useEffect(() => {
+    const channel = supabase
+      .channel('invoices_changes')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'invoices_dev' }, payload => {
+        setInvoices(currentInvoices => [...currentInvoices, payload.new]);
+        updateStatuses([...invoices, payload.new]);
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [invoices]);
+
+  const updateStatuses = (invoicesList) => {
+    const uniqueStatuses = Array.from(
+      new Set(invoicesList.map((invoice) => {
+        if (invoice.status === "Empfangen") return "Unchecked";
+        if (invoice.status === "Kontiert") return "Checked";
+        return invoice.status;
+      }))
+    );
+    setStatuses(uniqueStatuses);
+  };
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading invoices: {error.message}</div>;
