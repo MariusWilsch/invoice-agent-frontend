@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import InvoiceCard from "../organisms/InvoiceCard";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
+import FilterButton from "../molecules/FilterButton";
 
 const translations = {
   de: {
@@ -22,6 +23,7 @@ const translations = {
     showing: "Showing",
     invoicesCount: "invoices",
     manualRun: "Manual Run",
+    filter: "Filter",
   },
 };
 
@@ -33,6 +35,7 @@ const InvoicePageTemplate = ({
   onDelete,
   onStamp,
   onManualRun,
+  onFilter,
 }) => {
   const { language } = useLanguage();
   const t = translations[language];
@@ -49,7 +52,10 @@ const InvoicePageTemplate = ({
               </TabsTrigger>
             ))}
           </TabsList>
-          <Button onClick={onManualRun}>{t.manualRun}</Button>
+          <div className="flex space-x-2">
+            <FilterButton onFilter={onFilter} />
+            <Button onClick={onManualRun}>{t.manualRun}</Button>
+          </div>
         </div>
         <TabsContent value="all">
           <InvoiceCard

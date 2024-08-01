@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   useInvoicesDev,
   useDeleteInvoicesDev,
   supabase,
 } from "@/integrations/supabase/index.js";
 import InvoicePageTemplate from "../components/templates/InvoicePageTemplate";
+import { isWithinInterval } from "date-fns";
 import StampSheet from "@/components/StampSheet";
 import InvoiceDetailsSheet from "@/components/InvoiceDetailsSheet";
 import { toast } from "sonner";
@@ -19,6 +20,7 @@ const Index = () => {
   const [isStampSheetOpen, setIsStampSheetOpen] = useState(false);
   const [isDetailsSheetOpen, setIsDetailsSheetOpen] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
+  const [dateFilter, setDateFilter] = useState({ from: null, to: null });
 
   useEffect(() => {
     if (initialInvoices) {
@@ -97,25 +99,39 @@ const Index = () => {
     }
   };
 
-  const updatedInvoices = invoices.map(invoice => ({
-    ...invoice,
-    status: invoice.status === "Empfangen" ? "Unchecked" : 
-            invoice.status === "Kontiert" ? "Checked" : 
-            invoice.status
-  }));
+  const handleFilter = (dateRange) => {
+    setDateFilter(dateRange);
+  };
 
-  const filteredInvoices = updatedInvoices.filter(invoice => invoice.status !== "Marius_TEST");
+  const filteredInvoices = useMemo(() => {
+    let filtered = invoices.map(invoice => ({
+      ...invoice,
+      status: invoice.status === "Empfangen" ? "Unchecked" : 
+              invoice.status === "Kontiert" ? "Checked" : 
+              invoice.status
+    })).filter(invoice => invoice.status !== "Marius_TEST");
+
+    if (dateFilter.from && dateFilter.to) {
+      filtered = filtered.filter(invoice => {
+        const invoiceDate = new Date(invoice.invoice_date);
+        return isWithinInterval(invoiceDate, { start: dateFilter.from, end: dateFilter.to });
+      });
+    }
+
+    return filtered;
+  }, [invoices, dateFilter]);
 
   return (
     <div>
       <InvoicePageTemplate
         invoices={filteredInvoices}
-        allInvoices={updatedInvoices}
+        allInvoices={invoices}
         statuses={statuses}
         onViewDetails={handleViewDetails}
         onDelete={handleDelete}
         onStamp={handleStampClick}
         onManualRun={handleManualRun}
+        onFilter={handleFilter}
       />
 
       <StampSheet
