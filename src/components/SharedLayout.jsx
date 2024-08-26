@@ -15,15 +15,26 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import LanguageSwitcher from "./molecules/LanguageSwitcher";
+import { useAuth } from "@/contexts/AuthContext";
 
 const SharedLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState('de');
+  const { signOut, user } = useAuth();
 
   const handleLanguageChange = (langCode) => {
     setCurrentLanguage(langCode);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout error:', error.message);
+    }
   };
 
   return (
@@ -52,7 +63,7 @@ const SharedLayout = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuLabel>{user?.email}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>Settings</DropdownMenuItem>
                   <DropdownMenuItem>Support</DropdownMenuItem>
@@ -60,7 +71,7 @@ const SharedLayout = () => {
                     Show Ticket Number
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>Logout</DropdownMenuItem>
+                  <DropdownMenuItem onSelect={handleLogout}>Logout</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
