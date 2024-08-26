@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { DatePickerDemo } from "@/components/ui/date-picker";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
 import { Slider } from "@/components/ui/slider";
 import SelectField from "../molecules/SelectField";
 import { toast } from "sonner";
@@ -216,7 +215,7 @@ const StampForm = ({ invoice, onClose, onViewInvoice }) => {
           <FormField label={t.comment} id="kommentar" className="flex-grow">
             <Textarea
               placeholder={`${t.enter} ${t.comment}`}
-              className="h-full border-2 border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-50 rounded-md"
+              className="h-full"
               onChange={(e) => handleInputChange("kommentar", e.target.value)}
               value={formData.kommentar}
             />
@@ -278,12 +277,7 @@ const FormField = ({ label, id, children, className }) => (
     >
       {label}
     </label>
-    {React.cloneElement(children, {
-      className: cn(
-        "border-2 border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-50 rounded-md",
-        children.props.className
-      ),
-    })}
+    {children}
   </div>
 );
 
