@@ -12,15 +12,18 @@ const translations = {
     invoices: "Rechnungen",
     manage: "Verwalten Sie Ihre Rechnungen und sehen Sie deren Details ein.",
     unchecked: "Unkontiert",
+    checked: "Kontiert",
     showing: "Zeige",
     invoicesCount: "Rechnungen",
     manualRun: "Manueller Lauf",
+    filter: "Filter",
   },
   en: {
     all: "All",
     invoices: "Invoices",
     manage: "Manage your invoices and view their details.",
     unchecked: "Unchecked",
+    checked: "Checked",
     showing: "Showing",
     invoicesCount: "invoices",
     manualRun: "Manual Run",
@@ -44,6 +47,19 @@ const InvoicePageTemplate = ({
   const { language } = useLanguage();
   const t = translations[language];
 
+  const getTranslatedStatus = (status) => {
+    switch (status.toLowerCase()) {
+      case "unchecked":
+      case "empfangen":
+        return t.unchecked;
+      case "checked":
+      case "kontiert":
+        return t.checked;
+      default:
+        return status;
+    }
+  };
+
   return (
     <div>
       <Tabs defaultValue="all">
@@ -52,7 +68,7 @@ const InvoicePageTemplate = ({
             <TabsTrigger value="all">{t.all}</TabsTrigger>
             {statuses.map((status) => (
               <TabsTrigger key={status} value={status.toLowerCase()}>
-                {status === "Empfangen" ? t.unchecked : status}
+                {getTranslatedStatus(status)}
               </TabsTrigger>
             ))}
           </TabsList>
@@ -80,9 +96,7 @@ const InvoicePageTemplate = ({
         {statuses.map((status) => (
           <TabsContent key={status} value={status.toLowerCase()}>
             <InvoiceCard
-              title={`${status === "Empfangen" ? t.unchecked : status} ${
-                t.invoices
-              }`}
+              title={`${getTranslatedStatus(status)} ${t.invoices}`}
               description={t.manage}
               invoices={
                 status === "Marius_TEST"
