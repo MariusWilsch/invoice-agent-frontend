@@ -156,7 +156,7 @@ const StampForm = ({ invoice, onClose, onViewInvoice }) => {
       onSubmit={handleSubmit}
       className="space-y-6 h-full overflow-visible pr-4"
     >
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4 p-4">
         {/* Left Column */}
         <div className="space-y-4">
           <FormField label={t.receivedOn} id="eingegangen_am">
@@ -180,6 +180,7 @@ const StampForm = ({ invoice, onClose, onViewInvoice }) => {
               placeholder={`${t.enter} ${t.account}`}
               onChange={(e) => handleInputChange("konto", e.target.value)}
               value={formData.konto}
+              className="border-2 border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-50 rounded-md"
             />
           </FormField>
 
