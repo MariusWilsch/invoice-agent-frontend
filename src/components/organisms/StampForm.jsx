@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { DatePickerDemo } from "@/components/ui/date-picker";
 import { Input } from "@/components/ui/input";
@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import SelectField from "../molecules/SelectField";
 import { toast } from "sonner";
-import { useUpdateInvoicesDev, useAddDropdownOptionInvoicesDev } from "@/integrations/supabase/index.js";
+import { useUpdateInvoicesDev, useAddDropdownOptionInvoicesDev, useDropdownOptionsInvoicesDev } from "@/integrations/supabase/index.js";
 import { useLanguage } from "../../contexts/LanguageContext";
 
 const StampForm = ({ invoice, onClose, onViewInvoice }) => {
@@ -14,6 +14,7 @@ const StampForm = ({ invoice, onClose, onViewInvoice }) => {
   const [skontoValue, setSkontoValue] = useState(invoice?.skonto || 0);
   const [isViewingInvoice, setIsViewingInvoice] = useState(false);
   const addDropdownOptionMutation = useAddDropdownOptionInvoicesDev();
+  const { data: dropdownOptions } = useDropdownOptionsInvoicesDev();
   const [formData, setFormData] = useState({
     id: invoice?.id,
     eingegangen_am: invoice?.eingegangen_am || null,
@@ -30,8 +31,15 @@ const StampForm = ({ invoice, onClose, onViewInvoice }) => {
 
   const updateInvoiceMutation = useUpdateInvoicesDev();
 
-  const kostenstelleOptions = [];
-  const vbOptions = [];
+  const [kostenstelleOptions, setKostenstelleOptions] = useState([]);
+  const [vbOptions, setVbOptions] = useState([]);
+
+  useEffect(() => {
+    if (dropdownOptions) {
+      setKostenstelleOptions(dropdownOptions.filter(option => option.field_type === 'kostenstelle').map(option => ({ value: option.value, label: option.value })));
+      setVbOptions(dropdownOptions.filter(option => option.field_type === 'vb').map(option => ({ value: option.value, label: option.value })));
+    }
+  }, [dropdownOptions]);
 
   const translations = {
     de: {
@@ -81,17 +89,17 @@ const StampForm = ({ invoice, onClose, onViewInvoice }) => {
     }));
 
     // If it's a new option for kostenstelle or vb, add it to the dropdown options
-    if ((field === 'kostenstelle' || field === 'vb') && !kostenstelleOptions.find(option => option.value === value)) {
+    if ((field === 'kostenstelle' || field === 'vb') && !dropdownOptions.find(option => option.value === value && option.field_type === field)) {
       try {
         await addDropdownOptionMutation.mutateAsync({
           field_type: field,
           value: value,
-          label: value // Ensure label is set to the same value
+          label: field === 'kostenstelle' ? t.costCenter : t.vb
         });
-        toast.success(`New ${field} option added successfully`);
+        toast.success(`New ${field === 'kostenstelle' ? t.costCenter : t.vb} option added successfully`);
       } catch (error) {
         console.error(`Error adding new ${field} option:`, error);
-        toast.error(`Failed to add new ${field} option`);
+        toast.error(`Failed to add new ${field === 'kostenstelle' ? t.costCenter : t.vb} option`);
       }
     }
   };
