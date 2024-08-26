@@ -114,21 +114,21 @@ const SharedLayout = () => {
             <DialogTitle>IMAP Credentials</DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="email" className="text-right font-bold">
-                EMAIL
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="email" className="font-bold">
+                Email
               </Label>
               <Input
                 id="email"
                 name="email"
                 value={imapCredentials.email}
                 onChange={handleImapCredentialsChange}
-                className="col-span-3"
+                className="w-full"
               />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="password" className="text-right font-bold">
-                PASSWORD
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="password" className="font-bold">
+                Password
               </Label>
               <Input
                 id="password"
@@ -136,19 +136,19 @@ const SharedLayout = () => {
                 type="password"
                 value={imapCredentials.password}
                 onChange={handleImapCredentialsChange}
-                className="col-span-3"
+                className="w-full"
               />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="server" className="text-right font-bold">
-                IMAP SERVER ADDRESS
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="server" className="font-bold">
+                Imap server address
               </Label>
               <Input
                 id="server"
                 name="server"
                 value={imapCredentials.server}
                 onChange={handleImapCredentialsChange}
-                className="col-span-3"
+                className="w-full"
               />
             </div>
           </div>
