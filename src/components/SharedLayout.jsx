@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { User } from "lucide-react";
 import { toast } from "sonner";
 import { LanguageProvider } from "../contexts/LanguageContext";
@@ -16,13 +16,35 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import LanguageSwitcher from "./molecules/LanguageSwitcher";
 import { useAuth } from "@/contexts/AuthContext";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const SharedLayout = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState('de');
   const { signOut, user } = useAuth();
+  const [isImapModalOpen, setIsImapModalOpen] = useState(false);
+  const [imapCredentials, setImapCredentials] = useState({
+    email: "",
+    password: "",
+    server: "",
+  });
 
   const handleLanguageChange = (langCode) => {
     setCurrentLanguage(langCode);
@@ -35,6 +57,18 @@ const SharedLayout = () => {
     } catch (error) {
       console.error('Logout error:', error.message);
     }
+  };
+
+  const handleImapCredentialsChange = (e) => {
+    const { name, value } = e.target;
+    setImapCredentials(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleImapCredentialsSubmit = () => {
+    // Here you would typically send the IMAP credentials to your backend
+    console.log("IMAP Credentials:", imapCredentials);
+    toast.success("IMAP Credentials saved");
+    setIsImapModalOpen(false);
   };
 
   return (
@@ -65,10 +99,11 @@ const SharedLayout = () => {
                 <DropdownMenuContent align="end">
                   <DropdownMenuLabel>{user?.email}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>Settings</DropdownMenuItem>
-                  <DropdownMenuItem>Support</DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => toast("Inquires to: [Ticket#18801]")}>
                     Show Ticket Number
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => setIsImapModalOpen(true)}>
+                    IMAP Credentials
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onSelect={handleLogout}>Logout</DropdownMenuItem>
@@ -81,6 +116,56 @@ const SharedLayout = () => {
           </main>
         </div>
       </div>
+
+      <Dialog open={isImapModalOpen} onOpenChange={setIsImapModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>IMAP Credentials</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="email" className="text-right font-bold">
+                EMAIL
+              </Label>
+              <Input
+                id="email"
+                name="email"
+                value={imapCredentials.email}
+                onChange={handleImapCredentialsChange}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="password" className="text-right font-bold">
+                PASSWORD
+              </Label>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                value={imapCredentials.password}
+                onChange={handleImapCredentialsChange}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="server" className="text-right font-bold">
+                IMAP SERVER ADDRESS
+              </Label>
+              <Input
+                id="server"
+                name="server"
+                value={imapCredentials.server}
+                onChange={handleImapCredentialsChange}
+                className="col-span-3"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button onClick={handleImapCredentialsSubmit}>Save changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </LanguageProvider>
   );
 };
