@@ -98,7 +98,7 @@ const Index = () => {
   const handleManualRun = useCallback(async () => {
     try {
       await axios.post("https://invoiceagenttry2.ey.r.appspot.com/run", {
-        manual_run: "last",
+        manual_run: "today",
       });
       toast.success("Manual run initiated successfully", {
         icon: <CheckCircle className="h-5 w-5 text-green-500" />,
