@@ -123,7 +123,7 @@ const SharedLayout = () => {
                 name="email"
                 value={imapCredentials.email}
                 onChange={handleImapCredentialsChange}
-                className="w-full"
+                className="w-full border-gray-300"
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -136,7 +136,7 @@ const SharedLayout = () => {
                 type="password"
                 value={imapCredentials.password}
                 onChange={handleImapCredentialsChange}
-                className="w-full"
+                className="w-full border-gray-300"
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -148,7 +148,7 @@ const SharedLayout = () => {
                 name="server"
                 value={imapCredentials.server}
                 onChange={handleImapCredentialsChange}
-                className="w-full"
+                className="w-full border-gray-300"
               />
             </div>
           </div>
