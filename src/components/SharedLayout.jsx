@@ -55,11 +55,21 @@ const SharedLayout = () => {
     setImapCredentials(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleImapCredentialsSubmit = () => {
-    // Here you would typically send the IMAP credentials to your backend
-    console.log("IMAP Credentials:", imapCredentials);
-    toast.success("IMAP Credentials saved");
-    setIsImapModalOpen(false);
+  const handleImapCredentialsSubmit = async () => {
+    try {
+      const { data, error } = await supabase.auth.updateUser({
+        data: { imapCredentials: imapCredentials }
+      });
+
+      if (error) throw error;
+
+      console.log("IMAP Credentials saved to user metadata:", data);
+      toast.success("IMAP Credentials saved successfully");
+      setIsImapModalOpen(false);
+    } catch (error) {
+      console.error("Error saving IMAP credentials:", error.message);
+      toast.error(`Failed to save IMAP credentials: ${error.message}`);
+    }
   };
 
   return (
