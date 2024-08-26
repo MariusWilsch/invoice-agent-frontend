@@ -28,6 +28,7 @@ export const AuthProvider = ({ children }) => {
           // We'll show the toast only when explicitly signing in, not on page reload
         } else if (event === 'SIGNED_OUT') {
           navigate('/login');
+          // Show the toast only once, when the auth state changes to signed out
           toast.success('Signed out successfully');
         }
       }
@@ -68,7 +69,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
-      toast.success('Signed out successfully');
+      // Remove the toast from here as it will be handled by the onAuthStateChange listener
     } catch (error) {
       console.error('Error signing out:', error.message);
       toast.error(`Error signing out: ${error.message}`);
