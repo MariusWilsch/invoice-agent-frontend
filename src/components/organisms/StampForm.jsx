@@ -30,17 +30,8 @@ const StampForm = ({ invoice, onClose, onViewInvoice }) => {
 
   const updateInvoiceMutation = useUpdateInvoicesDev();
 
-  const kostenstelleOptions = [
-    { value: "option1", label: language === 'de' ? "Option 1" : "Option 1" },
-    { value: "option2", label: language === 'de' ? "Option 2" : "Option 2" },
-    { value: "option3", label: language === 'de' ? "Option 3" : "Option 3" },
-  ];
-
-  const vbOptions = [
-    { value: "option1", label: language === 'de' ? "Option 1" : "Option 1" },
-    { value: "option2", label: language === 'de' ? "Option 2" : "Option 2" },
-    { value: "option3", label: language === 'de' ? "Option 3" : "Option 3" },
-  ];
+  const kostenstelleOptions = [];
+  const vbOptions = [];
 
   const translations = {
     de: {
