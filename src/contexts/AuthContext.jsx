@@ -11,9 +11,13 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const session = supabase.auth.getSession();
-    setUser(session?.user ?? null);
-    setLoading(false);
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setUser(session?.user ?? null);
+      setLoading(false);
+    };
+
+    checkSession();
 
     const { data: listener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
@@ -21,7 +25,7 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
         if (event === 'SIGNED_IN') {
           navigate('/');
-          toast.success('Signed in successfully');
+          // We'll show the toast only when explicitly signing in, not on page reload
         } else if (event === 'SIGNED_OUT') {
           navigate('/login');
           toast.success('Signed out successfully');
