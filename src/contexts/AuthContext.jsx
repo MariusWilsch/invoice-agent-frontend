@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useContext, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/index.js';
 import { useNavigate } from 'react-router-dom';
+import { toast } from "sonner";
 
 const AuthContext = createContext();
 
@@ -20,8 +21,10 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
         if (event === 'SIGNED_IN') {
           navigate('/');
+          toast.success('Signed in successfully');
         } else if (event === 'SIGNED_OUT') {
           navigate('/login');
+          toast.success('Signed out successfully');
         }
       }
     );
@@ -35,9 +38,11 @@ export const AuthProvider = ({ children }) => {
     try {
       const { data, error } = await supabase.auth.signUp({ email, password });
       if (error) throw error;
+      toast.success('Signed up successfully. Please check your email for verification.');
       return data;
     } catch (error) {
       console.error('Error signing up:', error.message);
+      toast.error(`Error signing up: ${error.message}`);
       throw error;
     }
   };
@@ -46,9 +51,11 @@ export const AuthProvider = ({ children }) => {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
+      toast.success('Signed in successfully');
       return data;
     } catch (error) {
       console.error('Error signing in:', error.message);
+      toast.error(`Error signing in: ${error.message}`);
       throw error;
     }
   };
@@ -57,8 +64,10 @@ export const AuthProvider = ({ children }) => {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
+      toast.success('Signed out successfully');
     } catch (error) {
       console.error('Error signing out:', error.message);
+      toast.error(`Error signing out: ${error.message}`);
       throw error;
     }
   };
