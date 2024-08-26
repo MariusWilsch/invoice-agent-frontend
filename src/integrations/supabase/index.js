@@ -129,10 +129,12 @@ export const useDropdownOptionsInvoicesDev = () =>
 export const useAddDropdownOptionInvoicesDev = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (newItem) =>
-      fromSupabase(
-        supabase.from("dropdown_options_invoices_dev").insert([newItem])
-      ),
+    mutationFn: (newItem) => {
+      const { label, ...itemWithoutLabel } = newItem;
+      return fromSupabase(
+        supabase.from("dropdown_options_invoices_dev").insert([itemWithoutLabel])
+      );
+    },
     onSuccess: () => {
       queryClient.invalidateQueries("dropdown_options_invoices_dev");
     },
@@ -142,13 +144,15 @@ export const useAddDropdownOptionInvoicesDev = () => {
 export const useUpdateDropdownOptionInvoicesDev = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (updatedItem) =>
-      fromSupabase(
+    mutationFn: (updatedItem) => {
+      const { label, ...itemWithoutLabel } = updatedItem;
+      return fromSupabase(
         supabase
           .from("dropdown_options_invoices_dev")
-          .update(updatedItem)
+          .update(itemWithoutLabel)
           .eq("id", updatedItem.id)
-      ),
+      );
+    },
     onSuccess: () => {
       queryClient.invalidateQueries("dropdown_options_invoices_dev");
     },

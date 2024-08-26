@@ -93,8 +93,7 @@ const StampForm = ({ invoice, onClose, onViewInvoice }) => {
       try {
         await addDropdownOptionMutation.mutateAsync({
           field_type: field,
-          value: value,
-          label: field === 'kostenstelle' ? t.costCenter : t.vb
+          value: value
         });
         toast.success(`New ${field === 'kostenstelle' ? t.costCenter : t.vb} option added successfully`);
       } catch (error) {
