@@ -11,6 +11,7 @@ import InvoiceDetailsSheet from "@/components/InvoiceDetailsSheet";
 import { toast } from "sonner";
 import { CheckCircle, XCircle } from "lucide-react";
 import axios from "axios";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Index = () => {
   const { data: initialInvoices, error, isLoading } = useInvoicesDev();
@@ -21,6 +22,7 @@ const Index = () => {
   const [isDetailsSheetOpen, setIsDetailsSheetOpen] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [dateFilter, setDateFilter] = useState({ from: null, to: null });
+  const { user } = useAuth();
 
   const updateStatuses = useCallback((invoicesList) => {
     const uniqueStatuses = Array.from(
@@ -96,9 +98,18 @@ const Index = () => {
   );
 
   const handleManualRun = useCallback(async () => {
+    if (!user) {
+      toast.error("User not authenticated", {
+        icon: <XCircle className="h-5 w-5 text-red-500" />,
+        className: "text-red-500",
+      });
+      return;
+    }
+
     try {
       await axios.post("https://invoiceagenttry2.ey.r.appspot.com/run", {
         manual_run: "today",
+        user_metadata: user.user_metadata,
       });
       toast.success("Manual run initiated successfully", {
         icon: <CheckCircle className="h-5 w-5 text-green-500" />,
@@ -111,7 +122,7 @@ const Index = () => {
         className: "text-red-500",
       });
     }
-  }, []);
+  }, [user]);
 
   const handleFilter = useCallback((dateRange) => {
     setDateFilter(dateRange);
