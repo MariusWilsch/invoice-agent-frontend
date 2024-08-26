@@ -11,11 +11,14 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { signUp } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     try {
       await signUp(email, password);
       toast.success('Sign up successful. Please check your email for verification.');
@@ -23,6 +26,8 @@ const SignUp = () => {
     } catch (error) {
       console.error('SignUp error:', error.message);
       toast.error(`Sign up failed: ${error.message}`);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -43,6 +48,7 @@ const SignUp = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 className="w-full"
+                disabled={isSubmitting}
               />
             </div>
             <div>
@@ -56,11 +62,13 @@ const SignUp = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   className="w-full pr-10"
+                  disabled={isSubmitting}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-500"
+                  disabled={isSubmitting}
                 >
                   {showPassword ? (
                     <EyeOffIcon className="h-5 w-5" />
@@ -70,8 +78,8 @@ const SignUp = () => {
                 </button>
               </div>
             </div>
-            <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700">
-              Sign Up
+            <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700" disabled={isSubmitting}>
+              {isSubmitting ? 'Signing Up...' : 'Sign Up'}
             </Button>
           </form>
           <p className="mt-4 text-center text-sm text-gray-600">
