@@ -25,10 +25,8 @@ export const AuthProvider = ({ children }) => {
         setLoading(false);
         if (event === 'SIGNED_IN') {
           navigate('/');
-          // We'll show the toast only when explicitly signing in, not on page reload
         } else if (event === 'SIGNED_OUT') {
           navigate('/login');
-          // Show the toast only once, when the auth state changes to signed out
           toast.success('Signed out successfully');
         }
       }
@@ -65,11 +63,21 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const signInWithOtp = async (email) => {
+    try {
+      const { data, error } = await supabase.auth.signInWithOtp({ email });
+      if (error) throw error;
+      return { data, error: null };
+    } catch (error) {
+      console.error('Error sending magic link:', error.message);
+      return { data: null, error };
+    }
+  };
+
   const signOut = async () => {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
-      // Remove the toast from here as it will be handled by the onAuthStateChange listener
     } catch (error) {
       console.error('Error signing out:', error.message);
       toast.error(`Error signing out: ${error.message}`);
@@ -81,6 +89,7 @@ export const AuthProvider = ({ children }) => {
     () => ({
       signUp,
       signIn,
+      signInWithOtp,
       signOut,
       user,
     }),
