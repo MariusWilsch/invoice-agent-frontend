@@ -1,5 +1,4 @@
 import { supabase } from './supabase.js';
-import { SupabaseAuthProvider, useSupabaseAuth, SupabaseAuthUI } from './auth.jsx';
 
 import {
   useInvoicesProject,
@@ -19,9 +18,6 @@ import {
 
 export {
   supabase,
-  SupabaseAuthProvider,
-  useSupabaseAuth,
-  SupabaseAuthUI,
   useInvoicesProject,
   useInvoiceProjectById,
   useAddInvoiceProject,
