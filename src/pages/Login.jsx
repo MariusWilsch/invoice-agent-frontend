@@ -5,20 +5,20 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from 'react-router-dom';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
-import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [useMagicLink, setUseMagicLink] = useState(false);
+  const [authMethod, setAuthMethod] = useState('password');
   const { signIn, signInWithOtp } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (useMagicLink) {
+      if (authMethod === 'magic-link') {
         await signInWithOtp({ email });
       } else {
         await signIn(email, password);
@@ -34,9 +34,31 @@ const Login = () => {
         <CardContent>
           <h1 className="text-3xl font-bold mb-2">Login</h1>
           <p className="text-gray-600 mb-6">Hi, Welcome back 👋</p>
+          <div className="flex mb-4">
+            <Button
+              type="button"
+              className={cn(
+                "flex-1 rounded-r-none",
+                authMethod === 'password' ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"
+              )}
+              onClick={() => setAuthMethod('password')}
+            >
+              Password
+            </Button>
+            <Button
+              type="button"
+              className={cn(
+                "flex-1 rounded-l-none",
+                authMethod === 'magic-link' ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"
+              )}
+              onClick={() => setAuthMethod('magic-link')}
+            >
+              Magic Link
+            </Button>
+          </div>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <Label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</Label>
               <Input
                 id="email"
                 type="email"
@@ -47,9 +69,9 @@ const Login = () => {
                 className="w-full"
               />
             </div>
-            {!useMagicLink && (
+            {authMethod === 'password' && (
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                <Label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Password</Label>
                 <div className="relative">
                   <Input
                     id="password"
@@ -74,15 +96,7 @@ const Login = () => {
                 </div>
               </div>
             )}
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="magic-link"
-                checked={useMagicLink}
-                onCheckedChange={setUseMagicLink}
-              />
-              <Label htmlFor="magic-link">Use Magic Link</Label>
-            </div>
-            {!useMagicLink && (
+            {authMethod === 'password' && (
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
                   <input
@@ -103,7 +117,7 @@ const Login = () => {
               </div>
             )}
             <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700">
-              {useMagicLink ? "Send Magic Link" : "Login"}
+              {authMethod === 'magic-link' ? "Send Magic Link" : "Login"}
             </Button>
           </form>
           <p className="mt-4 text-center text-sm text-gray-600">
