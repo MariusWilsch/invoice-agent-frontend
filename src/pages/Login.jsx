@@ -20,11 +20,11 @@ const Login = () => {
     e.preventDefault();
     try {
       if (authMethod === 'magic-link') {
-        const { data, error } = await signInWithOtp(email);
+        const { data, error } = await signInWithOtp({ email });
         if (error) {
           throw error;
         }
-        toast.success('Magic link sent successfully', {
+        toast.success(`Magic link sent successfully (Status: ${data.status || 200})`, {
           description: "Please check your email for the login link.",
         });
       } else {
@@ -32,7 +32,7 @@ const Login = () => {
       }
     } catch (error) {
       console.error('Login error:', error.message);
-      toast.error('Authentication failed', {
+      toast.error(`Authentication failed (Status: ${error.status || 400})`, {
         description: error.message || "An error occurred during authentication.",
       });
     }

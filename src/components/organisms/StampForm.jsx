@@ -6,14 +6,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import SelectField from "../molecules/SelectField";
 import { toast } from "sonner";
-import { useUpdateInvoiceProject, useAddInvoiceProjectDropdownMenu, useInvoicesProjectDropdownMenu } from "@/integrations/supabase/index.js";
+import { useUpdateInvoicesDev, useAddDropdownOptionInvoicesDev, useDropdownOptionsInvoicesDev } from "@/integrations/supabase/index.js";
 import { useLanguage } from "../../contexts/LanguageContext";
 
-const StampForm = ({ invoice, onClose }) => {
+const StampForm = ({ invoice, onClose, onViewInvoice }) => {
   const { language } = useLanguage();
   const [skontoValue, setSkontoValue] = useState(invoice?.skonto || 0);
-  const addDropdownOptionMutation = useAddInvoiceProjectDropdownMenu();
-  const { data: dropdownOptions } = useInvoicesProjectDropdownMenu();
+  const [isViewingInvoice, setIsViewingInvoice] = useState(false);
+  const addDropdownOptionMutation = useAddDropdownOptionInvoicesDev();
+  const { data: dropdownOptions } = useDropdownOptionsInvoicesDev();
   const [formData, setFormData] = useState({
     id: invoice?.id,
     eingegangen_am: invoice?.eingegangen_am || null,
@@ -28,7 +29,7 @@ const StampForm = ({ invoice, onClose }) => {
     status: "Kontiert",
   });
 
-  const updateInvoiceMutation = useUpdateInvoiceProject();
+  const updateInvoiceMutation = useUpdateInvoicesDev();
 
   const [kostenstelleOptions, setKostenstelleOptions] = useState([]);
   const [vbOptions, setVbOptions] = useState([]);
@@ -57,6 +58,7 @@ const StampForm = ({ invoice, onClose }) => {
       pickDate: "Datum auswählen",
       enter: "Eingeben",
       select: "Auswählen",
+      seeInvoice: "Rechnung ansehen",
     },
     en: {
       receivedOn: "Received on",
@@ -74,6 +76,7 @@ const StampForm = ({ invoice, onClose }) => {
       pickDate: "Pick a date",
       enter: "Enter",
       select: "Select",
+      seeInvoice: "See Invoice",
     }
   };
 
@@ -85,6 +88,7 @@ const StampForm = ({ invoice, onClose }) => {
       [field]: value,
     }));
 
+    // If it's a new option for kostenstelle or vb, add it to the dropdown options
     if ((field === 'kostenstelle' || field === 'vb') && !dropdownOptions.find(option => option.value === value && option.field_type === field)) {
       try {
         await addDropdownOptionMutation.mutateAsync({
@@ -115,7 +119,7 @@ const StampForm = ({ invoice, onClose }) => {
         const updatedInvoice = {
           ...formData,
           skonto: skontoValue,
-          status: "Kontiert",
+          status: "Kontiert", // Ensure status is set to "Kontiert"
         };
         await updateInvoiceMutation.mutateAsync(updatedInvoice);
         toast.success("Form submitted successfully");
@@ -141,7 +145,7 @@ const StampForm = ({ invoice, onClose }) => {
       kommentar: "",
       kostenstelle: "",
       vb: "",
-      status: "Kontiert",
+      status: "Kontiert", // Keep the status as "Kontiert"
     });
     setSkontoValue(0);
     toast.info("Form cleared");
@@ -153,6 +157,7 @@ const StampForm = ({ invoice, onClose }) => {
       className="space-y-6 h-full overflow-visible pr-4"
     >
       <div className="grid grid-cols-2 gap-4 p-4">
+        {/* Left Column */}
         <div className="space-y-4">
           <FormField label={t.receivedOn} id="eingegangen_am">
             <DatePickerDemo
@@ -206,6 +211,7 @@ const StampForm = ({ invoice, onClose }) => {
           </FormField>
         </div>
 
+        {/* Right Column */}
         <div className="space-y-4 flex flex-col">
           <FormField label={t.comment} id="kommentar" className="flex-grow">
             <Textarea

@@ -11,7 +11,6 @@ import {
 import StatusBadge from "../molecules/StatusBadge";
 import ActionButtons from "../molecules/ActionButtons";
 import { useLanguage } from "../../contexts/LanguageContext";
-import { handleDownloadWithStamp } from "@/utils/pdfUtils";
 
 const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
   const { language } = useLanguage();
@@ -162,7 +161,6 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
                 onViewDetails={onViewDetails}
                 onDelete={onDelete}
                 onStamp={onStamp}
-                onDownload={handleDownloadWithStamp}
               />
             </TableCell>
           </TableRow>

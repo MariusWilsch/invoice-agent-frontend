@@ -2,12 +2,12 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
-import { AuthProvider } from './contexts/AuthContext';
+import { SupabaseProvider } from './integrations/supabase/index.js';
 import { Toaster } from "sonner";
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <AuthProvider>
+    <SupabaseProvider>
       <App />
       <Toaster 
         position="top-right" 
@@ -18,6 +18,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           },
         }}
       />
-    </AuthProvider>
+    </SupabaseProvider>
   </React.StrictMode>,
 )
