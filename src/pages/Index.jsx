@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
-  useInvoicesDev,
-  useDeleteInvoicesDev,
+  useInvoicesProject,
+  useDeleteInvoiceProject,
   supabase,
 } from "@/integrations/supabase/index.js";
 import InvoicePageTemplate from "../components/templates/InvoicePageTemplate";
@@ -13,8 +13,8 @@ import { CheckCircle, XCircle } from "lucide-react";
 import axios from "axios";
 
 const Index = () => {
-  const { data: initialInvoices, error, isLoading } = useInvoicesDev();
-  const deleteInvoiceMutation = useDeleteInvoicesDev();
+  const { data: initialInvoices, error, isLoading } = useInvoicesProject();
+  const deleteInvoiceMutation = useDeleteInvoiceProject();
   const [invoices, setInvoices] = useState([]);
   const [statuses, setStatuses] = useState([]);
   const [isStampSheetOpen, setIsStampSheetOpen] = useState(false);
@@ -50,7 +50,7 @@ const Index = () => {
       .channel("invoices_changes")
       .on(
         "postgres_changes",
-        { event: "INSERT", schema: "public", table: "invoices_dev" },
+        { event: "INSERT", schema: "public", table: "invoices_project" },
         (payload) => {
           setInvoices((currentInvoices) => {
             const newInvoices = [...currentInvoices, payload.new];
@@ -139,7 +139,7 @@ const Index = () => {
     const fetchFilteredInvoices = async () => {
       if (dateFilter.from && dateFilter.to) {
         const { data, error } = await supabase
-          .from("invoices_dev")
+          .from("invoices_project")
           .select()
           .gte("invoice_date", format(dateFilter.from, "yyyy-MM-dd"))
           .lte("invoice_date", format(dateFilter.to, "yyyy-MM-dd"));

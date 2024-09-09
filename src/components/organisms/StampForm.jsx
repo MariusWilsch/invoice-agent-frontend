@@ -9,10 +9,9 @@ import { toast } from "sonner";
 import { useUpdateInvoiceProject, useAddInvoiceProjectDropdownMenu, useInvoicesProjectDropdownMenu } from "@/integrations/supabase/index.js";
 import { useLanguage } from "../../contexts/LanguageContext";
 
-const StampForm = ({ invoice, onClose, onViewInvoice }) => {
+const StampForm = ({ invoice, onClose }) => {
   const { language } = useLanguage();
   const [skontoValue, setSkontoValue] = useState(invoice?.skonto || 0);
-  const [isViewingInvoice, setIsViewingInvoice] = useState(false);
   const addDropdownOptionMutation = useAddInvoiceProjectDropdownMenu();
   const { data: dropdownOptions } = useInvoicesProjectDropdownMenu();
   const [formData, setFormData] = useState({
@@ -58,7 +57,6 @@ const StampForm = ({ invoice, onClose, onViewInvoice }) => {
       pickDate: "Datum auswählen",
       enter: "Eingeben",
       select: "Auswählen",
-      seeInvoice: "Rechnung ansehen",
     },
     en: {
       receivedOn: "Received on",
@@ -76,7 +74,6 @@ const StampForm = ({ invoice, onClose, onViewInvoice }) => {
       pickDate: "Pick a date",
       enter: "Enter",
       select: "Select",
-      seeInvoice: "See Invoice",
     }
   };
 
