@@ -1,5 +1,5 @@
 import React from "react";
-import { FileText, Eye, Trash, Stamp } from "lucide-react";
+import { FileText, Eye, Trash, Stamp, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   TooltipProvider,
@@ -19,6 +19,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useLanguage } from "../../contexts/LanguageContext";
+import { handleDownloadWithStamp } from "@/utils/pdfUtils";
 
 const translations = {
   de: {
@@ -27,7 +28,8 @@ const translations = {
     view: "Ansehen",
     delete: "Löschen",
     areYouSure: "Sind Sie sicher?",
-    deleteWarning: "Diese Aktion kann nicht rückgängig gemacht werden. Die Rechnung wird dauerhaft aus der Datenbank gelöscht.",
+    deleteWarning:
+      "Diese Aktion kann nicht rückgängig gemacht werden. Die Rechnung wird dauerhaft aus der Datenbank gelöscht.",
     cancel: "Abbrechen",
   },
   en: {
@@ -36,7 +38,8 @@ const translations = {
     view: "View",
     delete: "Delete",
     areYouSure: "Are you sure?",
-    deleteWarning: "This action cannot be undone. The invoice will be permanently deleted from the database.",
+    deleteWarning:
+      "This action cannot be undone. The invoice will be permanently deleted from the database.",
     cancel: "Cancel",
   },
 };
@@ -61,48 +64,50 @@ const ActionButton = ({ icon: Icon, tooltip, onClick }) => (
   </TooltipProvider>
 );
 
-const ActionButtons = ({ invoice, onViewDetails, onDelete, onStamp }) => {
+const ActionButtons = ({
+  invoice,
+  onViewDetails,
+  onDelete,
+  onStamp,
+}) => {
   const { language } = useLanguage();
-  const t = translations[language];
+  const t = {
+    en: {
+      view: "View",
+      delete: "Delete",
+      stamp: "Stamp",
+      download: "Download",
+    },
+    de: {
+      view: "Ansehen",
+      delete: "Löschen",
+      stamp: "Stempeln",
+      download: "Herunterladen",
+    },
+  }[language];
 
   return (
-    <div className="flex space-x-1">
+    <div className="flex space-x-2">
+      <ActionButton
+        icon={Eye}
+        tooltip={t.view}
+        onClick={() => onViewDetails(invoice)}
+      />
+      <ActionButton
+        icon={Trash2}
+        tooltip={t.delete}
+        onClick={() => onDelete(invoice.id)}
+      />
       <ActionButton
         icon={Stamp}
         tooltip={t.stamp}
         onClick={() => onStamp(invoice)}
       />
       <ActionButton
-        icon={FileText}
-        tooltip={t.pdf}
-        onClick={() => window.open(invoice.public_url, "_blank")}
+        icon={Download}
+        tooltip={t.download}
+        onClick={() => handleDownloadWithStamp(invoice)}
       />
-      <ActionButton
-        icon={Eye}
-        tooltip={t.view}
-        onClick={() => onViewDetails(invoice)}
-      />
-      <AlertDialog>
-        <AlertDialogTrigger asChild>
-          <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
-            <Trash className="h-4 w-4" />
-          </Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t.areYouSure}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {t.deleteWarning}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t.cancel}</AlertDialogCancel>
-            <AlertDialogAction onClick={() => onDelete(invoice.id)}>
-              {t.delete}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   );
 };
