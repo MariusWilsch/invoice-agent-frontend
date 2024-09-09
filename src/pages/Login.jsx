@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useSupabaseAuth } from '@/integrations/supabase/auth.jsx';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,25 +14,27 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [authMethod, setAuthMethod] = useState('password');
-  const { signIn, signInWithOtp } = useAuth();
+  const { signInWithPassword, signInWithOtp } = useSupabaseAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       if (authMethod === 'magic-link') {
-        const { data, error } = await signInWithOtp({ email });
+        const { error } = await signInWithOtp({ email });
         if (error) {
           throw error;
         }
-        toast.success(`Magic link sent successfully (Status: ${data.status || 200})`, {
+        toast.success(`Magic link sent successfully`, {
           description: "Please check your email for the login link.",
         });
       } else {
-        await signIn(email, password);
+        const { error } = await signInWithPassword({ email, password });
+        if (error) throw error;
+        toast.success('Logged in successfully');
       }
     } catch (error) {
       console.error('Login error:', error.message);
-      toast.error(`Authentication failed (Status: ${error.status || 400})`, {
+      toast.error(`Authentication failed`, {
         description: error.message || "An error occurred during authentication.",
       });
     }

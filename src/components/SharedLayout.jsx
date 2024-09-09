@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import LanguageSwitcher from "./molecules/LanguageSwitcher";
-import { useAuth } from "@/contexts/AuthContext";
+import { useSupabaseAuth } from "@/integrations/supabase/auth.jsx";
 import {
   Dialog,
   DialogContent,
@@ -25,11 +25,12 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { supabase } from "@/integrations/supabase/supabase";
 
 const SharedLayout = () => {
   const navigate = useNavigate();
   const [currentLanguage, setCurrentLanguage] = useState('de');
-  const { signOut, user } = useAuth();
+  const { session, logout } = useSupabaseAuth();
   const [isImapModalOpen, setIsImapModalOpen] = useState(false);
   const [imapCredentials, setImapCredentials] = useState({
     email: "",
@@ -43,7 +44,7 @@ const SharedLayout = () => {
 
   const handleLogout = async () => {
     try {
-      await signOut();
+      await logout();
       navigate('/login');
     } catch (error) {
       console.error('Logout error:', error.message);
@@ -98,7 +99,7 @@ const SharedLayout = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>{user?.email}</DropdownMenuLabel>
+                  <DropdownMenuLabel>{session?.user?.email}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onSelect={() => toast("Inquires to: [Ticket#18801]")}>
                     Show Ticket Number

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useSupabaseAuth } from '@/integrations/supabase/auth.jsx';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,7 +12,7 @@ const SignUp = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { signUp } = useAuth();
+  const { signUp } = useSupabaseAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -20,7 +20,8 @@ const SignUp = () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
     try {
-      await signUp(email, password);
+      const { error } = await signUp({ email, password });
+      if (error) throw error;
       toast.success('Sign up successful. Please check your email for verification.');
       navigate('/login');
     } catch (error) {

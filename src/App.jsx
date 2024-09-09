@@ -3,11 +3,11 @@ import Index from "./pages/Index.jsx";
 import Login from "./pages/Login.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import SharedLayout from "./components/SharedLayout.jsx";
-import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import { SupabaseAuthProvider, useSupabaseAuth } from "./integrations/supabase/auth.jsx";
 
 const ProtectedRoute = ({ children }) => {
-  const { user } = useAuth();
-  if (!user) {
+  const { session } = useSupabaseAuth();
+  if (!session) {
     return <Navigate to="/login" replace />;
   }
   return children;
@@ -32,9 +32,9 @@ function AppContent() {
 function App() {
   return (
     <Router>
-      <AuthProvider>
+      <SupabaseAuthProvider>
         <AppContent />
-      </AuthProvider>
+      </SupabaseAuthProvider>
     </Router>
   );
 }
