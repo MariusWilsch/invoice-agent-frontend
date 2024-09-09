@@ -1,26 +1,40 @@
-import React from "react";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { Route, BrowserRouter as Router, Routes, Navigate } from "react-router-dom";
 import Index from "./pages/Index.jsx";
 import Login from "./pages/Login.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import SharedLayout from "./components/SharedLayout.jsx";
-import { AuthProvider } from "./contexts/AuthContext";
-import { SupabaseProvider } from './integrations/supabase/index.js';
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
+
+const ProtectedRoute = ({ children }) => {
+  const { user } = useAuth();
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+};
+
+function AppContent() {
+  return (
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<SignUp />} />
+      <Route element={
+        <ProtectedRoute>
+          <SharedLayout />
+        </ProtectedRoute>
+      }>
+        <Route exact path="/" element={<Index />} />
+      </Route>
+    </Routes>
+  );
+}
 
 function App() {
   return (
     <Router>
-      <SupabaseProvider>
-        <AuthProvider>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route element={<SharedLayout />}>
-              <Route exact path="/" element={<Index />} />
-            </Route>
-          </Routes>
-        </AuthProvider>
-      </SupabaseProvider>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
     </Router>
   );
 }

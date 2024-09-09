@@ -6,12 +6,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import SelectField from "../molecules/SelectField";
 import { toast } from "sonner";
-import { useUpdateInvoiceProject, useAddDropdownOptionInvoicesProject, useDropdownOptionsInvoicesProject } from "@/integrations/supabase/index.js";
+import { useUpdateInvoicesDev, useAddDropdownOptionInvoicesDev, useDropdownOptionsInvoicesDev } from "@/integrations/supabase/index.js";
 import { useLanguage } from "../../contexts/LanguageContext";
 
-const StampForm = ({ invoice, onClose }) => {
+const StampForm = ({ invoice, onClose, onViewInvoice }) => {
   const { language } = useLanguage();
   const [skontoValue, setSkontoValue] = useState(invoice?.skonto || 0);
+  const [isViewingInvoice, setIsViewingInvoice] = useState(false);
+  const addDropdownOptionMutation = useAddDropdownOptionInvoicesDev();
+  const { data: dropdownOptions } = useDropdownOptionsInvoicesDev();
   const [formData, setFormData] = useState({
     id: invoice?.id,
     eingegangen_am: invoice?.eingegangen_am || null,
@@ -26,17 +29,15 @@ const StampForm = ({ invoice, onClose }) => {
     status: "Kontiert",
   });
 
-  const updateInvoiceMutation = useUpdateInvoiceProject();
-  const addDropdownOptionMutation = useAddDropdownOptionInvoicesProject();
-  const { data: dropdownOptions } = useDropdownOptionsInvoicesProject();
+  const updateInvoiceMutation = useUpdateInvoicesDev();
 
   const [kostenstelleOptions, setKostenstelleOptions] = useState([]);
   const [vbOptions, setVbOptions] = useState([]);
 
   useEffect(() => {
     if (dropdownOptions) {
-      setKostenstelleOptions(dropdownOptions.filter(option => option.field_type === 'kostenstelle').map(item => ({ value: item.value, label: item.value })));
-      setVbOptions(dropdownOptions.filter(option => option.field_type === 'vb').map(item => ({ value: item.value, label: item.value })));
+      setKostenstelleOptions(dropdownOptions.filter(option => option.field_type === 'kostenstelle').map(option => ({ value: option.value, label: option.value })));
+      setVbOptions(dropdownOptions.filter(option => option.field_type === 'vb').map(option => ({ value: option.value, label: option.value })));
     }
   }, [dropdownOptions]);
 
@@ -57,6 +58,7 @@ const StampForm = ({ invoice, onClose }) => {
       pickDate: "Datum auswählen",
       enter: "Eingeben",
       select: "Auswählen",
+      seeInvoice: "Rechnung ansehen",
     },
     en: {
       receivedOn: "Received on",
@@ -74,6 +76,7 @@ const StampForm = ({ invoice, onClose }) => {
       pickDate: "Pick a date",
       enter: "Enter",
       select: "Select",
+      seeInvoice: "See Invoice",
     }
   };
 
@@ -85,9 +88,13 @@ const StampForm = ({ invoice, onClose }) => {
       [field]: value,
     }));
 
-    if ((field === 'kostenstelle' || field === 'vb') && !kostenstelleOptions.concat(vbOptions).find(option => option.value === value)) {
+    // If it's a new option for kostenstelle or vb, add it to the dropdown options
+    if ((field === 'kostenstelle' || field === 'vb') && !dropdownOptions.find(option => option.value === value && option.field_type === field)) {
       try {
-        await addDropdownOptionMutation.mutateAsync({ field_type: field, value: value });
+        await addDropdownOptionMutation.mutateAsync({
+          field_type: field,
+          value: value
+        });
         toast.success(`New ${field === 'kostenstelle' ? t.costCenter : t.vb} option added successfully`);
       } catch (error) {
         console.error(`Error adding new ${field} option:`, error);
@@ -112,7 +119,7 @@ const StampForm = ({ invoice, onClose }) => {
         const updatedInvoice = {
           ...formData,
           skonto: skontoValue,
-          status: "Kontiert",
+          status: "Kontiert", // Ensure status is set to "Kontiert"
         };
         await updateInvoiceMutation.mutateAsync(updatedInvoice);
         toast.success("Form submitted successfully");
@@ -138,15 +145,19 @@ const StampForm = ({ invoice, onClose }) => {
       kommentar: "",
       kostenstelle: "",
       vb: "",
-      status: "Kontiert",
+      status: "Kontiert", // Keep the status as "Kontiert"
     });
     setSkontoValue(0);
     toast.info("Form cleared");
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 h-full overflow-visible pr-4">
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-6 h-full overflow-visible pr-4"
+    >
       <div className="grid grid-cols-2 gap-4 p-4">
+        {/* Left Column */}
         <div className="space-y-4">
           <FormField label={t.receivedOn} id="eingegangen_am">
             <DatePickerDemo
@@ -192,12 +203,15 @@ const StampForm = ({ invoice, onClose }) => {
           <FormField label={t.ticketNumber} id="ticket_number">
             <Input
               placeholder={`${t.enter} ${t.ticketNumber}`}
-              onChange={(e) => handleInputChange("ticket_number", e.target.value)}
+              onChange={(e) =>
+                handleInputChange("ticket_number", e.target.value)
+              }
               value={formData.ticket_number}
             />
           </FormField>
         </div>
 
+        {/* Right Column */}
         <div className="space-y-4 flex flex-col">
           <FormField label={t.comment} id="kommentar" className="flex-grow">
             <Textarea
@@ -258,7 +272,10 @@ const StampForm = ({ invoice, onClose }) => {
 
 const FormField = ({ label, id, children, className }) => (
   <div className={`flex flex-col ${className}`}>
-    <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">
+    <label
+      htmlFor={id}
+      className="block text-sm font-medium text-gray-700 mb-1"
+    >
       {label}
     </label>
     {children}

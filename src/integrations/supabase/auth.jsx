@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext, useContext } from 'react';
-import { supabase } from './index.js';
+import { supabase, SupabaseProvider } from './index.js';
 import { useQueryClient } from '@tanstack/react-query';
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
@@ -8,9 +8,11 @@ const SupabaseAuthContext = createContext();
 
 export const SupabaseAuthProvider = ({ children }) => {
   return (
-    <SupabaseAuthProviderInner>
-      {children}
-    </SupabaseAuthProviderInner>
+    <SupabaseProvider>
+      <SupabaseAuthProviderInner>
+        {children}
+      </SupabaseAuthProviderInner>
+    </SupabaseProvider>
   );
 }
 
