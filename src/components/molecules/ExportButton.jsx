@@ -9,7 +9,7 @@ const ExportButton = ({ dateFilter }) => {
 
   const handleExport = async () => {
     try {
-      let query = supabase.from('invoices_dev').select();
+      let query = supabase.from('invoices_project').select();
 
       if (dateFilter.from && dateFilter.to) {
         query = query

@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import SelectField from "../molecules/SelectField";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/index.js";
+import { useUpdateInvoiceProject, useAddDropdownOptionInvoicesProject, useDropdownOptionsInvoicesProject } from "@/integrations/supabase/index.js";
 import { useLanguage } from "../../contexts/LanguageContext";
 
 const StampForm = ({ invoice, onClose }) => {
@@ -26,30 +26,19 @@ const StampForm = ({ invoice, onClose }) => {
     status: "Kontiert",
   });
 
+  const updateInvoiceMutation = useUpdateInvoiceProject();
+  const addDropdownOptionMutation = useAddDropdownOptionInvoicesProject();
+  const { data: dropdownOptions } = useDropdownOptionsInvoicesProject();
+
   const [kostenstelleOptions, setKostenstelleOptions] = useState([]);
   const [vbOptions, setVbOptions] = useState([]);
 
   useEffect(() => {
-    fetchDropdownOptions();
-  }, []);
-
-  const fetchDropdownOptions = async () => {
-    const { data: kostenstelleData, error: kostenstelleError } = await supabase
-      .from('dropdown_options_invoices_dev')
-      .select('value')
-      .eq('field_type', 'kostenstelle');
-
-    const { data: vbData, error: vbError } = await supabase
-      .from('dropdown_options_invoices_dev')
-      .select('value')
-      .eq('field_type', 'vb');
-
-    if (kostenstelleError) console.error('Error fetching kostenstelle options:', kostenstelleError);
-    if (vbError) console.error('Error fetching vb options:', vbError);
-
-    setKostenstelleOptions(kostenstelleData?.map(item => ({ value: item.value, label: item.value })) || []);
-    setVbOptions(vbData?.map(item => ({ value: item.value, label: item.value })) || []);
-  };
+    if (dropdownOptions) {
+      setKostenstelleOptions(dropdownOptions.filter(option => option.field_type === 'kostenstelle').map(item => ({ value: item.value, label: item.value })));
+      setVbOptions(dropdownOptions.filter(option => option.field_type === 'vb').map(item => ({ value: item.value, label: item.value })));
+    }
+  }, [dropdownOptions]);
 
   const translations = {
     de: {
@@ -98,14 +87,8 @@ const StampForm = ({ invoice, onClose }) => {
 
     if ((field === 'kostenstelle' || field === 'vb') && !kostenstelleOptions.concat(vbOptions).find(option => option.value === value)) {
       try {
-        const { error } = await supabase
-          .from('dropdown_options_invoices_dev')
-          .insert({ field_type: field, value: value });
-
-        if (error) throw error;
-
+        await addDropdownOptionMutation.mutateAsync({ field_type: field, value: value });
         toast.success(`New ${field === 'kostenstelle' ? t.costCenter : t.vb} option added successfully`);
-        fetchDropdownOptions();
       } catch (error) {
         console.error(`Error adding new ${field} option:`, error);
         toast.error(`Failed to add new ${field === 'kostenstelle' ? t.costCenter : t.vb} option`);
@@ -131,13 +114,7 @@ const StampForm = ({ invoice, onClose }) => {
           skonto: skontoValue,
           status: "Kontiert",
         };
-        const { error } = await supabase
-          .from('invoices_dev')
-          .update(updatedInvoice)
-          .eq('id', updatedInvoice.id);
-
-        if (error) throw error;
-
+        await updateInvoiceMutation.mutateAsync(updatedInvoice);
         toast.success("Form submitted successfully");
         onClose();
       } catch (error) {
