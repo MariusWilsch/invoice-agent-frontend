@@ -1,12 +1,15 @@
 import { supabase } from './supabase.js';
 import { SupabaseAuthProvider, useSupabaseAuth, SupabaseAuthUI } from './auth.jsx';
-import { useInvoicesDev, useDeleteInvoicesDev } from './hooks/invoices_project.js';
+
+// Remove or comment out the import for non-existent hooks
+// import { useInvoicesDev, useDeleteInvoicesDev } from './hooks/invoices_project.js';
 
 export {
   supabase,
   SupabaseAuthProvider,
   useSupabaseAuth,
   SupabaseAuthUI,
-  useInvoicesDev,
-  useDeleteInvoicesDev,
+  // Remove or comment out the exports for non-existent hooks
+  // useInvoicesDev,
+  // useDeleteInvoicesDev,
 };
