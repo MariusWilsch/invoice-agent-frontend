@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -19,12 +20,21 @@ const Login = () => {
     e.preventDefault();
     try {
       if (authMethod === 'magic-link') {
-        await signInWithOtp({ email });
+        const { data, error } = await signInWithOtp({ email });
+        if (error) {
+          throw error;
+        }
+        toast.success(`Magic link sent successfully (Status: ${data.status || 200})`, {
+          description: "Please check your email for the login link.",
+        });
       } else {
         await signIn(email, password);
       }
     } catch (error) {
       console.error('Login error:', error.message);
+      toast.error(`Authentication failed (Status: ${error.status || 400})`, {
+        description: error.message || "An error occurred during authentication.",
+      });
     }
   };
 
