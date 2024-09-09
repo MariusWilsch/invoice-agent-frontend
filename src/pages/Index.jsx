@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
   useInvoicesDev,
-  useDeleteInvoicesDev,
+  useDeleteInvoiceDev,
   supabase,
 } from "@/integrations/supabase/index.js";
 import InvoicePageTemplate from "../components/templates/InvoicePageTemplate";
@@ -14,7 +14,7 @@ import axios from "axios";
 
 const Index = () => {
   const { data: initialInvoices, error, isLoading } = useInvoicesDev();
-  const deleteInvoiceMutation = useDeleteInvoicesDev();
+  const deleteInvoiceMutation = useDeleteInvoiceDev();
   const [invoices, setInvoices] = useState([]);
   const [statuses, setStatuses] = useState([]);
   const [isStampSheetOpen, setIsStampSheetOpen] = useState(false);

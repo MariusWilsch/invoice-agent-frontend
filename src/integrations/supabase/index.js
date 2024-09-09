@@ -1,7 +1,6 @@
 import { supabase } from './supabase';
-import { SupabaseAuthProvider, useSupabaseAuth, SupabaseAuthUI } from './auth';
 
-// Import hooks for invoices_dev and dropdown_options_invoices_dev
+// Import hooks for invoices_dev
 import {
   useInvoicesDev,
   useAddInvoiceDev,
@@ -9,6 +8,7 @@ import {
   useDeleteInvoiceDev,
 } from './hooks/invoices_dev';
 
+// Import hooks for dropdown_options_invoices_dev
 import {
   useDropdownOptionsInvoicesDev,
   useAddDropdownOptionInvoicesDev,
@@ -19,9 +19,6 @@ import {
 // Export all
 export {
   supabase,
-  SupabaseAuthProvider,
-  useSupabaseAuth,
-  SupabaseAuthUI,
   useInvoicesDev,
   useAddInvoiceDev,
   useUpdateInvoiceDev,
