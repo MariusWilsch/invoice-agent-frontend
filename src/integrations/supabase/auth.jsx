@@ -40,6 +40,18 @@ export const SupabaseAuthProviderInner = ({ children }) => {
     };
   }, [queryClient]);
 
+  const signInWithPassword = async ({ email, password }) => {
+    return supabase.auth.signInWithPassword({ email, password });
+  };
+
+  const signInWithOtp = async ({ email }) => {
+    return supabase.auth.signInWithOtp({ email });
+  };
+
+  const signUp = async ({ email, password }) => {
+    return supabase.auth.signUp({ email, password });
+  };
+
   const logout = async () => {
     await supabase.auth.signOut();
     setSession(null);
@@ -48,7 +60,7 @@ export const SupabaseAuthProviderInner = ({ children }) => {
   };
 
   return (
-    <SupabaseAuthContext.Provider value={{ session, loading, logout }}>
+    <SupabaseAuthContext.Provider value={{ session, loading, logout, signInWithPassword, signInWithOtp, signUp }}>
       {children}
     </SupabaseAuthContext.Provider>
   );

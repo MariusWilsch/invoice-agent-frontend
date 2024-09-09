@@ -3,7 +3,7 @@ import { useSupabaseAuth } from '@/integrations/supabase/auth.jsx';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
@@ -15,6 +15,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [authMethod, setAuthMethod] = useState('password');
   const { signInWithPassword, signInWithOtp } = useSupabaseAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,6 +32,7 @@ const Login = () => {
         const { error } = await signInWithPassword({ email, password });
         if (error) throw error;
         toast.success('Logged in successfully');
+        navigate('/');
       }
     } catch (error) {
       console.error('Login error:', error.message);
