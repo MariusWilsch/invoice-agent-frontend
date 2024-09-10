@@ -1,5 +1,5 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '../supabase';
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "../supabase";
 
 const fromSupabase = async (query) => {
   const { data, error } = await query;
@@ -42,21 +42,24 @@ This is the database holding the Invoices from the Invoice Agent Project.
 | payment_terms  | text                     | string    | false    |
 | cost_of_run    | real                     | number    | false    |
 | user_id        | uuid                     | string    | false    |
+| fälligkeit_akzeptiert | boolean                  | boolean   | false    |
 
 Note: id is the Primary Key.
 */
 
-export const useInvoicesDev = () => useQuery({
-  queryKey: ['invoices_dev'],
-  queryFn: () => fromSupabase(supabase.from('invoices_dev').select('*')),
-});
+export const useInvoicesDev = () =>
+  useQuery({
+    queryKey: ["invoices_dev"],
+    queryFn: () => fromSupabase(supabase.from("invoices_dev").select("*")),
+  });
 
 export const useAddInvoiceDev = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (newItem) => fromSupabase(supabase.from('invoices_dev').insert([newItem])),
+    mutationFn: (newItem) =>
+      fromSupabase(supabase.from("invoices_dev").insert([newItem])),
     onSuccess: () => {
-      queryClient.invalidateQueries('invoices_dev');
+      queryClient.invalidateQueries("invoices_dev");
     },
   });
 };
@@ -64,9 +67,12 @@ export const useAddInvoiceDev = () => {
 export const useUpdateInvoiceDev = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, ...updateData }) => fromSupabase(supabase.from('invoices_dev').update(updateData).eq('id', id)),
+    mutationFn: ({ id, ...updateData }) =>
+      fromSupabase(
+        supabase.from("invoices_dev").update(updateData).eq("id", id)
+      ),
     onSuccess: () => {
-      queryClient.invalidateQueries('invoices_dev');
+      queryClient.invalidateQueries("invoices_dev");
     },
   });
 };
@@ -74,9 +80,10 @@ export const useUpdateInvoiceDev = () => {
 export const useDeleteInvoiceDev = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (id) => fromSupabase(supabase.from('invoices_dev').delete().eq('id', id)),
+    mutationFn: (id) =>
+      fromSupabase(supabase.from("invoices_dev").delete().eq("id", id)),
     onSuccess: () => {
-      queryClient.invalidateQueries('invoices_dev');
+      queryClient.invalidateQueries("invoices_dev");
     },
   });
 };
