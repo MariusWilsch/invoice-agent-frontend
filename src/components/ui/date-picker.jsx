@@ -11,11 +11,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-// Forcing new change
-
-export function DatePickerDemo() {
-  const [date, setDate] = React.useState(null);
-
+export function DatePickerDemo({ value, onChange, placeholder = "Pick a date" }) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -23,18 +19,18 @@ export function DatePickerDemo() {
           variant="outline"
           className={cn(
             "w-full justify-start text-left font-normal",
-            !date && "text-muted-foreground"
+            !value && "text-muted-foreground"
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, "PPP") : <span>Pick a date</span>}
+          {value ? format(value, "PPP") : <span>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
         <Calendar
           mode="single"
-          selected={date}
-          onSelect={setDate}
+          selected={value}
+          onSelect={onChange}
           initialFocus
         />
       </PopoverContent>

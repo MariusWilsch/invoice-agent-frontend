@@ -6,6 +6,7 @@ const StatusBadge = ({ status }) => {
   const t = useTranslations();
 
   const getStatusInfo = (status) => {
+    console.log(status);
     switch (status.toLowerCase()) {
       case "kontiert":
         return { color: "bg-green-500", text: t.kontiert };
