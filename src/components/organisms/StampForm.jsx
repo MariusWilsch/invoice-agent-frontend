@@ -4,6 +4,7 @@ import { DatePickerDemo } from "@/components/ui/date-picker";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
+import { Checkbox } from "@/components/ui/checkbox";
 import SelectField from "../molecules/SelectField";
 import FormField from "../molecules/FormField";
 import { useStampForm } from "../../hooks/useStampForm";
@@ -84,11 +85,20 @@ const StampForm = ({ invoice, onClose }) => {
         </div>
         <div className="space-y-4">
           {renderFormField(t.dueOn, "faellig_am", (
-            <DatePickerDemo
-              onChange={(date) => handleInputChange("faellig_am", date)}
-              value={formData.faellig_am}
-              placeholder={formData.faellig_am ? undefined : t.pickDate}
-            />
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="fälligkeit_akzeptiert"
+                checked={formData.fälligkeit_akzeptiert}
+                onCheckedChange={(checked) =>
+                  handleInputChange("fälligkeit_akzeptiert", checked)
+                }
+              />
+              <DatePickerDemo
+                onChange={(date) => handleInputChange("faellig_am", date)}
+                value={formData.faellig_am}
+                placeholder={formData.faellig_am ? undefined : t.pickDate}
+              />
+            </div>
           ))}
           {renderFormField(t.evVp, "ev_vp", (
             <Input
