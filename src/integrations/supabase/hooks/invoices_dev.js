@@ -61,6 +61,9 @@ export const useAddInvoiceDev = () => {
     onSuccess: () => {
       queryClient.invalidateQueries("invoices_dev");
     },
+    onError: (error) => {
+      console.error("Error adding invoice:", error);
+    },
   });
 };
 
@@ -74,6 +77,9 @@ export const useUpdateInvoiceDev = () => {
     onSuccess: () => {
       queryClient.invalidateQueries("invoices_dev");
     },
+    onError: (error) => {
+      console.error("Error updating invoice:", error);
+    },
   });
 };
 
@@ -84,6 +90,9 @@ export const useDeleteInvoiceDev = () => {
       fromSupabase(supabase.from("invoices_dev").delete().eq("id", id)),
     onSuccess: () => {
       queryClient.invalidateQueries("invoices_dev");
+    },
+    onError: (error) => {
+      console.error("Error deleting invoice:", error);
     },
   });
 };
