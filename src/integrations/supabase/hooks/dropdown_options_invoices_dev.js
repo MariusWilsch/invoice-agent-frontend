@@ -40,7 +40,14 @@ export const useAddDropdownOptionInvoicesDev = () => {
 export const useUpdateDropdownOptionInvoicesDev = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, ...updateData }) => fromSupabase(supabase.from('dropdown_options_invoices_dev').update(updateData).eq('id', id)),
+    mutationFn: ({ field_type, old_value, new_value }) => 
+      fromSupabase(
+        supabase
+          .from('dropdown_options_invoices_dev')
+          .update({ value: new_value })
+          .eq('field_type', field_type)
+          .eq('value', old_value)
+      ),
     onSuccess: () => {
       queryClient.invalidateQueries('dropdown_options_invoices_dev');
     },
@@ -50,7 +57,14 @@ export const useUpdateDropdownOptionInvoicesDev = () => {
 export const useDeleteDropdownOptionInvoicesDev = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (id) => fromSupabase(supabase.from('dropdown_options_invoices_dev').delete().eq('id', id)),
+    mutationFn: ({ field_type, value }) => 
+      fromSupabase(
+        supabase
+          .from('dropdown_options_invoices_dev')
+          .delete()
+          .eq('field_type', field_type)
+          .eq('value', value)
+      ),
     onSuccess: () => {
       queryClient.invalidateQueries('dropdown_options_invoices_dev');
     },

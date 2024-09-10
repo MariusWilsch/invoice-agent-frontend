@@ -3,6 +3,8 @@ import {
   useUpdateInvoiceDev,
   useAddDropdownOptionInvoicesDev,
   useDropdownOptionsInvoicesDev,
+  useUpdateDropdownOptionInvoicesDev,
+  useDeleteDropdownOptionInvoicesDev,
 } from "@/integrations/supabase/index.js";
 import { toast } from "sonner";
 
@@ -50,7 +52,9 @@ export const useStampForm = (invoice, onClose) => {
     initializeFormState
   );
   const addDropdownOptionMutation = useAddDropdownOptionInvoicesDev();
-  const { data: dropdownOptions } = useDropdownOptionsInvoicesDev();
+  const updateDropdownOptionMutation = useUpdateDropdownOptionInvoicesDev();
+  const deleteDropdownOptionMutation = useDeleteDropdownOptionInvoicesDev();
+  const { data: dropdownOptions, refetch: refetchDropdownOptions } = useDropdownOptionsInvoicesDev();
   const updateInvoiceMutation = useUpdateInvoiceDev();
 
   const kostenstelleOptions = useDropdownOptions(
@@ -77,12 +81,48 @@ export const useStampForm = (invoice, onClose) => {
           value,
         });
         toast.success(`New ${field} option added successfully`);
+        refetchDropdownOptions();
       } catch (error) {
         console.error(`Error adding new ${field} option:`, error);
         toast.error(`Failed to add new ${field} option`);
       }
     },
-    [dropdownOptions, addDropdownOptionMutation]
+    [dropdownOptions, addDropdownOptionMutation, refetchDropdownOptions]
+  );
+
+  const handleEditOption = useCallback(
+    async (fieldType, oldValue, newValue) => {
+      try {
+        await updateDropdownOptionMutation.mutateAsync({
+          field_type: fieldType,
+          old_value: oldValue,
+          new_value: newValue,
+        });
+        toast.success(`${fieldType} option updated successfully`);
+        refetchDropdownOptions();
+      } catch (error) {
+        console.error(`Error updating ${fieldType} option:`, error);
+        toast.error(`Failed to update ${fieldType} option`);
+      }
+    },
+    [updateDropdownOptionMutation, refetchDropdownOptions]
+  );
+
+  const handleDeleteOption = useCallback(
+    async (fieldType, value) => {
+      try {
+        await deleteDropdownOptionMutation.mutateAsync({
+          field_type: fieldType,
+          value: value,
+        });
+        toast.success(`${fieldType} option deleted successfully`);
+        refetchDropdownOptions();
+      } catch (error) {
+        console.error(`Error deleting ${fieldType} option:`, error);
+        toast.error(`Failed to delete ${fieldType} option`);
+      }
+    },
+    [deleteDropdownOptionMutation, refetchDropdownOptions]
   );
 
   const isAnyFieldFilled = useCallback(() => {
@@ -124,5 +164,7 @@ export const useStampForm = (invoice, onClose) => {
     handleInputChange,
     handleSubmit,
     handleClear,
+    handleEditOption,
+    handleDeleteOption,
   };
 };
