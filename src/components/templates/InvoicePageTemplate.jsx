@@ -25,16 +25,25 @@ const InvoicePageTemplate = ({
     switch (status.toLowerCase()) {
       case "unchecked":
       case "unkontiert":
-      case "empfangen":
         return t.unchecked;
       case "checked":
       case "kontiert":
         return t.checked;
       case "received":
+      case "empfangen":
         return t.received;
       default:
         return status;
     }
+  };
+
+  const filterInvoices = (status) => {
+    if (status === "all") return invoices;
+    return invoices.filter(invoice => 
+      invoice.status.toLowerCase() === status.toLowerCase() ||
+      (status === "unkontiert" && invoice.status.toLowerCase() === "empfangen") ||
+      (status === "kontiert" && invoice.status.toLowerCase() === "checked")
+    );
   };
 
   return (
@@ -43,11 +52,8 @@ const InvoicePageTemplate = ({
         <div className="flex items-center justify-between mb-4">
           <TabsList>
             <TabsTrigger value="all">{t.all}</TabsTrigger>
-            {statuses.map((status) => (
-              <TabsTrigger key={status} value={status.toLowerCase()}>
-                {getTranslatedStatus(status)}
-              </TabsTrigger>
-            ))}
+            <TabsTrigger value="unkontiert">{t.unchecked}</TabsTrigger>
+            <TabsTrigger value="kontiert">{t.checked}</TabsTrigger>
           </TabsList>
           <div className="flex space-x-2">
             <FilterButton
@@ -63,29 +69,33 @@ const InvoicePageTemplate = ({
           <InvoiceCard
             title={t.invoices}
             description={t.manage}
-            invoices={invoices}
+            invoices={filterInvoices("all")}
             onViewDetails={onViewDetails}
             onDelete={onDelete}
             onStamp={onStamp}
             showingText={`${t.showing} ${invoices.length} ${t.invoicesCount}`}
           />
         </TabsContent>
-        {statuses.map((status) => (
-          <TabsContent key={status} value={status.toLowerCase()}>
-            <InvoiceCard
-              title={`${getTranslatedStatus(status)} ${t.invoices}`}
-              description={t.manage}
-              invoices={
-                status === "Marius_TEST"
-                  ? allInvoices.filter((invoice) => invoice.status === status)
-                  : invoices.filter((invoice) => invoice.status.toLowerCase() === status.toLowerCase())
-              }
-              onViewDetails={onViewDetails}
-              onDelete={onDelete}
-              onStamp={onStamp}
-            />
-          </TabsContent>
-        ))}
+        <TabsContent value="unkontiert">
+          <InvoiceCard
+            title={`${t.unchecked} ${t.invoices}`}
+            description={t.manage}
+            invoices={filterInvoices("unkontiert")}
+            onViewDetails={onViewDetails}
+            onDelete={onDelete}
+            onStamp={onStamp}
+          />
+        </TabsContent>
+        <TabsContent value="kontiert">
+          <InvoiceCard
+            title={`${t.checked} ${t.invoices}`}
+            description={t.manage}
+            invoices={filterInvoices("kontiert")}
+            onViewDetails={onViewDetails}
+            onDelete={onDelete}
+            onStamp={onStamp}
+          />
+        </TabsContent>
       </Tabs>
     </div>
   );
