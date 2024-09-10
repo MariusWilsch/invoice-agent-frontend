@@ -72,6 +72,11 @@ const translations = {
     selectCostCenter: "Kostenstelle auswählen",
     selectVb: "VB auswählen",
     acceptDueDate: "Fälligkeitsdatum akzeptieren",
+    editOption: "Option bearbeiten",
+    deleteOption: "Option löschen",
+    deleteOptionConfirmation: "Sind Sie sicher, dass Sie diese Option löschen möchten?",
+    enterNewValue: "Neuen Wert eingeben",
+    save: "Speichern",
   },
   en: {
     title: "Data Overview",
@@ -144,6 +149,11 @@ const translations = {
     selectCostCenter: "Select cost center",
     selectVb: "Select VB",
     acceptDueDate: "Accept due date",
+    editOption: "Edit Option",
+    deleteOption: "Delete Option",
+    deleteOptionConfirmation: "Are you sure you want to delete this option?",
+    enterNewValue: "Enter new value",
+    save: "Save",
   },
 };
 
