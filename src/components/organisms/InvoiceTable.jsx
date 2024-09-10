@@ -15,18 +15,21 @@ import ActionButtons from "../molecules/ActionButtons";
 const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
   const t = useTranslations();
 
-  const renderSender = (sender) => {
-    if (Array.isArray(sender) && sender.length > 1) {
+  const renderSenderOrCompany = (invoice) => {
+    if (invoice.company_name) {
+      return invoice.company_name;
+    }
+    if (Array.isArray(invoice.sender) && invoice.sender.length > 1) {
       return (
         <div className="flex flex-col">
-          <span>{sender[0]}</span>
+          <span>{invoice.sender[0]}</span>
           <span className="text-sm text-gray-500">
-            {sender.slice(1).join(", ")}
+            {invoice.sender.slice(1).join(", ")}
           </span>
         </div>
       );
     }
-    return Array.isArray(sender) ? sender.join(", ") : sender;
+    return Array.isArray(invoice.sender) ? invoice.sender.join(", ") : invoice.sender;
   };
 
   const renderAmount = (invoice, field) => {
@@ -125,7 +128,7 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
             } transition-all duration-200 hover:shadow-md hover:-translate-y-1 hover:bg-gray-200 border-b border-gray-200 hover:border-transparent`}
           >
             <TableCell className="w-1/4">
-              {renderSender(invoice.sender)}
+              {renderSenderOrCompany(invoice)}
             </TableCell>
             <TableCell className="w-1/8 whitespace-nowrap">
               {invoice.invoice_date || "N/A"}
