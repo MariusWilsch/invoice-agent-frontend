@@ -2,7 +2,6 @@ import { useLanguage } from "../contexts/LanguageContext";
 
 const translations = {
   de: {
-    // Existing translations...
     title: "Datenübersicht",
     stampFields: "Stempelfelder",
     invoiceDetails: "Rechnungsdetails",
@@ -43,11 +42,9 @@ const translations = {
     applyFilter: "Filter anwenden",
     clearFilter: "Filter löschen",
     filterActive: "Filter aktiv",
-    // Status translations
     kontiert: "Kontiert",
     unkontiert: "Unkontiert",
     empfangen: "Empfangen",
-    // Keep other translations
     vendorName: "Absender",
     status: "Status",
     actions: "Aktionen",
@@ -77,7 +74,6 @@ const translations = {
     selectVb: "VB auswählen",
   },
   en: {
-    // Existing translations...
     title: "Data Overview",
     stampFields: "Stamp Fields",
     invoiceDetails: "Invoice Details",
@@ -118,11 +114,9 @@ const translations = {
     applyFilter: "Apply Filter",
     clearFilter: "Clear Filter",
     filterActive: "Filter Active",
-    // Status translations
     kontiert: "Checked",
     unkontiert: "Unchecked",
     empfangen: "Received",
-    // Keep other translations
     vendorName: "Vendor/Supplier Name / Email",
     status: "Status",
     actions: "Actions",
