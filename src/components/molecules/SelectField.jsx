@@ -1,37 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
 import FormLabel from '../atoms/FormLabel';
 import CreatableSelect from 'react-select/creatable';
 import { Edit, Trash2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
 const SelectField = ({ id, label, options, value, onChange, onEditOption, onDeleteOption }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
   const selectOptions = options.map(option => ({
     value: option.value,
     label: (
       <div className="flex items-center justify-between w-full">
         <span>{option.label}</span>
-        <div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation();
-              onEditOption(option);
-            }}
-          >
-            <Edit className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation();
-              onDeleteOption(option);
-            }}
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
-        </div>
+        {isOpen && (
+          <div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                onEditOption(option);
+              }}
+            >
+              <Edit className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDeleteOption(option);
+              }}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
       </div>
     ),
   }));
@@ -48,6 +52,8 @@ const SelectField = ({ id, label, options, value, onChange, onEditOption, onDele
         options={selectOptions}
         value={selectOptions.find(option => option.value === value) || null}
         onChange={handleChange}
+        onMenuOpen={() => setIsOpen(true)}
+        onMenuClose={() => setIsOpen(false)}
         placeholder={`Select ${label}...`}
         isClearable
         className="react-select-container"
