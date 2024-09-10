@@ -24,6 +24,7 @@ const initializeFormState = (invoice) => ({
   vb: invoice?.VB || "",
   status: "Kontiert",
   skonto: invoice?.skonto || 0,
+  fälligkeit_akzeptiert: invoice?.fälligkeit_akzeptiert || false,
 });
 
 const formReducer = (state, action) => {
@@ -62,7 +63,7 @@ export const useStampForm = (invoice, onClose) => {
   }, [dropdownOptions, addDropdownOptionMutation]);
 
   const isAnyFieldFilled = useCallback(() => {
-    return Object.values(formData).some(value => value !== null && value !== "" && value !== undefined);
+    return Object.values(formData).some(value => value !== null && value !== "" && value !== undefined && value !== false);
   }, [formData]);
 
   const handleSubmit = useCallback(async (e) => {

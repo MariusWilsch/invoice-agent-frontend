@@ -9,6 +9,12 @@ import SelectField from "../molecules/SelectField";
 import FormField from "../molecules/FormField";
 import { useStampForm } from "../../hooks/useStampForm";
 import { useTranslations } from "../../hooks/useTranslations";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const StampForm = ({ invoice, onClose }) => {
   const {
@@ -86,13 +92,22 @@ const StampForm = ({ invoice, onClose }) => {
         <div className="space-y-4">
           {renderFormField(t.dueOn, "faellig_am", (
             <div className="flex items-center space-x-2">
-              <Checkbox
-                id="fälligkeit_akzeptiert"
-                checked={formData.fälligkeit_akzeptiert}
-                onCheckedChange={(checked) =>
-                  handleInputChange("fälligkeit_akzeptiert", checked)
-                }
-              />
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Checkbox
+                      id="fälligkeit_akzeptiert"
+                      checked={formData.fälligkeit_akzeptiert}
+                      onCheckedChange={(checked) =>
+                        handleInputChange("fälligkeit_akzeptiert", checked)
+                      }
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{t.acceptDueDate}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
               <DatePickerDemo
                 onChange={(date) => handleInputChange("faellig_am", date)}
                 value={formData.faellig_am}

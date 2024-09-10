@@ -55,7 +55,6 @@ const translations = {
     showing: "Zeige",
     invoicesCount: "Rechnungen",
     manualRun: "Manueller Lauf",
-    // Add new translations
     receivedOn: "Eingegangen am",
     dueOn: "Fällig am",
     account: "Konto",
@@ -72,6 +71,7 @@ const translations = {
     enterComment: "Kommentar eingeben",
     selectCostCenter: "Kostenstelle auswählen",
     selectVb: "VB auswählen",
+    acceptDueDate: "Fälligkeitsdatum akzeptieren",
   },
   en: {
     title: "Data Overview",
@@ -127,7 +127,6 @@ const translations = {
     showing: "Showing",
     invoicesCount: "invoices",
     manualRun: "Manual Run",
-    // Add new translations
     receivedOn: "Received On",
     dueOn: "Due On",
     account: "Account",
@@ -144,6 +143,7 @@ const translations = {
     enterComment: "Enter comment",
     selectCostCenter: "Select cost center",
     selectVb: "Select VB",
+    acceptDueDate: "Accept due date",
   },
 };
 
