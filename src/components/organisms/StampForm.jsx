@@ -73,15 +73,6 @@ const StampForm = ({ invoice, onClose }) => {
               />
             </div>
           )}
-          {renderFormField("costCenter", "kostenstelle", 
-            <SelectField
-              id="kostenstelle"
-              options={kostenstelleOptions}
-              value={formData.kostenstelle}
-              onChange={(value) => handleInputChange("kostenstelle", value)}
-              placeholder={`${t.select} ${t.costCenter}`}
-            />
-          )}
         </div>
         <div className="space-y-4">
           {renderFormField("dueOn", "faellig_am", 
@@ -104,6 +95,15 @@ const StampForm = ({ invoice, onClose }) => {
               className="h-24"
               onChange={(e) => handleInputChange("kommentar", e.target.value)}
               value={formData.kommentar}
+            />
+          )}
+          {renderFormField("costCenter", "kostenstelle", 
+            <SelectField
+              id="kostenstelle"
+              options={kostenstelleOptions}
+              value={formData.kostenstelle}
+              onChange={(value) => handleInputChange("kostenstelle", value)}
+              placeholder={`${t.select} ${t.costCenter}`}
             />
           )}
           {renderFormField("vb", "vb", 
