@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslations } from "../../hooks/useTranslations";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -6,14 +7,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useLanguage } from "../../contexts/LanguageContext";
 import { Filter, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 const FilterButton = ({ onFilter, onClearFilter, isFilterActive }) => {
   const [dateRange, setDateRange] = useState({ from: null, to: null });
   const [isOpen, setIsOpen] = useState(false);
-  const { language } = useLanguage();
+  const t = useTranslations();
 
   const handleFilter = () => {
     if (dateRange.from && dateRange.to) {
@@ -26,23 +26,6 @@ const FilterButton = ({ onFilter, onClearFilter, isFilterActive }) => {
     setDateRange({ from: null, to: null });
     onClearFilter();
   };
-
-  const translations = {
-    de: {
-      filter: "Filter",
-      applyFilter: "Filter anwenden",
-      clearFilter: "Filter löschen",
-      filterActive: "Filter aktiv",
-    },
-    en: {
-      filter: "Filter",
-      applyFilter: "Apply Filter",
-      clearFilter: "Clear Filter",
-      filterActive: "Filter Active",
-    },
-  };
-
-  const t = translations[language];
 
   return (
     <div className="flex items-center space-x-2">

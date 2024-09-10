@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import { useTranslations } from "../../hooks/useTranslations";
 import {
   Table,
   TableBody,
@@ -10,37 +11,10 @@ import {
 } from "@/components/ui/table";
 import StatusBadge from "../molecules/StatusBadge";
 import ActionButtons from "../molecules/ActionButtons";
-import { useLanguage } from "../../contexts/LanguageContext";
 
 const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
-  const { language } = useLanguage();
+  const t = useTranslations();
 
-  const translations = {
-    en: {
-      vendorName: "Vendor/Supplier Name / Email",
-      dateIssued: "Date Issued",
-      dueDate: "Due Date",
-      invoiceNumber: "Invoice Number",
-      grossAmount: "Gross Amount",
-      vatAmount: "VAT Amount",
-      status: "Status",
-      actions: "Actions",
-      total: "Total",
-    },
-    de: {
-      vendorName: "Absender",
-      dateIssued: "Ausstellungsdatum",
-      dueDate: "Fälligkeitsdatum",
-      invoiceNumber: "Rechnungsnummer",
-      grossAmount: "Bruttobetrag",
-      vatAmount: "Umsatzsteuer",
-      status: "Status",
-      actions: "Aktionen",
-      total: "Gesamt",
-    },
-  };
-
-  const t = translations[language];
   const renderSender = (sender) => {
     if (Array.isArray(sender) && sender.length > 1) {
       return (
@@ -102,6 +76,22 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
     );
   }, [invoices]);
 
+  const getGermanStatus = (status) => {
+    switch (status.toLowerCase()) {
+      case "checked":
+      case "kontiert":
+        return "kontiert";
+      case "unchecked":
+      case "unkontiert":
+        return "unkontiert";
+      case "received":
+      case "empfangen":
+        return "empfangen";
+      default:
+        return status;
+    }
+  };
+
   return (
     <Table className="border-collapse">
       <TableHeader>
@@ -153,7 +143,7 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
               {renderAmount(invoice, "vat_amount")}
             </TableCell>
             <TableCell className="w-1/8">
-              <StatusBadge status={invoice.status} />
+              <StatusBadge status={getGermanStatus(invoice.status)} />
             </TableCell>
             <TableCell className="w-1/8">
               <ActionButtons
@@ -172,13 +162,13 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
             {t.total}
           </TableCell>
           <TableCell className="whitespace-nowrap font-medium">
-            {new Intl.NumberFormat(language === "de" ? "de-DE" : "en-US", {
+            {new Intl.NumberFormat(t.language === "de" ? "de-DE" : "en-US", {
               style: "currency",
               currency: invoices[0]?.amount?.currency || "EUR",
             }).format(totals.grossAmount)}
           </TableCell>
           <TableCell className="whitespace-nowrap font-medium">
-            {new Intl.NumberFormat(language === "de" ? "de-DE" : "en-US", {
+            {new Intl.NumberFormat(t.language === "de" ? "de-DE" : "en-US", {
               style: "currency",
               currency: invoices[0]?.amount?.currency || "EUR",
             }).format(totals.vatAmount)}

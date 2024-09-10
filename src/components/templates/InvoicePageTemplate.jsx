@@ -1,35 +1,10 @@
 import React from "react";
+import { useTranslations } from "../../hooks/useTranslations";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import InvoiceCard from "../organisms/InvoiceCard";
-import { useLanguage } from "../../contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import FilterButton from "../molecules/FilterButton";
 import ExportButton from "../molecules/ExportButton";
-
-const translations = {
-  de: {
-    all: "Alle",
-    invoices: "Rechnungen",
-    manage: "Verwalten Sie Ihre Rechnungen und sehen Sie deren Details ein.",
-    unchecked: "Unkontiert",
-    checked: "Kontiert",
-    showing: "Zeige",
-    invoicesCount: "Rechnungen",
-    manualRun: "Manueller Lauf",
-    filter: "Filter",
-  },
-  en: {
-    all: "All",
-    invoices: "Invoices",
-    manage: "Manage your invoices and view their details.",
-    unchecked: "Unchecked",
-    checked: "Checked",
-    showing: "Showing",
-    invoicesCount: "invoices",
-    manualRun: "Manual Run",
-    filter: "Filter",
-  },
-};
 
 const InvoicePageTemplate = ({
   invoices,
@@ -44,9 +19,7 @@ const InvoicePageTemplate = ({
   isFilterActive,
   dateFilter,
 }) => {
-  const { language } = useLanguage();
-  const t = translations[language];
-
+  const t = useTranslations();
   const getTranslatedStatus = (status) => {
     switch (status.toLowerCase()) {
       case "unchecked":
@@ -73,8 +46,8 @@ const InvoicePageTemplate = ({
             ))}
           </TabsList>
           <div className="flex space-x-2">
-            <FilterButton 
-              onFilter={onFilter} 
+            <FilterButton
+              onFilter={onFilter}
               onClearFilter={onClearFilter}
               isFilterActive={isFilterActive}
             />

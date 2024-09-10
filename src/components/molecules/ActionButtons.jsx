@@ -18,7 +18,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useLanguage } from "../../contexts/LanguageContext";
+import { useTranslations } from "@/hooks/useTranslations";
 
 const translations = {
   de: {
@@ -27,7 +27,8 @@ const translations = {
     view: "Ansehen",
     delete: "Löschen",
     areYouSure: "Sind Sie sicher?",
-    deleteWarning: "Diese Aktion kann nicht rückgängig gemacht werden. Die Rechnung wird dauerhaft aus der Datenbank gelöscht.",
+    deleteWarning:
+      "Diese Aktion kann nicht rückgängig gemacht werden. Die Rechnung wird dauerhaft aus der Datenbank gelöscht.",
     cancel: "Abbrechen",
   },
   en: {
@@ -36,7 +37,8 @@ const translations = {
     view: "View",
     delete: "Delete",
     areYouSure: "Are you sure?",
-    deleteWarning: "This action cannot be undone. The invoice will be permanently deleted from the database.",
+    deleteWarning:
+      "This action cannot be undone. The invoice will be permanently deleted from the database.",
     cancel: "Cancel",
   },
 };
@@ -62,8 +64,7 @@ const ActionButton = ({ icon: Icon, tooltip, onClick }) => (
 );
 
 const ActionButtons = ({ invoice, onViewDetails, onDelete, onStamp }) => {
-  const { language } = useLanguage();
-  const t = translations[language];
+  const t = useTranslations();
 
   return (
     <div className="flex space-x-1">
@@ -91,9 +92,7 @@ const ActionButtons = ({ invoice, onViewDetails, onDelete, onStamp }) => {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{t.areYouSure}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {t.deleteWarning}
-            </AlertDialogDescription>
+            <AlertDialogDescription>{t.deleteWarning}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{t.cancel}</AlertDialogCancel>

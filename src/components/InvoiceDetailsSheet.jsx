@@ -1,82 +1,17 @@
 import React, { useState } from "react";
+import { useTranslations } from "../hooks/useTranslations";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { useLanguage } from "../contexts/LanguageContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
-  const { language } = useLanguage();
-
-  const translations = {
-    en: {
-      title: "Data Overview",
-      stampFields: "Stamp Fields",
-      invoiceDetails: "Invoice Details",
-      financialDetails: "Financial Details",
-      costCenter: "Cost Center",
-      account: "Account",
-      vb: "VB",
-      evVp: "EV/VP",
-      checkedBy: "Checked by",
-      documentText: "Document Text",
-      paidBy: "Paid by",
-      comment: "Comment",
-      booked: "Booked",
-      discount: "Discount",
-      invoiceNumber: "Invoice Number",
-      dateIssued: "Date Issued",
-      dueDate: "Due Date",
-      sender: "Sender",
-      vatId: "VAT ID",
-      emailBody: "Email Body",
-      grossAmount: "Gross Amount",
-      netAmount: "Net Amount",
-      vatAmount: "VAT Amount",
-      paymentTerms: "Payment Terms",
-      vatRate: "VAT Rate",
-      noInvoice: "No invoice selected",
-      empty: "Empty",
-      no: "No",
-    },
-    de: {
-      title: "Datenübersicht",
-      stampFields: "Stempelfelder",
-      invoiceDetails: "Rechnungsdetails",
-      financialDetails: "Finanzielle Details",
-      costCenter: "Kostenstelle",
-      account: "Konto",
-      vb: "VB",
-      evVp: "EV/VP",
-      checkedBy: "Geprüft von",
-      documentText: "Belegtext",
-      paidBy: "Bezahlt von",
-      comment: "Kommentar",
-      booked: "Gebucht",
-      discount: "Skonto",
-      invoiceNumber: "Rechnungsnummer",
-      dateIssued: "Ausstellungsdatum",
-      dueDate: "Fälligkeitsdatum",
-      sender: "Absender",
-      vatId: "Umsatzsteuer-ID",
-      emailBody: "E-Mail-Text",
-      grossAmount: "Bruttobetrag",
-      netAmount: "Nettobetrag",
-      vatAmount: "Umsatzsteuerbetrag",
-      paymentTerms: "Zahlungsbedingungen",
-      vatRate: "Umsatzsteuersatz",
-      noInvoice: "Keine Rechnung ausgewählt",
-      empty: "Leer",
-      no: "Nein",
-    },
-  };
-
-  const t = translations[language];
+  const t = useTranslations();
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
@@ -170,15 +105,15 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
                 <CardContent className="grid grid-cols-2 gap-4">
                   <Field
                     label={t.grossAmount}
-                    value={renderAmount(invoice, "gross_amount", language)}
+                    value={renderAmount(invoice, "gross_amount", t.language)}
                   />
                   <Field
                     label={t.netAmount}
-                    value={renderAmount(invoice, "net_amount", language)}
+                    value={renderAmount(invoice, "net_amount", t.language)}
                   />
                   <Field
                     label={t.vatAmount}
-                    value={renderAmount(invoice, "vat_amount", language)}
+                    value={renderAmount(invoice, "vat_amount", t.language)}
                   />
                   <Field
                     label={t.vatRate}
