@@ -20,6 +20,7 @@ const InvoicePageTemplate = ({
   dateFilter,
 }) => {
   const t = useTranslations();
+
   const getTranslatedStatus = (status) => {
     switch (status.toLowerCase()) {
       case "unchecked":
