@@ -43,6 +43,7 @@ This is the database holding the Invoices from the Invoice Agent Project.
 | cost_of_run    | real                     | number    | false    |
 | user_id        | uuid                     | string    | false    |
 | fälligkeit_akzeptiert | boolean                  | boolean   | false    |
+| company_name   | text                     | string    | false    |
 
 Note: id is the Primary Key.
 */
