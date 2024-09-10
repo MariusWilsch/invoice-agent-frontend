@@ -23,11 +23,14 @@ const InvoicePageTemplate = ({
   const getTranslatedStatus = (status) => {
     switch (status.toLowerCase()) {
       case "unchecked":
+      case "unkontiert":
       case "empfangen":
         return t.unchecked;
       case "checked":
       case "kontiert":
         return t.checked;
+      case "received":
+        return t.received;
       default:
         return status;
     }
@@ -74,7 +77,7 @@ const InvoicePageTemplate = ({
               invoices={
                 status === "Marius_TEST"
                   ? allInvoices.filter((invoice) => invoice.status === status)
-                  : invoices.filter((invoice) => invoice.status === status)
+                  : invoices.filter((invoice) => invoice.status.toLowerCase() === status.toLowerCase())
               }
               onViewDetails={onViewDetails}
               onDelete={onDelete}

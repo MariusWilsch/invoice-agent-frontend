@@ -26,8 +26,8 @@ const Index = () => {
     const uniqueStatuses = Array.from(
       new Set(
         invoicesList.map((invoice) => {
-          if (invoice.status === "Empfangen") return "Unchecked";
-          if (invoice.status === "Kontiert") return "Checked";
+          if (invoice.status.toLowerCase() === "empfangen") return "Unchecked";
+          if (invoice.status.toLowerCase() === "kontiert") return "Checked";
           return invoice.status;
         })
       )
@@ -38,7 +38,7 @@ const Index = () => {
   useEffect(() => {
     if (initialInvoices) {
       const sortedInvoices = [...initialInvoices].sort(
-        (a, b) => new Date(a.invoice_date) - new Date(b.invoice_date)
+        (a, b) => new Date(b.invoice_date) - new Date(a.invoice_date)
       );
       setInvoices(sortedInvoices);
       updateStatuses(sortedInvoices);
@@ -126,9 +126,9 @@ const Index = () => {
       .map((invoice) => ({
         ...invoice,
         status:
-          invoice.status === "Empfangen"
+          invoice.status.toLowerCase() === "empfangen"
             ? "Unchecked"
-            : invoice.status === "Kontiert"
+            : invoice.status.toLowerCase() === "kontiert"
             ? "Checked"
             : invoice.status,
       }))
