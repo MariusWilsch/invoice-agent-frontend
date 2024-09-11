@@ -1,26 +1,27 @@
-import React, { useState } from 'react';
-import { useSupabaseAuth } from '@/integrations/supabase/auth.jsx';
+import { useState } from "react";
+import { useSupabaseAuth } from "@/integrations/supabase/auth.jsx";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Link, useNavigate } from 'react-router-dom';
-import { EyeIcon, EyeOffIcon } from 'lucide-react';
+import { Link, useNavigate } from "react-router-dom";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [authMethod, setAuthMethod] = useState('password');
+  const [authMethod, setAuthMethod] = useState("password");
   const { signInWithPassword, signInWithOtp } = useSupabaseAuth();
+  // const [step, setStep] = useState(1);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (authMethod === 'magic-link') {
+      if (authMethod === "magic-link") {
         const { error } = await signInWithOtp({ email });
         if (error) {
           throw error;
@@ -31,18 +32,19 @@ const Login = () => {
       } else {
         const { error } = await signInWithPassword({ email, password });
         if (error) throw error;
-        toast.success('Logged in successfully');
-        navigate('/');
+        toast.success("Logged in successfully");
+        navigate("/");
       }
     } catch (error) {
-      console.error('Login error:', error.message);
+      console.error("Login error:", error.message);
       toast.error(`Authentication failed`, {
-        description: error.message || "An error occurred during authentication.",
+        description:
+          error.message || "An error occurred during authentication.",
       });
     }
   };
 
-  return (
+    return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <Card className="w-full max-w-md p-8">
         <CardContent>
@@ -53,9 +55,11 @@ const Login = () => {
               type="button"
               className={cn(
                 "flex-1 rounded-r-none",
-                authMethod === 'password' ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"
+                authMethod === "password"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-secondary text-secondary-foreground"
               )}
-              onClick={() => setAuthMethod('password')}
+              onClick={() => setAuthMethod("password")}
             >
               Password
             </Button>
@@ -63,16 +67,23 @@ const Login = () => {
               type="button"
               className={cn(
                 "flex-1 rounded-l-none",
-                authMethod === 'magic-link' ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground"
+                authMethod === "magic-link"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-secondary text-secondary-foreground"
               )}
-              onClick={() => setAuthMethod('magic-link')}
+              onClick={() => setAuthMethod("magic-link")}
             >
               Magic Link
             </Button>
           </div>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <Label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</Label>
+              <Label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Email
+              </Label>
               <Input
                 id="email"
                 type="email"
@@ -83,9 +94,14 @@ const Login = () => {
                 className="w-full"
               />
             </div>
-            {authMethod === 'password' && (
+            {authMethod === "password" && (
               <div>
-                <Label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Password</Label>
+                <Label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Password
+                </Label>
                 <div className="relative">
                   <Input
                     id="password"
@@ -110,20 +126,29 @@ const Login = () => {
                 </div>
               </div>
             )}
-            {authMethod === 'password' && (
+            {authMethod === "password" && (
               <div className="text-sm">
-                <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
+                <a
+                  href="#"
+                  className="font-medium text-indigo-600 hover:text-indigo-500"
+                >
                   Forgot Password?
                 </a>
               </div>
             )}
-            <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700">
-              {authMethod === 'magic-link' ? "Send Magic Link" : "Login"}
+            <Button
+              type="submit"
+              className="w-full bg-indigo-600 hover:bg-indigo-700"
+            >
+              {authMethod === "magic-link" ? "Send Magic Link" : "Login"}
             </Button>
           </form>
           <p className="mt-4 text-center text-sm text-gray-600">
             Not registered yet?{" "}
-            <Link to="/signup" className="font-medium text-indigo-600 hover:text-indigo-500">
+            <Link
+              to="/signup"
+              className="font-medium text-indigo-600 hover:text-indigo-500"
+            >
               Create an account
             </Link>
           </p>

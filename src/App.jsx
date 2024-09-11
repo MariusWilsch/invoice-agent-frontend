@@ -1,10 +1,19 @@
-import { Route, BrowserRouter as Router, Routes, Navigate } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {
+  Route,
+  BrowserRouter as Router,
+  Routes,
+  Navigate,
+} from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Index from "./pages/Index.jsx";
 import Login from "./pages/Login.jsx";
 import SignUp from "./pages/SignUp.jsx";
 import SharedLayout from "./components/SharedLayout.jsx";
-import { SupabaseAuthProvider, useSupabaseAuth } from "./integrations/supabase/auth.jsx";
+import {
+  SupabaseAuthProvider,
+  useSupabaseAuth,
+} from "./integrations/supabase/auth.jsx";
+import Settings from "./pages/Setting.jsx";
 
 const queryClient = new QueryClient();
 
@@ -21,11 +30,14 @@ function AppContent() {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
-      <Route element={
-        <ProtectedRoute>
-          <SharedLayout />
-        </ProtectedRoute>
-      }>
+      <Route path="/setting" element={<Settings />} />
+      <Route
+        element={
+          <ProtectedRoute>
+            <SharedLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route exact path="/" element={<Index />} />
       </Route>
     </Routes>

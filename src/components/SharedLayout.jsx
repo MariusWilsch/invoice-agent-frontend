@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { User } from "lucide-react";
 import { toast } from "sonner";
@@ -106,6 +106,9 @@ const SharedLayout = () => {
                   </DropdownMenuItem>
                   <DropdownMenuItem onSelect={() => setIsImapModalOpen(true)}>
                     IMAP Credentials
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => navigate('/setting')}>
+                    Settings
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onSelect={handleLogout}>Logout</DropdownMenuItem>
