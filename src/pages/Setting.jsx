@@ -24,21 +24,23 @@ const Settings = () => {
 
   const checkTwoFactorStatus = async () => {
     const {
-      data: { user },
+      data: { user, session },
     } = await supabase.auth.getUser();
-    console.log("the user", user);
+    console.log("the user", user, session);
     if (user?.factors) {
-      console.log("the length of factors is", user?.factors);
-      setTwofaObject(user?.factors[0]);
-      if (user?.factors?.totp[0].status === "verified") {
+      console.log("the length of factors is", user?.factors?.length);
+      if (user?.factors[0]?.status === "verified") {
+        console.log("the user has a verified factor");
+        setTwofaObject(user?.factors[0]);
         setTwoFactorEnabled(true);
       } else {
+        setTwofaObject(user?.factors[0]);
         console.log("the user has no factors verified");
-        setTwoFactorEnabled(false);
+        setTwoFactorEnabled(true);
       }
-    }else {
+    } else {
       console.log("the user has no factors");
-      setTwoFactorEnabled(false)
+      setTwoFactorEnabled(false);
     }
   };
 
@@ -60,7 +62,7 @@ const Settings = () => {
       setSecret(data.totp.secret);
       setTwoFactorEnabled(true);
     } else {
-      const { error } = await supabase.auth.mfa.unenroll({ factorId: "totp" });
+      const { error } = await supabase.auth.mfa.unenroll({ factorId: twofaObject.id });
       if (error) {
         console.error("Error disabling 2FA:", error);
         return;
@@ -118,11 +120,10 @@ const Settings = () => {
                     toast.error("Please enter a valid 6-digit code");
                     return;
                   }
-                  try{
-
-                    const res = await supabase.auth.mfa.verify({
+                  try {
+                    const res = await supabase.auth.mfa.challengeAndVerify({
                       factorId: twofaObject.id,
-                      code: totpSecret,  
+                      code: totpSecret,
                     });
                     console.log(res);
                   } catch (error) {

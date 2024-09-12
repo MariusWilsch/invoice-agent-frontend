@@ -30,7 +30,6 @@ function AppContent() {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
-      <Route path="/setting" element={<Settings />} />
       <Route
         element={
           <ProtectedRoute>
@@ -39,6 +38,7 @@ function AppContent() {
         }
       >
         <Route exact path="/" element={<Index />} />
+        <Route exact path="/setting" element={<Settings />} />
       </Route>
     </Routes>
   );
