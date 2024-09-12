@@ -24,22 +24,18 @@ const Settings = () => {
 
   const checkTwoFactorStatus = async () => {
     const {
-      data: { user, session },
+      data: { user },
     } = await supabase.auth.getUser();
-    console.log("the user", user, session);
     if (user?.factors) {
-      console.log("the length of factors is", user?.factors?.length);
       if (user?.factors[0]?.status === "verified") {
-        console.log("the user has a verified factor");
         setTwofaObject(user?.factors[0]);
         setTwoFactorEnabled(true);
       } else {
         setTwofaObject(user?.factors[0]);
-        console.log("the user has no factors verified");
+        ("the user has no factors verified");
         setTwoFactorEnabled(true);
       }
     } else {
-      console.log("the user has no factors");
       setTwoFactorEnabled(false);
     }
   };
@@ -51,7 +47,6 @@ const Settings = () => {
       });
 
       setTwofaObject(data);
-      console.log("the data: ", data);
 
       if (error) {
         console.error("Error enrolling in 2FA:", error);
@@ -125,7 +120,6 @@ const Settings = () => {
                       factorId: twofaObject.id,
                       code: totpSecret,
                     });
-                    console.log(res);
                   } catch (error) {
                     console.error("Error verifying 2FA:", error);
                   }
