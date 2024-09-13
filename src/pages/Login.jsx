@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSupabaseAuth } from "@/integrations/supabase/auth.jsx";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,20 +8,15 @@ import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
-const Login = () => {
+const Login = ({ setIsOtpVerified }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const { signInWithPassword, challengeAndVerifyOtp, isOtpVerified, requiresOtp, setRequiresOtp } = useSupabaseAuth();
+  const { signInWithPassword, challengeAndVerifyOtp } = useSupabaseAuth();
+  const [isOtpRequired, setIsOtpRequired] = useState(false);
   const [factorId, setFactorId] = useState(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (isOtpVerified) {
-      navigate("/");
-    }
-  }, [isOtpVerified, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,10 +25,11 @@ const Login = () => {
       if (error) throw error;
 
       if (data.user?.factors && data.user.factors.length > 0) {
-        setRequiresOtp(true);
+        setIsOtpRequired(true);
         setFactorId(data.user.factors[0].id);
         toast.info("Please enter your OTP to complete login");
       } else {
+        setIsOtpVerified(true);
         navigate("/");
       }
     } catch (error) {
@@ -53,6 +49,7 @@ const Login = () => {
       });
       if (error) throw error;
       toast.success("2FA verified successfully");
+      setIsOtpVerified(true);
       navigate("/");
     } catch (error) {
       console.error("OTP verification error:", error.message);
@@ -68,8 +65,8 @@ const Login = () => {
         <CardContent>
           <h1 className="text-3xl font-bold mb-2">Login</h1>
           <p className="text-gray-600 mb-6">Hi, Welcome back 👋</p>
-          <form onSubmit={requiresOtp ? handleVerifyOtp : handleSubmit} className="space-y-4">
-            {!requiresOtp && (
+          <form onSubmit={isOtpRequired ? handleVerifyOtp : handleSubmit} className="space-y-4">
+            {!isOtpRequired && (
               <>
                 <div>
                   <Label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
@@ -120,7 +117,7 @@ const Login = () => {
               </>
             )}
 
-            {requiresOtp && (
+            {isOtpRequired && (
               <div>
                 <Label htmlFor="otp" className="block text-sm font-medium text-gray-700 mb-1">
                   One-Time Password (OTP)
@@ -138,7 +135,7 @@ const Login = () => {
             )}
 
             <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700">
-              {requiresOtp ? "Verify OTP" : "Login"}
+              {isOtpRequired ? "Verify OTP" : "Login"}
             </Button>
           </form>
           <p className="mt-4 text-center text-sm text-gray-600">
