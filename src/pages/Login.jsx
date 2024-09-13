@@ -30,6 +30,7 @@ const Login = () => {
       if (aalData.currentLevel === 'aal1' && aalData.nextLevel === 'aal2') {
         setIsOtpRequired(true);
         setFactorId(data.user.factors[0].id);
+        toast.info("Please enter your OTP to complete login");
       } else {
         toast.success("Logged in successfully");
         navigate("/");
