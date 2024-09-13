@@ -29,6 +29,7 @@ const ProtectedRoute = ({ children }) => {
 function AppContent() {
   const { session, loading } = useSupabaseAuth();
   const [isLoading, setIsLoading] = useState(true);
+  const [isOtpVerified, setIsOtpVerified] = useState(false);
 
   useEffect(() => {
     if (!loading) {
@@ -42,7 +43,16 @@ function AppContent() {
 
   return (
     <Routes>
-      <Route path="/login" element={session ? <Navigate to="/" replace /> : <Login />} />
+      <Route 
+        path="/login" 
+        element={
+          session && isOtpVerified ? (
+            <Navigate to="/" replace />
+          ) : (
+            <Login setIsOtpVerified={setIsOtpVerified} />
+          )
+        } 
+      />
       <Route path="/signup" element={session ? <Navigate to="/" replace /> : <SignUp />} />
       <Route
         element={
@@ -51,7 +61,17 @@ function AppContent() {
           </ProtectedRoute>
         }
       >
-        <Route exact path="/" element={<Index />} />
+        <Route 
+          exact 
+          path="/" 
+          element={
+            session && isOtpVerified ? (
+              <Index />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          } 
+        />
         <Route exact path="/setting" element={<Settings />} />
       </Route>
     </Routes>

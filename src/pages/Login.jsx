@@ -8,12 +8,12 @@ import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
-const Login = () => {
+const Login = ({ setIsOtpVerified }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const { signInWithPassword, verifyOtp } = useSupabaseAuth();
+  const { signInWithPassword } = useSupabaseAuth();
   const [isOtpRequired, setIsOtpRequired] = useState(false);
   const [factorId, setFactorId] = useState(null);
   const navigate = useNavigate();
@@ -41,6 +41,7 @@ const Login = () => {
       const { error } = await verifyOtp({ factorId, code: otp });
       if (error) throw error;
       toast.success("2FA verified successfully");
+      setIsOtpVerified(true);
       navigate("/");
     } catch (error) {
       console.error("OTP verification error:", error.message);
