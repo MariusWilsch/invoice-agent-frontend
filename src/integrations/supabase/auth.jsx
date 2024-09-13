@@ -76,6 +76,14 @@ export const SupabaseAuthProviderInner = ({ children }) => {
     }
   };
 
+  const verifyOtp = async ({ factorId, token }) => {
+    return supabase.auth.verifyOtp({
+      type: 'totp',
+      factorId,
+      token,
+    });
+  };
+
   return (
     <SupabaseAuthContext.Provider value={{ 
       session, 
@@ -83,7 +91,8 @@ export const SupabaseAuthProviderInner = ({ children }) => {
       signOut, 
       signInWithPassword, 
       signUp,
-      getAuthenticatorAssuranceLevel 
+      getAuthenticatorAssuranceLevel,
+      verifyOtp
     }}>
       {children}
     </SupabaseAuthContext.Provider>

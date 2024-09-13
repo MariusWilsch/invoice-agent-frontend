@@ -7,14 +7,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/supabase";
 
 const Login = ({ setIsOtpVerified }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const { signInWithPassword } = useSupabaseAuth();
+  const { signInWithPassword, verifyOtp } = useSupabaseAuth();
   const [isOtpRequired, setIsOtpRequired] = useState(false);
   const [factorId, setFactorId] = useState(null);
   const navigate = useNavigate();
@@ -44,8 +43,7 @@ const Login = ({ setIsOtpVerified }) => {
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     try {
-      const { data, error } = await supabase.auth.verifyOtp({
-        type: 'totp',
+      const { data, error } = await verifyOtp({
         factorId: factorId,
         token: otp,
       });
