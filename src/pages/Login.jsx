@@ -15,11 +15,11 @@ const Login = () => {
   const [otp, setOtp] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [authMethod, setAuthMethod] = useState("password");
-  const { signInWithPassword, signInWithOtp, verifyOtp, getAuthenticatorAssuranceLevel, enrollMFA, challengeMFA, verifyMFA, enrollmentData } = useSupabaseAuth();
   const [is2FAEnabled, setIs2FAEnabled] = useState(false);
   const [factorId, setFactorId] = useState(null);
   const [showQRCode, setShowQRCode] = useState(false);
   const navigate = useNavigate();
+  const { signInWithPassword, signInWithOtp, verifyOtp, getAuthenticatorAssuranceLevel, enrollMFA, challengeMFA, verifyMFA } = useSupabaseAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
