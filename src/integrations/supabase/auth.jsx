@@ -18,6 +18,7 @@ export const SupabaseAuthProviderInner = ({ children }) => {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isOtpVerified, setIsOtpVerified] = useState(false);
+  const [requiresOtp, setRequiresOtp] = useState(false);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -32,6 +33,7 @@ export const SupabaseAuthProviderInner = ({ children }) => {
       setSession(session);
       if (event === 'SIGNED_OUT') {
         setIsOtpVerified(false);
+        setRequiresOtp(false);
       }
       queryClient.invalidateQueries('user');
     });
@@ -47,7 +49,8 @@ export const SupabaseAuthProviderInner = ({ children }) => {
   const signInWithPassword = async ({ email, password }) => {
     const response = await supabase.auth.signInWithPassword({ email, password });
     if (response.data.user) {
-      await getAuthenticatorAssuranceLevel();
+      const { data } = await getAuthenticatorAssuranceLevel();
+      setRequiresOtp(data.currentLevel !== data.nextLevel);
     }
     return response;
   };
@@ -60,6 +63,7 @@ export const SupabaseAuthProviderInner = ({ children }) => {
     await supabase.auth.signOut();
     setSession(null);
     setIsOtpVerified(false);
+    setRequiresOtp(false);
     queryClient.invalidateQueries('user');
     setLoading(false);
   };
@@ -89,6 +93,7 @@ export const SupabaseAuthProviderInner = ({ children }) => {
       });
       if (error) throw error;
       setIsOtpVerified(true);
+      setRequiresOtp(false);
       return { data, error: null };
     } catch (error) {
       console.error('Error in challengeAndVerifyOtp:', error);
@@ -106,7 +111,9 @@ export const SupabaseAuthProviderInner = ({ children }) => {
       getAuthenticatorAssuranceLevel,
       challengeAndVerifyOtp,
       isOtpVerified,
-      setIsOtpVerified
+      setIsOtpVerified,
+      requiresOtp,
+      setRequiresOtp
     }}>
       {children}
     </SupabaseAuthContext.Provider>
