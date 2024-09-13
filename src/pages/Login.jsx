@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Link, useNavigate } from "react-router-dom";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 const Login = () => {
@@ -13,7 +14,8 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const { signInWithPassword, verifyOtp } = useSupabaseAuth();
+  const [authMethod, setAuthMethod] = useState("password");
+  const { signInWithPassword, signInWithOtp, verifyOtp } = useSupabaseAuth();
   const [is2FAEnabled, setIs2FAEnabled] = useState(false);
   const [factorId, setFactorId] = useState(null);
   const navigate = useNavigate();
@@ -21,16 +23,24 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { error, data } = await signInWithPassword({ email, password });
-      if (error) throw error;
-
-      const totpFactor = data?.user?.factors?.find(factor => factor.factor_type === "totp");
-      if (totpFactor) {
-        setIs2FAEnabled(true);
-        setFactorId(totpFactor.id);
+      if (authMethod === "magic-link") {
+        const { error } = await signInWithOtp({ email });
+        if (error) throw error;
+        toast.success(`Magic link sent successfully`, {
+          description: "Please check your email for the login link.",
+        });
       } else {
-        toast.success("Logged in successfully");
-        navigate("/");
+        const { error, data } = await signInWithPassword({ email, password });
+        if (error) throw error;
+
+        const totpFactor = data?.user?.factors?.find(factor => factor.factor_type === "totp");
+        if (totpFactor) {
+          setIs2FAEnabled(true);
+          setFactorId(totpFactor.id);
+        } else {
+          toast.success("Logged in successfully");
+          navigate("/");
+        }
       }
     } catch (error) {
       console.error("Login error:", error.message);
@@ -61,9 +71,38 @@ const Login = () => {
         <CardContent>
           <h1 className="text-3xl font-bold mb-2">Login</h1>
           <p className="text-gray-600 mb-6">Hi, Welcome back 👋</p>
+          <div className="flex mb-4">
+            <Button
+              type="button"
+              className={cn(
+                "flex-1 rounded-r-none",
+                authMethod === "password"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-secondary text-secondary-foreground"
+              )}
+              onClick={() => setAuthMethod("password")}
+            >
+              Password
+            </Button>
+            <Button
+              type="button"
+              className={cn(
+                "flex-1 rounded-l-none",
+                authMethod === "magic-link"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-secondary text-secondary-foreground"
+              )}
+              onClick={() => setAuthMethod("magic-link")}
+            >
+              Magic Link
+            </Button>
+          </div>
           <form onSubmit={is2FAEnabled ? handleVerifyOtp : handleSubmit} className="space-y-4">
             <div>
-              <Label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              <Label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Email
               </Label>
               <Input
@@ -77,9 +116,12 @@ const Login = () => {
               />
             </div>
 
-            {!is2FAEnabled && (
+            {authMethod === "password" && !is2FAEnabled && (
               <div>
-                <Label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                <Label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
                   Password
                 </Label>
                 <div className="relative">
@@ -109,7 +151,10 @@ const Login = () => {
 
             {is2FAEnabled && (
               <div>
-                <Label htmlFor="otp" className="block text-sm font-medium text-gray-700 mb-1">
+                <Label
+                  htmlFor="otp"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
                   One-Time Password (OTP)
                 </Label>
                 <Input
@@ -124,20 +169,29 @@ const Login = () => {
               </div>
             )}
 
-            {!is2FAEnabled && (
+            {!is2FAEnabled && authMethod === "password" && (
               <div className="text-sm">
-                <Link to="/forgot-password" className="font-medium text-indigo-600 hover:text-indigo-500">
+                <a
+                  href="#"
+                  className="font-medium text-indigo-600 hover:text-indigo-500"
+                >
                   Forgot Password?
-                </Link>
+                </a>
               </div>
             )}
-            <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700">
-              {is2FAEnabled ? "Verify OTP" : "Login"}
+            <Button
+              type="submit"
+              className="w-full bg-indigo-600 hover:bg-indigo-700"
+            >
+              {is2FAEnabled ? "Verify OTP" : authMethod === "magic-link" ? "Send Magic Link" : "Login"}
             </Button>
           </form>
           <p className="mt-4 text-center text-sm text-gray-600">
             Not registered yet?{" "}
-            <Link to="/signup" className="font-medium text-indigo-600 hover:text-indigo-500">
+            <Link
+              to="/signup"
+              className="font-medium text-indigo-600 hover:text-indigo-500"
+            >
               Create an account
             </Link>
           </p>
