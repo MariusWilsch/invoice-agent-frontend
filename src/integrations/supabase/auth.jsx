@@ -64,14 +64,22 @@ export const SupabaseAuthProviderInner = ({ children }) => {
   };
 
   const verifyOtp = async ({ factorId, code }) => {
-    return supabase.auth.mfa.challenge({ factorId })
-      .then(({ data }) => {
-        if (data.challenge) {
-          return supabase.auth.mfa.verify({ factorId, challengeId: data.challenge.id, code });
-        } else {
-          throw new Error('Failed to create MFA challenge');
-        }
+    try {
+      const { data, error } = await supabase.auth.mfa.challenge({ factorId });
+      if (error) throw error;
+      
+      const { data: verifyData, error: verifyError } = await supabase.auth.mfa.verify({ 
+        factorId, 
+        challengeId: data.id, 
+        code 
       });
+      if (verifyError) throw verifyError;
+      
+      return { data: verifyData, error: null };
+    } catch (error) {
+      console.error('Error in verifyOtp:', error);
+      return { data: null, error };
+    }
   };
 
   const getAuthenticatorAssuranceLevel = async () => {
