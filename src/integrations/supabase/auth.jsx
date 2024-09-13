@@ -41,7 +41,11 @@ export const SupabaseAuthProviderInner = ({ children }) => {
   }, [queryClient]);
 
   const signInWithPassword = async ({ email, password }) => {
-    return supabase.auth.signInWithPassword({ email, password });
+    const response = await supabase.auth.signInWithPassword({ email, password });
+    if (response.data.user) {
+      await getAuthenticatorAssuranceLevel();
+    }
+    return response;
   };
 
   const signInWithOtp = async ({ email }) => {
@@ -63,8 +67,34 @@ export const SupabaseAuthProviderInner = ({ children }) => {
     return supabase.auth.mfa.verifyOtp({ factorId, code });
   };
 
+  const getAuthenticatorAssuranceLevel = async () => {
+    try {
+      const { data, error } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+      if (error) {
+        console.error('Error getting AAL:', error);
+      } else {
+        console.log('User AAL Data:', data);
+        console.log('Current Session:', session);
+        console.log('Current User:', session?.user);
+      }
+      return { data, error };
+    } catch (error) {
+      console.error('Error in getAuthenticatorAssuranceLevel:', error);
+      return { data: null, error };
+    }
+  };
+
   return (
-    <SupabaseAuthContext.Provider value={{ session, loading, logout, signInWithPassword, signInWithOtp, signUp, verifyOtp }}>
+    <SupabaseAuthContext.Provider value={{ 
+      session, 
+      loading, 
+      logout, 
+      signInWithPassword, 
+      signInWithOtp, 
+      signUp, 
+      verifyOtp,
+      getAuthenticatorAssuranceLevel 
+    }}>
       {children}
     </SupabaseAuthContext.Provider>
   );
