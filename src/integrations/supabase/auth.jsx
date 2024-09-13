@@ -76,11 +76,12 @@ export const SupabaseAuthProviderInner = ({ children }) => {
     }
   };
 
-  const verifyOtp = async ({ factorId, token }) => {
+  const verifyOtp = async ({ email, token, factorId }) => {
     return supabase.auth.verifyOtp({
+      email,
+      token,
       type: 'totp',
       factorId,
-      token,
     });
   };
 

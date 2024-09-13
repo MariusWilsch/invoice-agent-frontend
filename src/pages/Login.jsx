@@ -44,8 +44,9 @@ const Login = ({ setIsOtpVerified }) => {
     e.preventDefault();
     try {
       const { data, error } = await verifyOtp({
-        factorId: factorId,
+        email,
         token: otp,
+        factorId: factorId,
       });
       if (error) throw error;
       toast.success("2FA verified successfully");
