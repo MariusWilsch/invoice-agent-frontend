@@ -25,9 +25,14 @@ const Login = ({ setIsOtpVerified }) => {
       const { error, data } = await signInWithPassword({ email, password });
       if (error) throw error;
 
-      setIsOtpRequired(true);
-      setFactorId(data.user.factors[0].id);
-      toast.info("Please enter your OTP to complete login");
+      if (data.user?.factors && data.user.factors.length > 0) {
+        setIsOtpRequired(true);
+        setFactorId(data.user.factors[0].id);
+        toast.info("Please enter your OTP to complete login");
+      } else {
+        setIsOtpVerified(true);
+        navigate("/");
+      }
     } catch (error) {
       console.error("Login error:", error.message);
       toast.error(`Authentication failed`, {
@@ -39,9 +44,10 @@ const Login = ({ setIsOtpVerified }) => {
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     try {
-      const { data, error } = await supabase.auth.mfa.verifyOtp({
-        factorId,
-        code: otp,
+      const { data, error } = await supabase.auth.verifyOtp({
+        type: 'totp',
+        factorId: factorId,
+        token: otp,
       });
       if (error) throw error;
       toast.success("2FA verified successfully");
