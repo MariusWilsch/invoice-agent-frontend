@@ -52,30 +52,11 @@ export const SupabaseAuthProviderInner = ({ children }) => {
     return supabase.auth.signUp({ email, password });
   };
 
-  const logout = async () => {
+  const signOut = async () => {
     await supabase.auth.signOut();
     setSession(null);
     queryClient.invalidateQueries('user');
     setLoading(false);
-  };
-
-  const verifyOtp = async ({ factorId, code }) => {
-    try {
-      const { data, error } = await supabase.auth.mfa.challenge({ factorId });
-      if (error) throw error;
-      
-      const { data: verifyData, error: verifyError } = await supabase.auth.mfa.verify({ 
-        factorId, 
-        challengeId: data.id, 
-        code 
-      });
-      if (verifyError) throw verifyError;
-      
-      return { data: verifyData, error: null };
-    } catch (error) {
-      console.error('Error in verifyOtp:', error);
-      return { data: null, error };
-    }
   };
 
   const getAuthenticatorAssuranceLevel = async () => {
@@ -99,10 +80,9 @@ export const SupabaseAuthProviderInner = ({ children }) => {
     <SupabaseAuthContext.Provider value={{ 
       session, 
       loading, 
-      logout, 
+      signOut, 
       signInWithPassword, 
-      signUp, 
-      verifyOtp,
+      signUp,
       getAuthenticatorAssuranceLevel 
     }}>
       {children}

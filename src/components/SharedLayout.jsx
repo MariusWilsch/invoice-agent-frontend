@@ -30,7 +30,7 @@ import { supabase } from "@/integrations/supabase/supabase";
 const SharedLayout = () => {
   const navigate = useNavigate();
   const [currentLanguage, setCurrentLanguage] = useState('de');
-  const { session, logout } = useSupabaseAuth();
+  const { session, signOut } = useSupabaseAuth();
   const [isImapModalOpen, setIsImapModalOpen] = useState(false);
   const [imapCredentials, setImapCredentials] = useState({
     email: "",
@@ -44,10 +44,12 @@ const SharedLayout = () => {
 
   const handleLogout = async () => {
     try {
-      await logout();
+      await signOut();
       navigate('/login');
+      toast.success("Logged out successfully");
     } catch (error) {
       console.error('Logout error:', error.message);
+      toast.error("Failed to log out");
     }
   };
 
