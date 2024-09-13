@@ -8,7 +8,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <App />
     <Toaster 
-      position="top-right" 
+      position="bottom-right" 
       toastOptions={{
         style: {
           background: 'white',
