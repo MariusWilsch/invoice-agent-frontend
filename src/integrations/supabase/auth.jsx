@@ -48,10 +48,6 @@ export const SupabaseAuthProviderInner = ({ children }) => {
     return response;
   };
 
-  const signInWithOtp = async ({ email }) => {
-    return supabase.auth.signInWithOtp({ email });
-  };
-
   const signUp = async ({ email, password }) => {
     return supabase.auth.signUp({ email, password });
   };
@@ -105,7 +101,6 @@ export const SupabaseAuthProviderInner = ({ children }) => {
       loading, 
       logout, 
       signInWithPassword, 
-      signInWithOtp, 
       signUp, 
       verifyOtp,
       getAuthenticatorAssuranceLevel 
