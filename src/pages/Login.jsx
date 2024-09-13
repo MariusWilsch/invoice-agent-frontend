@@ -19,7 +19,7 @@ const Login = () => {
   const [factorId, setFactorId] = useState(null);
   const [showQRCode, setShowQRCode] = useState(false);
   const navigate = useNavigate();
-  const { signInWithPassword, signInWithOtp, verifyOtp, getAuthenticatorAssuranceLevel, enrollMFA, challengeMFA, verifyMFA } = useSupabaseAuth();
+  const { signInWithPassword, signInWithOtp, verifyOtp, getAuthenticatorAssuranceLevel, enrollMFA, challengeMFA, verifyMFA, logout } = useSupabaseAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,7 +37,7 @@ const Login = () => {
         const { data: aalData, error: aalError } = await getAuthenticatorAssuranceLevel();
         if (aalError) throw aalError;
 
-        console.log("AAL Data:", aalData); // Debug log
+        console.log("AAL Data:", aalData);
 
         if (aalData.nextLevel === 'aal1') {
           const { data: enrollmentData, error: enrollmentError } = await enrollMFA();
@@ -49,7 +49,7 @@ const Login = () => {
             return;
           }
           setShowQRCode(true);
-          console.log("Enrollment Data:", enrollmentData); // Debug log
+          console.log("Enrollment Data:", enrollmentData);
         } else if (aalData.currentLevel === 'aal1' && aalData.nextLevel === 'aal2') {
           setIs2FAEnabled(true);
           setFactorId(data.user.factors[0].id);
@@ -96,6 +96,19 @@ const Login = () => {
       console.error("MFA enrollment error:", error);
       toast.error(`Failed to enable 2FA`, {
         description: error.message || "An error occurred during 2FA enrollment.",
+      });
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await logout();
+      toast.success("Signed out successfully");
+      navigate("/login");
+    } catch (error) {
+      console.error("Sign out error:", error);
+      toast.error(`Sign out failed`, {
+        description: error.message || "An error occurred during sign out.",
       });
     }
   };
@@ -202,6 +215,9 @@ const Login = () => {
           {is2FAEnabled ? "Verify OTP" : authMethod === "magic-link" ? "Send Magic Link" : "Login"}
         </Button>
       </form>
+      <Button onClick={handleSignOut} className="w-full mt-4 bg-red-600 hover:bg-red-700">
+        Sign Out
+      </Button>
     </>
   );
 
