@@ -13,7 +13,7 @@ const Login = ({ setIsOtpVerified }) => {
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const { signInWithPassword, verifyOtp } = useSupabaseAuth();
+  const { signInWithPassword, challengeAndVerifyOtp } = useSupabaseAuth();
   const [isOtpRequired, setIsOtpRequired] = useState(false);
   const [factorId, setFactorId] = useState(null);
   const navigate = useNavigate();
@@ -43,10 +43,9 @@ const Login = ({ setIsOtpVerified }) => {
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     try {
-      const { data, error } = await verifyOtp({
-        email,
-        token: otp,
+      const { data, error } = await challengeAndVerifyOtp({
         factorId: factorId,
+        code: otp,
       });
       if (error) throw error;
       toast.success("2FA verified successfully");

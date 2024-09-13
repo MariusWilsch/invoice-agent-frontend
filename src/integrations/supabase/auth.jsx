@@ -76,12 +76,10 @@ export const SupabaseAuthProviderInner = ({ children }) => {
     }
   };
 
-  const verifyOtp = async ({ email, token, factorId }) => {
-    return supabase.auth.verifyOtp({
-      email,
-      token,
-      type: 'totp',
+  const challengeAndVerifyOtp = async ({ factorId, code }) => {
+    return supabase.auth.mfa.challengeAndVerify({
       factorId,
+      code,
     });
   };
 
@@ -93,7 +91,7 @@ export const SupabaseAuthProviderInner = ({ children }) => {
       signInWithPassword, 
       signUp,
       getAuthenticatorAssuranceLevel,
-      verifyOtp
+      challengeAndVerifyOtp
     }}>
       {children}
     </SupabaseAuthContext.Provider>
