@@ -13,7 +13,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const { signInWithPassword, verifyOtp, getAuthenticatorAssuranceLevel } = useSupabaseAuth();
+  const { signInWithPassword, verifyOtp } = useSupabaseAuth();
   const [isOtpRequired, setIsOtpRequired] = useState(false);
   const [factorId, setFactorId] = useState(null);
   const navigate = useNavigate();
@@ -23,9 +23,6 @@ const Login = () => {
     try {
       const { error, data } = await signInWithPassword({ email, password });
       if (error) throw error;
-
-      const { data: aalData, error: aalError } = await getAuthenticatorAssuranceLevel();
-      if (aalError) throw aalError;
 
       setIsOtpRequired(true);
       setFactorId(data.user.factors[0].id);
