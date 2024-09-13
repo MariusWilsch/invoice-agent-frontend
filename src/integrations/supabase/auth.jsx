@@ -44,50 +44,23 @@ export const SupabaseAuthProviderInner = ({ children }) => {
     return supabase.auth.signInWithPassword({ email, password });
   };
 
+  const signInWithOtp = async ({ email }) => {
+    return supabase.auth.signInWithOtp({ email });
+  };
+
   const signUp = async ({ email, password }) => {
     return supabase.auth.signUp({ email, password });
   };
 
-  const signOut = async () => {
+  const logout = async () => {
     await supabase.auth.signOut();
     setSession(null);
     queryClient.invalidateQueries('user');
     setLoading(false);
   };
 
-  const getAuthenticatorAssuranceLevel = async () => {
-    return supabase.auth.mfa.getAuthenticatorAssuranceLevel();
-  };
-
-  const challengeAndVerifyOtp = async ({ factorId, code }) => {
-    try {
-      const challenge = await supabase.auth.mfa.challenge({ factorId });
-      if (challenge.error) throw challenge.error;
-
-      const verify = await supabase.auth.mfa.verify({
-        factorId,
-        challengeId: challenge.data.id,
-        code,
-      });
-      if (verify.error) throw verify.error;
-
-      return { data: verify.data, error: null };
-    } catch (error) {
-      console.error('Error in challengeAndVerifyOtp:', error);
-      return { data: null, error };
-    }
-  };
-
   return (
-    <SupabaseAuthContext.Provider value={{ 
-      session, 
-      loading, 
-      signOut, 
-      signInWithPassword, 
-      signUp,
-      getAuthenticatorAssuranceLevel,
-      challengeAndVerifyOtp
-    }}>
+    <SupabaseAuthContext.Provider value={{ session, loading, logout, signInWithPassword, signInWithOtp, signUp }}>
       {children}
     </SupabaseAuthContext.Provider>
   );
