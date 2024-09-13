@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSupabaseAuth } from "@/integrations/supabase/auth.jsx";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,16 +37,19 @@ const Login = () => {
         const { data: aalData, error: aalError } = await getAuthenticatorAssuranceLevel();
         if (aalError) throw aalError;
 
+        console.log("AAL Data:", aalData); // Debug log
+
         if (aalData.nextLevel === 'aal1') {
-          const enrollmentResult = await enrollMFA();
-          if (enrollmentResult.error) {
+          const { data: enrollmentData, error: enrollmentError } = await enrollMFA();
+          if (enrollmentError) {
             toast.error("Failed to initiate 2FA enrollment. Please try again.", {
-              description: enrollmentResult.error.message,
+              description: enrollmentError.message,
             });
-            console.error("2FA Enrollment Error:", enrollmentResult.error);
+            console.error("2FA Enrollment Error:", enrollmentError);
             return;
           }
           setShowQRCode(true);
+          console.log("Enrollment Data:", enrollmentData); // Debug log
         } else if (aalData.currentLevel === 'aal1' && aalData.nextLevel === 'aal2') {
           setIs2FAEnabled(true);
           setFactorId(data.user.factors[0].id);
