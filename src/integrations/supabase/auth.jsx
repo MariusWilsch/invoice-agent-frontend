@@ -59,8 +59,12 @@ export const SupabaseAuthProviderInner = ({ children }) => {
     setLoading(false);
   };
 
+  const verifyOtp = async ({ factorId, code }) => {
+    return supabase.auth.mfa.verifyOtp({ factorId, code });
+  };
+
   return (
-    <SupabaseAuthContext.Provider value={{ session, loading, logout, signInWithPassword, signInWithOtp, signUp }}>
+    <SupabaseAuthContext.Provider value={{ session, loading, logout, signInWithPassword, signInWithOtp, signUp, verifyOtp }}>
       {children}
     </SupabaseAuthContext.Provider>
   );

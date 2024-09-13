@@ -8,24 +8,16 @@ import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { createClient } from "@supabase/supabase-js";
-
-
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_PROJECT_URL,
-  import.meta.env.VITE_SUPABASE_API_KEY
-);
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [loggedUser, setLoggedUser] = useState(null);
-  const [otp, setOtp] = useState(""); // Add OTP state
+  const [otp, setOtp] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [authMethod, setAuthMethod] = useState("password");
-  const { signInWithPassword, signInWithOtp } = useSupabaseAuth(); // Add verifyOtp method
-  const [is2FAEnabled, setIs2FAEnabled] = useState(false); // Add 2FA flag
-  const [factorId, setFactorId] = useState(null); // Add factorId to track TOTP
+  const { signInWithPassword, signInWithOtp, verifyOtp } = useSupabaseAuth();
+  const [is2FAEnabled, setIs2FAEnabled] = useState(false);
+  const [factorId, setFactorId] = useState(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -41,11 +33,10 @@ const Login = () => {
         const { error, data } = await signInWithPassword({ email, password });
         if (error) throw error;
 
-        // Check if 2FA is enabled for this user
         const totpFactor = data?.user?.factors?.find(factor => factor.factor_type === "totp");
         if (totpFactor) {
           setIs2FAEnabled(true);
-          setFactorId(totpFactor.id); // Save factorId for OTP verification
+          setFactorId(totpFactor.id);
         } else {
           toast.success("Logged in successfully");
           navigate("/");
@@ -62,10 +53,7 @@ const Login = () => {
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     try {
-      // const {
-      //   data: { user, session },
-      // } = await supabase.auth.getUser();
-      const { error } = await supabase.auth.mfa.challengeAndVerify({ factorId, code: otp }); // Verify OTP
+      const { error } = await verifyOtp({ factorId, code: otp });
       if (error) throw error;
       toast.success("2FA verified successfully");
       navigate("/");
@@ -161,7 +149,6 @@ const Login = () => {
               </div>
             )}
 
-            {/* OTP input field */}
             {is2FAEnabled && (
               <div>
                 <Label
