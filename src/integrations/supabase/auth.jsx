@@ -17,7 +17,6 @@ export const SupabaseAuthProvider = ({ children }) => {
 export const SupabaseAuthProviderInner = ({ children }) => {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isOtpVerified, setIsOtpVerified] = useState(false);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -30,9 +29,6 @@ export const SupabaseAuthProviderInner = ({ children }) => {
 
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
-      if (event === 'SIGNED_OUT') {
-        setIsOtpVerified(false);
-      }
       queryClient.invalidateQueries('user');
     });
 
@@ -45,11 +41,7 @@ export const SupabaseAuthProviderInner = ({ children }) => {
   }, [queryClient]);
 
   const signInWithPassword = async ({ email, password }) => {
-    const response = await supabase.auth.signInWithPassword({ email, password });
-    if (response.data.user) {
-      await getAuthenticatorAssuranceLevel();
-    }
-    return response;
+    return supabase.auth.signInWithPassword({ email, password });
   };
 
   const signUp = async ({ email, password }) => {
@@ -59,37 +51,27 @@ export const SupabaseAuthProviderInner = ({ children }) => {
   const signOut = async () => {
     await supabase.auth.signOut();
     setSession(null);
-    setIsOtpVerified(false);
     queryClient.invalidateQueries('user');
     setLoading(false);
   };
 
   const getAuthenticatorAssuranceLevel = async () => {
-    try {
-      const { data, error } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
-      if (error) {
-        console.error('Error getting AAL:', error);
-      } else {
-        console.log('User AAL Data:', data);
-        console.log('Current Session:', session);
-        console.log('Current User:', session?.user);
-      }
-      return { data, error };
-    } catch (error) {
-      console.error('Error in getAuthenticatorAssuranceLevel:', error);
-      return { data: null, error };
-    }
+    return supabase.auth.mfa.getAuthenticatorAssuranceLevel();
   };
 
   const challengeAndVerifyOtp = async ({ factorId, code }) => {
     try {
-      const { data, error } = await supabase.auth.mfa.challengeAndVerify({
+      const challenge = await supabase.auth.mfa.challenge({ factorId });
+      if (challenge.error) throw challenge.error;
+
+      const verify = await supabase.auth.mfa.verify({
         factorId,
+        challengeId: challenge.data.id,
         code,
       });
-      if (error) throw error;
-      setIsOtpVerified(true);
-      return { data, error: null };
+      if (verify.error) throw verify.error;
+
+      return { data: verify.data, error: null };
     } catch (error) {
       console.error('Error in challengeAndVerifyOtp:', error);
       return { data: null, error };
@@ -104,9 +86,7 @@ export const SupabaseAuthProviderInner = ({ children }) => {
       signInWithPassword, 
       signUp,
       getAuthenticatorAssuranceLevel,
-      challengeAndVerifyOtp,
-      isOtpVerified,
-      setIsOtpVerified
+      challengeAndVerifyOtp
     }}>
       {children}
     </SupabaseAuthContext.Provider>

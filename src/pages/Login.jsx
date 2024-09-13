@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSupabaseAuth } from "@/integrations/supabase/auth.jsx";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,15 +8,35 @@ import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
-const Login = ({ setIsOtpVerified }) => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const { signInWithPassword, challengeAndVerifyOtp } = useSupabaseAuth();
   const [isOtpRequired, setIsOtpRequired] = useState(false);
   const [factorId, setFactorId] = useState(null);
+  const { signInWithPassword, challengeAndVerifyOtp, getAuthenticatorAssuranceLevel } = useSupabaseAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    checkMfaStatus();
+  }, []);
+
+  const checkMfaStatus = async () => {
+    try {
+      const { data, error } = await getAuthenticatorAssuranceLevel();
+      if (error) throw error;
+      
+      if (data.nextLevel === 'aal2' && data.nextLevel !== data.currentLevel) {
+        setIsOtpRequired(true);
+      } else {
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Error checking MFA status:", error.message);
+      toast.error("Failed to check MFA status");
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,16 +45,15 @@ const Login = ({ setIsOtpVerified }) => {
       if (error) throw error;
 
       if (data.user?.factors && data.user.factors.length > 0) {
-        setIsOtpRequired(true);
         setFactorId(data.user.factors[0].id);
+        setIsOtpRequired(true);
         toast.info("Please enter your OTP to complete login");
       } else {
-        setIsOtpVerified(true);
         navigate("/");
       }
     } catch (error) {
       console.error("Login error:", error.message);
-      toast.error(`Authentication failed`, {
+      toast.error("Authentication failed", {
         description: error.message || "An error occurred during authentication.",
       });
     }
@@ -49,11 +68,10 @@ const Login = ({ setIsOtpVerified }) => {
       });
       if (error) throw error;
       toast.success("2FA verified successfully");
-      setIsOtpVerified(true);
       navigate("/");
     } catch (error) {
       console.error("OTP verification error:", error.message);
-      toast.error(`OTP verification failed`, {
+      toast.error("OTP verification failed", {
         description: error.message || "Invalid OTP code.",
       });
     }
