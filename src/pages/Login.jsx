@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/supabase";
 
 const Login = ({ setIsOtpVerified }) => {
   const [email, setEmail] = useState("");
@@ -38,7 +39,10 @@ const Login = ({ setIsOtpVerified }) => {
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     try {
-      const { error } = await verifyOtp({ factorId, code: otp });
+      const { data, error } = await supabase.auth.mfa.verifyOtp({
+        factorId,
+        code: otp,
+      });
       if (error) throw error;
       toast.success("2FA verified successfully");
       setIsOtpVerified(true);
