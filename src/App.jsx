@@ -14,6 +14,7 @@ import {
   useSupabaseAuth,
 } from "./integrations/supabase/auth.jsx";
 import Settings from "./pages/Setting.jsx";
+import { useEffect, useState } from "react";
 
 const queryClient = new QueryClient();
 
@@ -26,10 +27,23 @@ const ProtectedRoute = ({ children }) => {
 };
 
 function AppContent() {
+  const { session, loading } = useSupabaseAuth();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (!loading) {
+      setIsLoading(false);
+    }
+  }, [loading]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<SignUp />} />
+      <Route path="/login" element={session ? <Navigate to="/" replace /> : <Login />} />
+      <Route path="/signup" element={session ? <Navigate to="/" replace /> : <SignUp />} />
       <Route
         element={
           <ProtectedRoute>
