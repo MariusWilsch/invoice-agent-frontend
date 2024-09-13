@@ -27,14 +27,9 @@ const Login = () => {
       const { data: aalData, error: aalError } = await getAuthenticatorAssuranceLevel();
       if (aalError) throw aalError;
 
-      if (aalData.currentLevel === 'aal1' && aalData.nextLevel === 'aal2') {
-        setIsOtpRequired(true);
-        setFactorId(data.user.factors[0].id);
-        toast.info("Please enter your OTP to complete login");
-      } else {
-        toast.success("Logged in successfully");
-        navigate("/");
-      }
+      setIsOtpRequired(true);
+      setFactorId(data.user.factors[0].id);
+      toast.info("Please enter your OTP to complete login");
     } catch (error) {
       console.error("Login error:", error.message);
       toast.error(`Authentication failed`, {
