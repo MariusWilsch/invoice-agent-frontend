@@ -17,7 +17,6 @@ export const SupabaseAuthProvider = ({ children }) => {
 export const SupabaseAuthProviderInner = ({ children }) => {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [enrollmentData, setEnrollmentData] = useState(null);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -25,17 +24,11 @@ export const SupabaseAuthProviderInner = ({ children }) => {
       setLoading(true);
       const { data: { session } } = await supabase.auth.getSession();
       setSession(session);
-      if (session) {
-        await getAuthenticatorAssuranceLevel();
-      }
       setLoading(false);
     };
 
-    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
-      if (session) {
-        await getAuthenticatorAssuranceLevel();
-      }
       queryClient.invalidateQueries('user');
     });
 
@@ -71,7 +64,7 @@ export const SupabaseAuthProviderInner = ({ children }) => {
   };
 
   const verifyOtp = async ({ factorId, code }) => {
-    return supabase.auth.mfa.verify({ factorId, code });
+    return supabase.auth.mfa.verifyOtp({ factorId, code });
   };
 
   const getAuthenticatorAssuranceLevel = async () => {
@@ -83,63 +76,11 @@ export const SupabaseAuthProviderInner = ({ children }) => {
         console.log('User AAL Data:', data);
         console.log('Current Session:', session);
         console.log('Current User:', session?.user);
-
-        if (data.nextLevel === 'aal1') {
-          await enrollMFA();
-        }
       }
       return { data, error };
     } catch (error) {
       console.error('Error in getAuthenticatorAssuranceLevel:', error);
       return { data: null, error };
-    }
-  };
-
-  const enrollMFA = async () => {
-    try {
-      const { data, error } = await supabase.auth.mfa.enroll({
-        factorType: 'totp',
-      });
-      if (error) {
-        console.error('Error enrolling in MFA:', error);
-        return;
-      }
-      setEnrollmentData(data);
-      console.log('MFA Enrollment Data:', data);
-    } catch (error) {
-      console.error('Error in enrollMFA:', error);
-    }
-  };
-
-  const challengeMFA = async (factorId) => {
-    try {
-      const { data, error } = await supabase.auth.mfa.challenge({ factorId });
-      if (error) {
-        console.error('Error creating MFA challenge:', error);
-        return null;
-      }
-      return data.id;
-    } catch (error) {
-      console.error('Error in challengeMFA:', error);
-      return null;
-    }
-  };
-
-  const verifyMFA = async (factorId, challengeId, code) => {
-    try {
-      const { data, error } = await supabase.auth.mfa.verify({
-        factorId,
-        challengeId,
-        code,
-      });
-      if (error) {
-        console.error('Error verifying MFA:', error);
-        return false;
-      }
-      return true;
-    } catch (error) {
-      console.error('Error in verifyMFA:', error);
-      return false;
     }
   };
 
@@ -152,11 +93,7 @@ export const SupabaseAuthProviderInner = ({ children }) => {
       signInWithOtp, 
       signUp, 
       verifyOtp,
-      getAuthenticatorAssuranceLevel,
-      enrollMFA,
-      challengeMFA,
-      verifyMFA,
-      enrollmentData
+      getAuthenticatorAssuranceLevel 
     }}>
       {children}
     </SupabaseAuthContext.Provider>
