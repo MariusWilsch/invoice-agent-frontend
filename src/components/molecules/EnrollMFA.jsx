@@ -1,52 +1,34 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useSupabaseAuth } from "@/integrations/supabase/auth.jsx";
+import useAuthFlow from "@/hooks/useAuthFlow";
 
 const EnrollMFA = ({ onEnrolled, onCancelled }) => {
-  const [factorId, setFactorId] = useState("");
-  const [qr, setQR] = useState("");
-  const [verifyCode, setVerifyCode] = useState("");
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const { enrollMFA, challengeMFA, verifyMFA } = useSupabaseAuth();
+  const {
+    qrCode,
+    verificationCode,
+    error,
+    isLoading,
+    setVerificationCode,
+    startMFAEnrollment,
+    verifyMFACode,
+    resetMFAState,
+  } = useAuthFlow();
 
   useEffect(() => {
-    (async () => {
-      try {
-        const { data, error } = await enrollMFA();
-        if (error) throw error;
-
-        setFactorId(data.id);
-        setQR(data.totp.qr_code);
-      } catch (error) {
-        setError(error.message);
-      }
-    })();
-  }, [enrollMFA]);
+    startMFAEnrollment();
+  }, []);
 
   const onEnableClicked = async () => {
-    setError("");
-    setIsLoading(true);
-    try {
-      const challenge = await challengeMFA(factorId);
-      if (challenge.error) throw challenge.error;
-
-      const challengeId = challenge.data.id;
-
-      const verify = await verifyMFA(factorId, challengeId, verifyCode);
-      if (verify.error) throw verify.error;
-
+    const success = await verifyMFACode();
+    if (success) {
       onEnrolled();
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setIsLoading(false);
     }
   };
 
   const handleCancel = () => {
+    resetMFAState();
     onCancelled();
   };
 
@@ -54,7 +36,7 @@ const EnrollMFA = ({ onEnrolled, onCancelled }) => {
     <div className="space-y-4">
       {error && <div className="text-red-500">{error}</div>}
       <div className="flex justify-center">
-        {qr && <img src={qr} alt="QR Code" className="w-64 h-64" />}
+        {qrCode && <img src={qrCode} alt="QR Code" className="w-64 h-64" />}
       </div>
       <div>
         <Label
@@ -66,8 +48,8 @@ const EnrollMFA = ({ onEnrolled, onCancelled }) => {
         <Input
           id="verifyCode"
           type="text"
-          value={verifyCode}
-          onChange={(e) => setVerifyCode(e.target.value.trim())}
+          value={verificationCode}
+          onChange={(e) => setVerificationCode(e.target.value.trim())}
           placeholder="Enter verification code"
           className="w-full"
         />
