@@ -7,10 +7,18 @@ import { EyeIcon, EyeOffIcon } from "lucide-react";
 const SignUpForm = ({ onSubmit, isLoading }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (password !== confirmPassword) {
+      setPasswordError("Passwords do not match");
+      return;
+    }
+    setPasswordError("");
     onSubmit({ email, password });
   };
 
@@ -63,6 +71,39 @@ const SignUpForm = ({ onSubmit, isLoading }) => {
           </button>
         </div>
       </div>
+      <div>
+        <Label
+          htmlFor="confirmPassword"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          Confirm Password
+        </Label>
+        <div className="relative">
+          <Input
+            id="confirmPassword"
+            type={showConfirmPassword ? "text" : "password"}
+            placeholder="Confirm your password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+            className="w-full pr-10"
+          />
+          <button
+            type="button"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-500"
+          >
+            {showConfirmPassword ? (
+              <EyeOffIcon className="h-5 w-5" />
+            ) : (
+              <EyeIcon className="h-5 w-5" />
+            )}
+          </button>
+        </div>
+      </div>
+      {passwordError && (
+        <p className="text-red-500 text-sm">{passwordError}</p>
+      )}
       <Button
         type="submit"
         className="w-full bg-indigo-600 hover:bg-indigo-700"
