@@ -58,6 +58,7 @@ const ActionButtons = ({ invoice, onViewDetails, onDelete, onStamp }) => {
         vb: invoice.VB || "",
         skonto: invoice.skonto ? invoice.skonto.toString() : "",
         kommentar: invoice.kommentar || "",
+        public_url: invoice.public_url || "",
       };
 
       const response = await axios.post(
