@@ -1,5 +1,5 @@
 import React from "react";
-import { FileText, Eye, Trash, Stamp } from "lucide-react";
+import { FileText, Eye, Trash, Stamp, FileDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   TooltipProvider,
@@ -19,29 +19,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useTranslations } from "@/hooks/useTranslations";
-
-const translations = {
-  de: {
-    stamp: "Stempel",
-    pdf: "PDF",
-    view: "Ansehen",
-    delete: "Löschen",
-    areYouSure: "Sind Sie sicher?",
-    deleteWarning:
-      "Diese Aktion kann nicht rückgängig gemacht werden. Die Rechnung wird dauerhaft aus der Datenbank gelöscht.",
-    cancel: "Abbrechen",
-  },
-  en: {
-    stamp: "Stamp",
-    pdf: "PDF",
-    view: "View",
-    delete: "Delete",
-    areYouSure: "Are you sure?",
-    deleteWarning:
-      "This action cannot be undone. The invoice will be permanently deleted from the database.",
-    cancel: "Cancel",
-  },
-};
+import axios from "axios";
+import { toast } from "sonner";
 
 const ActionButton = ({ icon: Icon, tooltip, onClick }) => (
   <TooltipProvider>
@@ -66,6 +45,48 @@ const ActionButton = ({ icon: Icon, tooltip, onClick }) => (
 const ActionButtons = ({ invoice, onViewDetails, onDelete, onStamp }) => {
   const t = useTranslations();
 
+  const handleAddAccountingStamp = async () => {
+    try {
+      const stampData = {
+        eingegangen: invoice.eingegangen_am || "",
+        faellig: invoice.faellig_am || "",
+        konto: invoice.konto || "",
+        evVp: invoice.ev_vp || "",
+        belegtext: invoice.belegtext || "",
+        ticketnummer: invoice.ticket_number || "",
+        kostenstelle: invoice.kostenstelle || "",
+        vb: invoice.VB || "",
+        skonto: invoice.skonto ? invoice.skonto.toString() : "",
+        kommentar: invoice.kommentar || "",
+      };
+
+      const response = await axios.post(
+        "https://eokgvoyqcnhkpfqhicuz.supabase.co/functions/v1/addAccoutingStamp",
+        stampData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          responseType: "blob",
+        }
+      );
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `accounting_stamp_${invoice.id}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+
+      toast.success(t.accountingStampAdded);
+    } catch (error) {
+      console.error("Error adding accounting stamp:", error);
+      toast.error(t.errorAddingAccountingStamp);
+    }
+  };
+
   return (
     <div className="flex space-x-1">
       <ActionButton
@@ -82,6 +103,11 @@ const ActionButtons = ({ invoice, onViewDetails, onDelete, onStamp }) => {
         icon={Eye}
         tooltip={t.view}
         onClick={() => onViewDetails(invoice)}
+      />
+      <ActionButton
+        icon={FileDown}
+        tooltip={t.addAccountingStamp}
+        onClick={handleAddAccountingStamp}
       />
       <AlertDialog>
         <AlertDialogTrigger asChild>
