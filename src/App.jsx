@@ -14,14 +14,35 @@ import {
   useSupabaseAuth,
 } from "./integrations/supabase/auth.jsx";
 import Settings from "./pages/Setting.jsx";
+import { useEffect, useState } from "react";
 
 const queryClient = new QueryClient();
 
 const ProtectedRoute = ({ children }) => {
-  const { session } = useSupabaseAuth();
-  if (!session) {
+  const { session, getAuthenticatorAssuranceLevel } = useSupabaseAuth();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      if (session) {
+        const { data: aal } = await getAuthenticatorAssuranceLevel();
+        setIsAuthenticated(aal.currentLevel === "aal2");
+      }
+      setIsLoading(false);
+    };
+
+    checkAuthStatus();
+  }, [session, getAuthenticatorAssuranceLevel]);
+
+  if (isLoading) {
+    return <div>Loading...</div>; // Or a loading spinner
+  }
+
+  if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
+
   return children;
 };
 
