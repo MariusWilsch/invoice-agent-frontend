@@ -8,13 +8,17 @@ const useAuthFlow = () => {
   const [isEnrollMFAStep, setIsEnrollMFAStep] = useState(false);
   const [factorId, setFactorId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [qrCodeUrl, setQrCodeUrl] = useState("");
+  const [secret, setSecret] = useState("");
 
   const {
     signInWithPassword,
+    signUp,
     listFactors,
     challengeAndVerify,
     getAuthenticatorAssuranceLevel,
     logout,
+    enrollMFA,
   } = useSupabaseAuth();
 
   const navigate = useNavigate();
@@ -23,6 +27,26 @@ const useAuthFlow = () => {
     setIsLoading(true);
     try {
       await signInWithPasswordAndCheckAAL(email, password);
+    } catch (error) {
+      handleAuthError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSignUp = async ({ email, password }) => {
+    setIsLoading(true);
+    try {
+      const { error } = await signUp({ email, password });
+      if (error) throw error;
+      
+      // Directly proceed to MFA enrollment
+      const { data: mfaData, error: mfaError } = await enrollMFA();
+      if (mfaError) throw mfaError;
+
+      setQrCodeUrl(mfaData.totp.qr_code);
+      setSecret(mfaData.totp.secret);
+      setIsEnrollMFAStep(true);
     } catch (error) {
       handleAuthError(error);
     } finally {
@@ -84,7 +108,7 @@ const useAuthFlow = () => {
   };
 
   const handleAuthError = async (error) => {
-    console.error("Login error:", error.message);
+    console.error("Authentication error:", error.message);
     toast.error(`Authentication failed`, {
       description: error.message || "An error occurred during authentication.",
     });
@@ -162,9 +186,12 @@ const useAuthFlow = () => {
     isEnrollMFAStep,
     isLoading,
     handleSignIn,
+    handleSignUp,
     handleOtpVerification,
     handleMFAEnrolled,
     handleMFACancelled,
+    qrCodeUrl,
+    secret,
   };
 };
 
