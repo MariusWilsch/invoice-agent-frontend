@@ -46,17 +46,6 @@ const InvoicePageTemplate = ({
     );
   };
 
-  const getSenderDisplay = (invoice) => {
-    return invoice.company || (Array.isArray(invoice.sender) ? invoice.sender[0] : invoice.sender) || "N/A";
-  };
-
-  const modifyInvoicesForDisplay = (invoices) => {
-    return invoices.map(invoice => ({
-      ...invoice,
-      senderDisplay: getSenderDisplay(invoice)
-    }));
-  };
-
   return (
     <div>
       <Tabs defaultValue="all" onValueChange={setActiveTab}>
@@ -80,7 +69,7 @@ const InvoicePageTemplate = ({
           <InvoiceCard
             title={t.invoices}
             description={t.manage}
-            invoices={modifyInvoicesForDisplay(filterInvoices("all"))}
+            invoices={filterInvoices("all")}
             onViewDetails={onViewDetails}
             onDelete={onDelete}
             onStamp={onStamp}
@@ -91,7 +80,7 @@ const InvoicePageTemplate = ({
           <InvoiceCard
             title={`${t.unkontiert} ${t.invoices}`}
             description={t.manage}
-            invoices={modifyInvoicesForDisplay(filterInvoices("unkontiert"))}
+            invoices={filterInvoices("unkontiert")}
             onViewDetails={onViewDetails}
             onDelete={onDelete}
             onStamp={onStamp}
@@ -101,7 +90,7 @@ const InvoicePageTemplate = ({
           <InvoiceCard
             title={`${t.kontiert} ${t.invoices}`}
             description={t.manage}
-            invoices={modifyInvoicesForDisplay(filterInvoices("kontiert"))}
+            invoices={filterInvoices("kontiert")}
             onViewDetails={onViewDetails}
             onDelete={onDelete}
             onStamp={onStamp}
