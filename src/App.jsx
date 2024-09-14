@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import {
   Route,
   BrowserRouter as Router,
@@ -14,7 +15,7 @@ import {
   useSupabaseAuth,
 } from "./integrations/supabase/auth.jsx";
 import Settings from "./pages/Setting.jsx";
-import { useEffect, useState } from "react";
+import { Loader } from "lucide-react";
 
 const queryClient = new QueryClient();
 
@@ -36,7 +37,11 @@ const ProtectedRoute = ({ children }) => {
   }, [session, getAuthenticatorAssuranceLevel]);
 
   if (isLoading) {
-    return <div>Loading...</div>; // Or a loading spinner
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader className="animate-spin h-8 w-8 text-primary" />
+      </div>
+    );
   }
 
   if (!isAuthenticated) {
