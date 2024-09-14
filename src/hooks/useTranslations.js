@@ -80,6 +80,7 @@ const translations = {
     addAccountingStamp: "Kontierungsstempel hinzufügen",
     accountingStampAdded: "Kontierungsstempel erfolgreich hinzugefügt",
     errorAddingAccountingStamp: "Fehler beim Hinzufügen des Kontierungsstempels",
+    addingAccountingStamp: "Kontierungsstempel wird hinzugefügt...",
   },
   en: {
     title: "Data Overview",
@@ -160,6 +161,7 @@ const translations = {
     addAccountingStamp: "Add Accounting Stamp",
     accountingStampAdded: "Accounting stamp added successfully",
     errorAddingAccountingStamp: "Error adding accounting stamp",
+    addingAccountingStamp: "Adding accounting stamp...",
   },
 };
 

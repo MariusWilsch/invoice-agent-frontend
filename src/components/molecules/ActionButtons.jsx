@@ -1,5 +1,5 @@
-import React from "react";
-import { FileText, Eye, Trash, Stamp, FileDown } from "lucide-react";
+import React, { useState } from "react";
+import { FileText, Eye, Trash, Stamp, FileDown, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   TooltipProvider,
@@ -22,7 +22,7 @@ import { useTranslations } from "@/hooks/useTranslations";
 import axios from "axios";
 import { toast } from "sonner";
 
-const ActionButton = ({ icon: Icon, tooltip, onClick }) => (
+const ActionButton = ({ icon: Icon, tooltip, onClick, disabled }) => (
   <TooltipProvider>
     <Tooltip>
       <TooltipTrigger asChild>
@@ -31,6 +31,7 @@ const ActionButton = ({ icon: Icon, tooltip, onClick }) => (
           size="icon"
           onClick={onClick}
           className="h-8 w-8 p-0"
+          disabled={disabled}
         >
           <Icon className="h-4 w-4" />
         </Button>
@@ -44,8 +45,11 @@ const ActionButton = ({ icon: Icon, tooltip, onClick }) => (
 
 const ActionButtons = ({ invoice, onViewDetails, onDelete, onStamp }) => {
   const t = useTranslations();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleAddAccountingStamp = async () => {
+    setIsLoading(true);
+    toast.loading(t.addingAccountingStamp);
     try {
       const stampData = {
         eingegangen: invoice.eingegangen_am || "",
@@ -81,10 +85,14 @@ const ActionButtons = ({ invoice, onViewDetails, onDelete, onStamp }) => {
       link.remove();
       window.URL.revokeObjectURL(url);
 
+      toast.dismiss();
       toast.success(t.accountingStampAdded);
     } catch (error) {
       console.error("Error adding accounting stamp:", error);
+      toast.dismiss();
       toast.error(t.errorAddingAccountingStamp);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -106,9 +114,10 @@ const ActionButtons = ({ invoice, onViewDetails, onDelete, onStamp }) => {
         onClick={() => onViewDetails(invoice)}
       />
       <ActionButton
-        icon={FileDown}
+        icon={isLoading ? Loader2 : FileDown}
         tooltip={t.addAccountingStamp}
         onClick={handleAddAccountingStamp}
+        disabled={isLoading}
       />
       <AlertDialog>
         <AlertDialogTrigger asChild>
