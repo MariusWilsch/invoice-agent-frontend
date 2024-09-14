@@ -13,6 +13,19 @@ import { Button } from "@/components/ui/button";
 const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
   const t = useTranslations();
 
+  const getSenderOrCompany = (invoice) => {
+    switch (true) {
+      case !!invoice.company_name:
+        return invoice.company_name;
+      case Array.isArray(invoice.sender):
+        return invoice.sender.join(", ");
+      case !!invoice.sender:
+        return invoice.sender;
+      default:
+        return "N/A";
+    }
+  };
+
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent
@@ -79,16 +92,7 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
                     label={t.paymentTerms}
                     value={invoice.payment_terms || t.empty}
                   />
-                  <Field
-                    label={t.sender}
-                    value={
-                      invoice.sender
-                        ? Array.isArray(invoice.sender)
-                          ? invoice.sender.join(", ")
-                          : invoice.sender
-                        : "Finance, finance@wph.onl"
-                    }
-                  />
+                  <Field label={t.sender} value={getSenderOrCompany(invoice)} />
                   <Field label={t.vatId} value={invoice.vat_id || t.empty} />
                   <Field
                     label={t.emailBody}

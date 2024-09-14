@@ -5,6 +5,7 @@ import {
   rgb,
   StandardFonts,
 } from "https://esm.sh/pdf-lib@1.17.1";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@latest";
 
 // Define the interface for stamp data
 interface StampData {
@@ -120,7 +121,7 @@ function addCommentSection(
   const headerFontSize = 12;
   const commentFontSize = 10;
   const lineHeight = 14;
-  const textX = margin + 20;  // Define a common x-coordinate for title and text
+  const textX = margin + 20; // Define a common x-coordinate for title and text
 
   // Add comment header
   page.drawText(commentHeader, {
@@ -233,7 +234,7 @@ async function createStampedPDF(
 
 // CORS headers
 const corsHeaders = {
-  "Access-Control-Allow-Origin": Deno.env.get("ALLOWED_ORIGIN") || "",
+  "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
@@ -253,6 +254,28 @@ Deno.serve(async (req) => {
     });
   }
   // TODO: Check the jwt token of the user if he's authenticated
+  const token = req.headers.get("Authorization") || "";
+  const supabase = createClient(
+    Deno.env.get("SUPABASE_URL") || "",
+    Deno.env.get("SUPABASE_ANON_KEY") || "",
+    {
+      global: {
+        headers: {
+          Authorization: token,
+        },
+      },
+    },
+  );
+  const {
+    data: { user },
+  } = await supabase.auth.getUser(token);
+
+  if (!user) {
+    return new Response("Unauthorized", {
+      headers: corsHeaders,
+      status: 401,
+    });
+  }
 
   // ! Handle POST request
   try {
