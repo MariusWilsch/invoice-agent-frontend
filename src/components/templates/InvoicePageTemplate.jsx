@@ -22,7 +22,6 @@ const InvoicePageTemplate = ({
   const [activeTab, setActiveTab] = React.useState("all");
 
   const getTranslatedStatus = (status) => {
-    console.log("Status in getTranslatedStatus", status);
     switch (status.toLowerCase()) {
       case "unchecked":
       case "unkontiert":

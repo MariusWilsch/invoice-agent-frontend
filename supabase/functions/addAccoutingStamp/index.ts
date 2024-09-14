@@ -18,22 +18,13 @@ interface StampData {
   vb: string;
   skonto: string;
   kommentar: string;
+  public_url: string;
 }
 
-// Global dummy data
-const dummyData: StampData = {
-  eingegangen: "2023-05-15",
-  faellig: "2023-06-15",
-  konto: "1234567890",
-  evVp: "EV",
-  belegtext: "Invoice #12345",
-  ticketnummer: "T-9876",
-  kostenstelle: "KS-001",
-  vb: "500 EUR",
-  skonto: "2%",
-  kommentar:
-    "This is a sample comment for the accounting stamp. It demonstrates how longer text will be wrapped within the designated comment section of the PDF.",
-};
+// Helper function to get value or default to "Leer"
+function getValueOrDefault(value: string | null | undefined): string {
+  return value && value.trim() !== "" ? value : "Leer";
+}
 
 function addTitle(
   page: PDFPage,
@@ -72,37 +63,36 @@ function addKeyValuePairs(
   startY: number,
   margin: number,
   width: number,
+  stampData: StampData,
 ): number {
   const fontSize = 12;
-  const lineHeight = 30; // Increased for more vertical spacing
-  const leftColumnX = margin + 20; // Aligned to left margin
-  const rightColumnX = width / 2 + 20; // Fixed position for values
+  const lineHeight = 30;
+  const leftColumnX = margin + 20;
+  const rightColumnX = width / 2 + 20;
 
   let currentY = startY;
 
   const pairs = [
-    { key: "Eingegangen am:", value: dummyData.eingegangen },
-    { key: "Fällig am:", value: dummyData.faellig },
-    { key: "Konto:", value: dummyData.konto },
-    { key: "EV/VP:", value: dummyData.evVp },
-    { key: "Belegtext:", value: dummyData.belegtext },
-    { key: "Ticketnummer:", value: dummyData.ticketnummer },
-    { key: "Kostenstelle:", value: dummyData.kostenstelle },
-    { key: "VB:", value: dummyData.vb },
-    { key: "Skonto:", value: dummyData.skonto },
+    { key: "Eingegangen am:", value: getValueOrDefault(stampData.eingegangen) },
+    { key: "Fällig am:", value: getValueOrDefault(stampData.faellig) },
+    { key: "Konto:", value: getValueOrDefault(stampData.konto) },
+    { key: "EV/VP:", value: getValueOrDefault(stampData.evVp) },
+    { key: "Belegtext:", value: getValueOrDefault(stampData.belegtext) },
+    { key: "Ticketnummer:", value: getValueOrDefault(stampData.ticketnummer) },
+    { key: "Kostenstelle:", value: getValueOrDefault(stampData.kostenstelle) },
+    { key: "VB:", value: getValueOrDefault(stampData.vb) },
+    { key: "Skonto:", value: getValueOrDefault(stampData.skonto) },
   ];
 
   for (const item of pairs) {
-    // Draw label (key) with bold font
     page.drawText(item.key, {
       x: leftColumnX,
       y: currentY,
       size: fontSize,
-      font: helveticaBoldFont, // Using bold font for labels
+      font: helveticaBoldFont,
       color: rgb(0, 0, 0),
     });
 
-    // Draw value
     page.drawText(item.value, {
       x: rightColumnX,
       y: currentY,
@@ -124,34 +114,27 @@ function addCommentSection(
   startY: number,
   margin: number,
   width: number,
+  stampData: StampData,
 ): number {
   const commentHeader = "Kommentar:";
   const headerFontSize = 12;
   const commentFontSize = 10;
   const lineHeight = 14;
+  const textX = margin + 20;  // Define a common x-coordinate for title and text
 
   // Add comment header
   page.drawText(commentHeader, {
-    x: margin + 20,
+    x: textX,
     y: startY,
     size: headerFontSize,
     font: helveticaBoldFont,
     color: rgb(0, 0, 0),
   });
 
-  // Draw separator line
-  const separatorY = startY - 5;
-  page.drawLine({
-    start: { x: margin + 20, y: separatorY },
-    end: { x: width - margin - 20, y: separatorY },
-    thickness: 1,
-    color: rgb(0, 0, 0),
-  });
-
   // Add comment text with word wrapping
   const maxWidth = width - 2 * (margin + 20);
-  let currentY = separatorY - lineHeight;
-  let words = dummyData.kommentar.split(" ");
+  let currentY = startY - lineHeight;
+  let words = getValueOrDefault(stampData.kommentar).split(" ");
   let currentLine = "";
 
   for (const word of words) {
@@ -163,7 +146,7 @@ function addCommentSection(
 
     if (testLineWidth > maxWidth) {
       page.drawText(currentLine, {
-        x: margin + 20,
+        x: textX,
         y: currentY,
         size: commentFontSize,
         font: helveticaFont,
@@ -179,7 +162,7 @@ function addCommentSection(
   // Draw the last line
   if (currentLine) {
     page.drawText(currentLine, {
-      x: margin + 20,
+      x: textX,
       y: currentY,
       size: commentFontSize,
       font: helveticaFont,
@@ -187,7 +170,7 @@ function addCommentSection(
     });
   }
 
-  return currentY; // Return the final Y position after comment
+  return currentY;
 }
 
 function drawBorder(
@@ -208,49 +191,102 @@ function drawBorder(
   });
 }
 
-async function createStampedPDF() {
-  const pdfDoc = await PDFDocument.create();
-  const page = pdfDoc.addPage([595.276, 841.890]);
-  const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
-  const helveticaBoldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+async function createStampedPDF(
+  existingPdfDoc: PDFDocument,
+  stampData: StampData,
+): Promise<Uint8Array> {
+  const stampPage = existingPdfDoc.addPage([595.276, 841.890]);
+  const helveticaFont = await existingPdfDoc.embedFont(StandardFonts.Helvetica);
+  const helveticaBoldFont = await existingPdfDoc.embedFont(
+    StandardFonts.HelveticaBold,
+  );
 
   const margin = 50;
-  const { width, height } = page.getSize();
+  const { width, height } = stampPage.getSize();
 
   let currentY = height;
-  const startY = addTitle(page, helveticaBoldFont, width, currentY, margin);
-
+  currentY = addTitle(stampPage, helveticaBoldFont, width, currentY, margin);
   currentY = addKeyValuePairs(
-    page,
-    helveticaFont,
-    helveticaBoldFont,
-    startY - 20,
-    margin,
-    width,
-  );
-  currentY = addCommentSection(
-    page,
+    stampPage,
     helveticaFont,
     helveticaBoldFont,
     currentY - 20,
     margin,
     width,
+    stampData,
+  );
+  currentY = addCommentSection(
+    stampPage,
+    helveticaFont,
+    helveticaBoldFont,
+    currentY - 20,
+    margin,
+    width,
+    stampData,
   );
 
   const contentHeight = height - currentY;
-  drawBorder(page, width, height, margin, contentHeight);
+  drawBorder(stampPage, width, height, margin, contentHeight);
 
-  const pdfBytes = await pdfDoc.save();
-  return pdfBytes;
+  return existingPdfDoc.save();
 }
 
+// CORS headers
+const corsHeaders = {
+  "Access-Control-Allow-Origin": Deno.env.get("ALLOWED_ORIGIN") || "",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
+
 Deno.serve(async (req) => {
-  // TODO: Implement receiving and using an existing PDF.
-  // For now, we're creating an empty PDF with the stamp layout.
+  // Handle CORS preflight requests
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
+  }
 
-  const pdfBytes = await createStampedPDF();
+  // Handle unsupported methods
+  if (req.method !== "POST") {
+    return new Response("Method Not Allowed", {
+      headers: corsHeaders,
+      status: 405,
+    });
+  }
+  // TODO: Check the jwt token of the user if he's authenticated
 
-  return new Response(pdfBytes, {
-    headers: { "Content-Type": "application/pdf" },
-  });
+  // ! Handle POST request
+  try {
+    const { public_url, ...stampData } = await req.json();
+    console.log("Data:", stampData);
+
+    // TODO: Download the PDF from the private bucket
+
+    //! Right now our bucket is public, so we can download it without any problems
+    const pdfResponse = await fetch(public_url);
+    if (!pdfResponse.ok) {
+      throw new Error("Failed to download PDF");
+    }
+
+    const pdfBytes = await pdfResponse.arrayBuffer();
+
+    const pdfDoc = await PDFDocument.load(pdfBytes);
+
+    const stampedPdfBytes = await createStampedPDF(pdfDoc, stampData);
+
+    return new Response(stampedPdfBytes, {
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "application/pdf",
+      },
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    return new Response(JSON.stringify({ error: error.message }), {
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "application/json",
+      },
+      status: 400,
+    });
+  }
 });
