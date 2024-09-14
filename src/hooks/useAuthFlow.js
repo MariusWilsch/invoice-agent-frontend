@@ -39,7 +39,7 @@ const useAuthFlow = () => {
     try {
       const { error } = await signUp({ email, password });
       if (error) throw error;
-      
+
       // Directly proceed to MFA enrollment
       const { data: mfaData, error: mfaError } = await enrollMFA();
       if (mfaError) throw mfaError;
