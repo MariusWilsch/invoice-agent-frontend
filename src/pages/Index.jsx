@@ -10,7 +10,6 @@ import StampSheet from "@/components/StampSheet";
 import InvoiceDetailsSheet from "@/components/InvoiceDetailsSheet";
 import { toast } from "sonner";
 import { CheckCircle, XCircle } from "lucide-react";
-import axios from "axios";
 
 const Index = () => {
   const { data: initialInvoices, error, isLoading } = useInvoicesDev();
@@ -95,24 +94,6 @@ const Index = () => {
     [deleteInvoiceMutation]
   );
 
-  const handleManualRun = useCallback(async () => {
-    try {
-      await axios.post("https://invoiceagenttry2.ey.r.appspot.com/run", {
-        manual_run: "today",
-      });
-      toast.success("Manual run initiated successfully", {
-        icon: <CheckCircle className="h-5 w-5 text-green-500" />,
-        className: "text-green-500",
-      });
-    } catch (error) {
-      console.error("Error initiating manual run:", error);
-      toast.error("Failed to initiate manual run", {
-        icon: <XCircle className="h-5 w-5 text-red-500" />,
-        className: "text-red-500",
-      });
-    }
-  }, []);
-
   const handleFilter = useCallback((dateRange) => {
     setDateFilter(dateRange);
   }, []);
@@ -172,7 +153,6 @@ const Index = () => {
         onViewDetails={handleViewDetails}
         onDelete={handleDelete}
         onStamp={handleStampClick}
-        onManualRun={handleManualRun}
         onFilter={handleFilter}
         onClearFilter={handleClearFilter}
         isFilterActive={isFilterActive}

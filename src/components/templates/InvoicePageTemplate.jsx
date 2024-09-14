@@ -2,7 +2,6 @@ import React from "react";
 import { useTranslations } from "../../hooks/useTranslations";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import InvoiceCard from "../organisms/InvoiceCard";
-import { Button } from "@/components/ui/button";
 import FilterButton from "../molecules/FilterButton";
 import ExportButton from "../molecules/ExportButton";
 
@@ -11,7 +10,6 @@ const InvoicePageTemplate = ({
   onViewDetails,
   onDelete,
   onStamp,
-  onManualRun,
   onFilter,
   onClearFilter,
   isFilterActive,
@@ -66,7 +64,6 @@ const InvoicePageTemplate = ({
               status={getTranslatedStatus(activeTab)}
             />
             <ExportButton dateFilter={dateFilter} />
-            <Button onClick={onManualRun}>{t.manualRun}</Button>
           </div>
         </div>
         <TabsContent value="all">
