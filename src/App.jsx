@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import {
   Route,
   BrowserRouter as Router,
@@ -15,39 +14,14 @@ import {
   useSupabaseAuth,
 } from "./integrations/supabase/auth.jsx";
 import Settings from "./pages/Setting.jsx";
-import { Loader } from "lucide-react";
 
 const queryClient = new QueryClient();
 
 const ProtectedRoute = ({ children }) => {
-  const { session, getAuthenticatorAssuranceLevel } = useSupabaseAuth();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const checkAuthStatus = async () => {
-      if (session) {
-        const { data: aal } = await getAuthenticatorAssuranceLevel();
-        setIsAuthenticated(aal.currentLevel === "aal2");
-      }
-      setIsLoading(false);
-    };
-
-    checkAuthStatus();
-  }, [session, getAuthenticatorAssuranceLevel]);
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <Loader className="animate-spin h-8 w-8 text-primary" />
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
+  const { session } = useSupabaseAuth();
+  if (!session) {
     return <Navigate to="/login" replace />;
   }
-
   return children;
 };
 
