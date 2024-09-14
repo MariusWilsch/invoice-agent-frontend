@@ -2,17 +2,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from "@/components/ui/card";
 import SignUpForm from "@/components/molecules/SignUpForm";
-import OtpVerificationForm from "@/components/molecules/OtpVerificationForm";
 import EnrollMFA from "@/components/molecules/EnrollMFA";
 import useAuthFlow from "@/hooks/useAuthFlow";
 
 const SignUp = () => {
   const {
-    isOtpStep,
     isEnrollMFAStep,
     isLoading,
     handleSignUp,
-    handleOtpVerification,
     handleMFAEnrolled,
     handleMFACancelled,
     qrCodeUrl,
@@ -25,14 +22,8 @@ const SignUp = () => {
         <CardContent>
           <h1 className="text-3xl font-bold mb-2">Sign Up</h1>
           <p className="text-gray-600 mb-6">Create your account</p>
-          {!isOtpStep && !isEnrollMFAStep && (
+          {!isEnrollMFAStep && (
             <SignUpForm onSubmit={handleSignUp} isLoading={isLoading} />
-          )}
-          {isOtpStep && (
-            <OtpVerificationForm
-              onSubmit={handleOtpVerification}
-              isLoading={isLoading}
-            />
           )}
           {isEnrollMFAStep && (
             <EnrollMFA
@@ -43,7 +34,7 @@ const SignUp = () => {
               isLoading={isLoading}
             />
           )}
-          {!isOtpStep && !isEnrollMFAStep && (
+          {!isEnrollMFAStep && (
             <p className="mt-4 text-center text-sm text-gray-600">
               Already have an account?{" "}
               <Link

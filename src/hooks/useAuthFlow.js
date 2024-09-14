@@ -39,8 +39,14 @@ const useAuthFlow = () => {
     try {
       const { error } = await signUp({ email, password });
       if (error) throw error;
-      toast.success("Sign up successful. Please check your email to verify your account.");
-      navigate("/login");
+      
+      // Directly proceed to MFA enrollment
+      const { data: mfaData, error: mfaError } = await enrollMFA();
+      if (mfaError) throw mfaError;
+
+      setQrCodeUrl(mfaData.totp.qr_code);
+      setSecret(mfaData.totp.secret);
+      setIsEnrollMFAStep(true);
     } catch (error) {
       handleAuthError(error);
     } finally {
