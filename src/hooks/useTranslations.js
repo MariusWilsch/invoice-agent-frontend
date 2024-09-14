@@ -77,6 +77,10 @@ const translations = {
     deleteOptionConfirmation: "Sind Sie sicher, dass Sie diese Option löschen möchten?",
     enterNewValue: "Neuen Wert eingeben",
     save: "Speichern",
+    addAccountingStamp: "Kontierungsstempel hinzufügen",
+    accountingStampAdded: "Kontierungsstempel erfolgreich hinzugefügt",
+    errorAddingAccountingStamp: "Fehler beim Hinzufügen des Kontierungsstempels",
+    addingAccountingStamp: "Kontierungsstempel wird hinzugefügt...",
   },
   en: {
     title: "Data Overview",
@@ -154,6 +158,10 @@ const translations = {
     deleteOptionConfirmation: "Are you sure you want to delete this option?",
     enterNewValue: "Enter new value",
     save: "Save",
+    addAccountingStamp: "Add Accounting Stamp",
+    accountingStampAdded: "Accounting stamp added successfully",
+    errorAddingAccountingStamp: "Error adding accounting stamp",
+    addingAccountingStamp: "Adding accounting stamp...",
   },
 };
 

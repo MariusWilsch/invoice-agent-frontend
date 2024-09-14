@@ -1,5 +1,5 @@
-import React from "react";
-import { FileText, Eye, Trash, Stamp } from "lucide-react";
+import React, { useState } from "react";
+import { FileText, Eye, Trash, Stamp, FileDown, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   TooltipProvider,
@@ -19,31 +19,10 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useTranslations } from "@/hooks/useTranslations";
+import axios from "axios";
+import { toast } from "sonner";
 
-const translations = {
-  de: {
-    stamp: "Stempel",
-    pdf: "PDF",
-    view: "Ansehen",
-    delete: "Löschen",
-    areYouSure: "Sind Sie sicher?",
-    deleteWarning:
-      "Diese Aktion kann nicht rückgängig gemacht werden. Die Rechnung wird dauerhaft aus der Datenbank gelöscht.",
-    cancel: "Abbrechen",
-  },
-  en: {
-    stamp: "Stamp",
-    pdf: "PDF",
-    view: "View",
-    delete: "Delete",
-    areYouSure: "Are you sure?",
-    deleteWarning:
-      "This action cannot be undone. The invoice will be permanently deleted from the database.",
-    cancel: "Cancel",
-  },
-};
-
-const ActionButton = ({ icon: Icon, tooltip, onClick }) => (
+const ActionButton = ({ icon: Icon, tooltip, onClick, disabled }) => (
   <TooltipProvider>
     <Tooltip>
       <TooltipTrigger asChild>
@@ -52,6 +31,7 @@ const ActionButton = ({ icon: Icon, tooltip, onClick }) => (
           size="icon"
           onClick={onClick}
           className="h-8 w-8 p-0"
+          disabled={disabled}
         >
           <Icon className="h-4 w-4" />
         </Button>
@@ -65,6 +45,56 @@ const ActionButton = ({ icon: Icon, tooltip, onClick }) => (
 
 const ActionButtons = ({ invoice, onViewDetails, onDelete, onStamp }) => {
   const t = useTranslations();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleAddAccountingStamp = async () => {
+    setIsLoading(true);
+    toast.loading(t.addingAccountingStamp);
+    try {
+      const stampData = {
+        eingegangen: invoice.eingegangen_am || "",
+        faellig: invoice.faellig_am || "",
+        konto: invoice.konto || "",
+        evVp: invoice.ev_vp || "",
+        belegtext: invoice.belegtext || "",
+        ticketnummer: invoice.ticket_number || "",
+        kostenstelle: invoice.kostenstelle || "",
+        vb: invoice.VB || "",
+        skonto: invoice.skonto ? invoice.skonto.toString() : "",
+        kommentar: invoice.kommentar || "",
+        public_url: invoice.public_url || "",
+      };
+
+      const response = await axios.post(
+        "https://eokgvoyqcnhkpfqhicuz.supabase.co/functions/v1/addAccoutingStamp",
+        stampData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          responseType: "blob",
+        }
+      );
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `accounting_stamp_${invoice.id}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+
+      toast.dismiss();
+      toast.success(t.accountingStampAdded);
+    } catch (error) {
+      console.error("Error adding accounting stamp:", error);
+      toast.dismiss();
+      toast.error(t.errorAddingAccountingStamp);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="flex space-x-1">
@@ -82,6 +112,12 @@ const ActionButtons = ({ invoice, onViewDetails, onDelete, onStamp }) => {
         icon={Eye}
         tooltip={t.view}
         onClick={() => onViewDetails(invoice)}
+      />
+      <ActionButton
+        icon={isLoading ? Loader2 : FileDown}
+        tooltip={t.addAccountingStamp}
+        onClick={handleAddAccountingStamp}
+        disabled={isLoading}
       />
       <AlertDialog>
         <AlertDialogTrigger asChild>
