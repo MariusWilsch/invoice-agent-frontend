@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-const EnrollMFA = ({ qrCode, onEnrolled, onCancelled, isLoading }) => {
+const EnrollMFA = ({ qrCode, secret, onEnrolled, onCancelled, isLoading }) => {
   const [verifyCode, setVerifyCode] = useState("");
 
   const handleSubmit = (e) => {
@@ -33,6 +33,11 @@ const EnrollMFA = ({ qrCode, onEnrolled, onCancelled, isLoading }) => {
             className="w-full"
           />
         </div>
+        {secret && (
+          <p className="mt-2 text-sm text-gray-600">
+            If you can't scan the QR code, enter this code manually: {secret}
+          </p>
+        )}
         <div className="flex space-x-4 mt-4">
           <Button
             type="submit"

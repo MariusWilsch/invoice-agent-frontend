@@ -149,8 +149,12 @@ const useAuthFlow = () => {
     await logout();
   };
 
-  const handleMFAEnrolled = async () => {
+  const handleMFAEnrolled = async (verificationCode) => {
+    setIsLoading(true);
     try {
+      const { error } = await challengeAndVerify(factorId, verificationCode);
+      if (error) throw error;
+
       const { data: aal, error: aalError } =
         await getAuthenticatorAssuranceLevel();
       if (aalError) throw aalError;
@@ -167,6 +171,8 @@ const useAuthFlow = () => {
           error.message || "An error occurred during MFA enrollment.",
       });
       await logout();
+    } finally {
+      setIsLoading(false);
     }
   };
 
