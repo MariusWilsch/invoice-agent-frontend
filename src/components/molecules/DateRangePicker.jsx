@@ -10,6 +10,7 @@ import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { useTranslations } from "../../hooks/useTranslations";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 const DateRangePicker = ({ onConfirm }) => {
   const [dateRange, setDateRange] = useState({ from: null, to: null });
@@ -22,7 +23,13 @@ const DateRangePicker = ({ onConfirm }) => {
   const handleConfirm = () => {
     if (dateRange.from && dateRange.to) {
       onConfirm(dateRange);
+      toast.info("Date range filter not implemented yet");
+      console.log("Selected date range:", dateRange);
     }
+  };
+
+  const handleClear = () => {
+    setDateRange({ from: null, to: null });
   };
 
   return (
@@ -30,11 +37,10 @@ const DateRangePicker = ({ onConfirm }) => {
       <Popover>
         <PopoverTrigger asChild>
           <Button
-            id="date"
             variant="outline"
             className={cn(
               "justify-start text-left font-normal",
-              !dateRange && "text-muted-foreground"
+              !dateRange.from && "text-muted-foreground"
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
@@ -52,7 +58,7 @@ const DateRangePicker = ({ onConfirm }) => {
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start">
+        <PopoverContent className="p-0" align="start">
           <Calendar
             initialFocus
             mode="range"
@@ -61,10 +67,15 @@ const DateRangePicker = ({ onConfirm }) => {
             onSelect={handleSelect}
             numberOfMonths={2}
           />
-          <div className="p-3 border-t">
+          <div className="p-3 border-t flex justify-end space-x-2">
+            <Button 
+              variant="outline" 
+              onClick={handleClear}
+            >
+              {t.clear}
+            </Button>
             <Button 
               onClick={handleConfirm} 
-              className="w-full"
               disabled={!dateRange.from || !dateRange.to}
             >
               {t.confirm}
