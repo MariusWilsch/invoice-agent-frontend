@@ -4,6 +4,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import InvoiceCard from "../organisms/InvoiceCard";
 import DateRangePicker from "../molecules/DateRangePicker";
 import { toast } from "sonner";
+import axios from "axios";
+import { useSupabaseAuth } from "@/integrations/supabase/auth.jsx";
 
 const InvoicePageTemplate = ({
   invoices,
@@ -13,6 +15,7 @@ const InvoicePageTemplate = ({
   onDateRangeSelect,
 }) => {
   const t = useTranslations();
+  const { session } = useSupabaseAuth();
 
   const [activeTab, setActiveTab] = React.useState("all");
 
@@ -43,13 +46,28 @@ const InvoicePageTemplate = ({
     );
   };
 
-  const handleDateRangeConfirm = (dateRange) => {
+  const handleDateRangeConfirm = async (dateRange) => {
     const fromDate = dateRange.from;
     const toDate = dateRange.to;
 
-    toast.info(`Processing invoices from ${fromDate.toLocaleDateString()} to ${toDate.toLocaleDateString()}`);
+    const formattedFromDate = fromDate.toLocaleDateString();
+    const formattedToDate = toDate.toLocaleDateString();
 
-    onDateRangeSelect(fromDate, toDate);
+    toast.info(`Processing invoices from ${formattedFromDate} to ${formattedToDate}`);
+
+    try {
+      await axios.post("http://127.0.0.1:8080", {
+        user_id: session?.user?.id,
+        from_date: fromDate.toISOString().split('T')[0],
+        to_date: toDate.toISOString().split('T')[0],
+      });
+
+      // We don't await the response, so we can just call onDateRangeSelect here
+      onDateRangeSelect(fromDate, toDate);
+    } catch (error) {
+      console.error("Error sending date range to backend:", error);
+      toast.error("Failed to process invoices for the selected date range");
+    }
   };
 
   return (
