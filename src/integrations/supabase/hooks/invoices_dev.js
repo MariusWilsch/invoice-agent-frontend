@@ -51,7 +51,13 @@ Note: id is the Primary Key.
 export const useInvoicesDev = () =>
   useQuery({
     queryKey: ["invoices_dev"],
-    queryFn: () => fromSupabase(supabase.from("invoices_dev").select("*")),
+    queryFn: () =>
+      fromSupabase(
+        supabase
+          .from("invoices_dev")
+          .select("*")
+          .order("eingegangen_am", { ascending: false })
+      ),
   });
 
 export const useAddInvoiceDev = () => {
