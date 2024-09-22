@@ -57,7 +57,11 @@ const DateRangePicker = ({ onConfirm }) => {
           numberOfMonths={2}
         />
         <div className="p-3 border-t">
-          <Button onClick={handleConfirm} className="w-full">
+          <Button 
+            onClick={handleConfirm} 
+            className="w-full"
+            disabled={!dateRange.from || !dateRange.to}
+          >
             {t.confirm}
           </Button>
         </div>
