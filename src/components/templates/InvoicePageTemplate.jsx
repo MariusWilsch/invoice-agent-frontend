@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import InvoiceCard from "../organisms/InvoiceCard";
 import FilterButton from "../molecules/FilterButton";
 import ExportButton from "../molecules/ExportButton";
+import DateRangePicker from "../molecules/DateRangePicker";
 import { toast } from "sonner";
 
 const InvoicePageTemplate = ({
@@ -24,10 +25,10 @@ const InvoicePageTemplate = ({
     switch (status.toLowerCase()) {
       case "unchecked":
       case "unkontiert":
-        return "test";
+        return t.unkontiert;
       case "checked":
       case "kontiert":
-        return t.checked;
+        return t.kontiert;
       case "received":
       case "empfangen":
         return t.received;
@@ -51,6 +52,11 @@ const InvoicePageTemplate = ({
     toast.info("This feature is not implemented yet");
   };
 
+  const handleDateRangeConfirm = (dateRange) => {
+    toast.info("Date range filter not implemented yet");
+    console.log("Selected date range:", dateRange);
+  };
+
   return (
     <div>
       <Tabs defaultValue="all" onValueChange={setActiveTab}>
@@ -61,6 +67,7 @@ const InvoicePageTemplate = ({
             <TabsTrigger value="kontiert">{t.kontiert}</TabsTrigger>
           </TabsList>
           <div className="flex space-x-2">
+            <DateRangePicker onConfirm={handleDateRangeConfirm} />
             <FilterButton
               onFilter={onFilter}
               onClearFilter={onClearFilter}
