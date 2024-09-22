@@ -27,6 +27,7 @@ const DateRangePicker = ({ onConfirm }) => {
 
   const handleClear = () => {
     setDateRange({ from: null, to: null });
+    onConfirm({ from: null, to: null });
   };
 
   return (
