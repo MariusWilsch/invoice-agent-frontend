@@ -3,7 +3,6 @@ import { useTranslations } from "../../hooks/useTranslations";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import InvoiceCard from "../organisms/InvoiceCard";
 import DateRangePicker from "../molecules/DateRangePicker";
-import { differenceInDays } from 'date-fns';
 import { toast } from "sonner";
 
 const InvoicePageTemplate = ({
@@ -45,13 +44,12 @@ const InvoicePageTemplate = ({
   };
 
   const handleDateRangeConfirm = (dateRange) => {
-    const today = new Date();
-    const fromDaysAgo = differenceInDays(today, dateRange.from);
-    const toDaysAgo = differenceInDays(today, dateRange.to);
+    const fromDate = dateRange.from;
+    const toDate = dateRange.to;
 
-    toast.info(`Processing invoices from ${fromDaysAgo} to ${toDaysAgo} days ago`);
+    toast.info(`Processing invoices from ${fromDate.toLocaleDateString()} to ${toDate.toLocaleDateString()}`);
 
-    onDateRangeSelect(fromDaysAgo, toDaysAgo);
+    onDateRangeSelect(fromDate, toDate);
   };
 
   return (

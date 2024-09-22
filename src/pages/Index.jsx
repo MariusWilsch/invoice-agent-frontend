@@ -45,10 +45,10 @@ const Index = () => {
     [deleteInvoiceMutation]
   );
 
-  const handleDateRangeSelect = useCallback((fromDaysAgo, toDaysAgo) => {
+  const handleDateRangeSelect = useCallback((fromDate, toDate) => {
     // Here you would typically update your API call with the new date range
     // For now, we'll just log it and refetch the data
-    console.log(`Fetching invoices from ${fromDaysAgo} to ${toDaysAgo} days ago`);
+    console.log(`Fetching invoices from ${fromDate.toISOString()} to ${toDate.toISOString()}`);
     refetch();
   }, [refetch]);
 
