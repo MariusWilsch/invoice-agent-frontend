@@ -12,7 +12,10 @@ import { useTranslations } from "../../hooks/useTranslations";
 import { cn } from "@/lib/utils";
 
 const DateRangePicker = ({ onConfirm }) => {
-  const [dateRange, setDateRange] = useState({ from: null, to: null });
+  const [dateRange, setDateRange] = useState({
+    from: undefined,
+    to: undefined,
+  });
   const t = useTranslations();
 
   const handleSelect = (range) => {
@@ -34,8 +37,21 @@ const DateRangePicker = ({ onConfirm }) => {
   };
 
   const handleClear = () => {
-    setDateRange({ from: null, to: null });
+    setDateRange({ from: undefined, to: undefined });
     onConfirm({ from: null, to: null });
+  };
+
+  const formatDateRange = () => {
+    if (dateRange.from) {
+      if (dateRange.to) {
+        return `${format(dateRange.from, "LLL dd, y")} - ${format(
+          dateRange.to,
+          "LLL dd, y"
+        )}`;
+      }
+      return format(dateRange.from, "LLL dd, y");
+    }
+    return t.selectDateRange;
   };
 
   return (
@@ -51,18 +67,7 @@ const DateRangePicker = ({ onConfirm }) => {
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
-            {dateRange.from ? (
-              dateRange.to ? (
-                <>
-                  {format(dateRange.from, "LLL dd, y")} -{" "}
-                  {format(dateRange.to, "LLL dd, y")}
-                </>
-              ) : (
-                format(dateRange.from, "LLL dd, y")
-              )
-            ) : (
-              <span>{t.selectDateRange}</span>
-            )}
+            {formatDateRange()}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
