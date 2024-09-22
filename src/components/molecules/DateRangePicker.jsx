@@ -16,7 +16,16 @@ const DateRangePicker = ({ onConfirm }) => {
   const t = useTranslations();
 
   const handleSelect = (range) => {
-    setDateRange(range);
+    if (range?.from) {
+      if (dateRange.from && dateRange.from.getTime() === range.from.getTime()) {
+        // If clicking the same 'from' date, reset the range
+        setDateRange({ from: undefined, to: undefined });
+      } else {
+        setDateRange(range);
+      }
+    } else {
+      setDateRange(range);
+    }
   };
 
   const handleConfirm = () => {
