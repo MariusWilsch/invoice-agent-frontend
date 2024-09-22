@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/table";
 import StatusBadge from "../molecules/StatusBadge";
 import ActionButtons from "../molecules/ActionButtons";
+import { format } from "date-fns";
 
 const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
   const t = useTranslations();
@@ -129,7 +130,8 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
               {renderSender(invoice.sender, invoice.company_name)}
             </TableCell>
             <TableCell className="w-1/8 whitespace-nowrap">
-              {invoice.eingegangen_am || "N/A"}
+              {format(new Date(invoice.eingegangen_am), "dd.MM.yyyy") ||
+                "N/A"}
             </TableCell>
             <TableCell className="w-1/8 whitespace-nowrap hidden md:table-cell">
               {invoice.faellig_am || "N/A"}
