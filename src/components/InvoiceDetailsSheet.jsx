@@ -48,7 +48,7 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
                     value={invoice.kostenstelle || t.empty}
                   />
                   <Field label={t.account} value={invoice.konto || t.empty} />
-                  <Field label={t.vb} value={invoice.VB || t.empty} />
+                  <Field label={t.vb} value={invoice.vb || t.empty} />
                   <Field label={t.evVp} value={invoice.ev_vp || t.empty} />
                   <Field
                     label={t.checkedBy}

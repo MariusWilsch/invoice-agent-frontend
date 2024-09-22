@@ -60,8 +60,8 @@ const ActionButtons = ({ invoice, onViewDetails, onDelete, onStamp }) => {
         belegtext: invoice.belegtext || "",
         ticketnummer: invoice.ticket_number || "",
         kostenstelle: invoice.kostenstelle || "",
-        vb: invoice.VB || "",
-        skonto: invoice.skonto ? invoice.skonto.toString() : "",
+        vb: invoice.vb || "",
+        skonto: invoice.skonto ? invoice.skonto.toString() : "Nein",
         kommentar: invoice.kommentar || "",
         public_url: invoice.public_url || "",
       };

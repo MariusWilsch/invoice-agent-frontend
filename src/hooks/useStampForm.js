@@ -28,7 +28,7 @@ const initializeFormState = (invoice) => ({
   ticket_number: invoice?.ticket_number || "",
   kommentar: invoice?.kommentar || "",
   kostenstelle: invoice?.kostenstelle || "",
-  vb: invoice?.VB || "",
+  vb: invoice?.vb || "",
   status: "Kontiert",
   skonto: invoice?.skonto || 0,
   fälligkeit_akzeptiert: invoice?.fälligkeit_akzeptiert || false,
@@ -54,7 +54,8 @@ export const useStampForm = (invoice, onClose) => {
   const addDropdownOptionMutation = useAddDropdownOptionInvoicesDev();
   const updateDropdownOptionMutation = useUpdateDropdownOptionInvoicesDev();
   const deleteDropdownOptionMutation = useDeleteDropdownOptionInvoicesDev();
-  const { data: dropdownOptions, refetch: refetchDropdownOptions } = useDropdownOptionsInvoicesDev();
+  const { data: dropdownOptions, refetch: refetchDropdownOptions } =
+    useDropdownOptionsInvoicesDev();
   const updateInvoiceMutation = useUpdateInvoiceDev();
 
   const kostenstelleOptions = useDropdownOptions(
