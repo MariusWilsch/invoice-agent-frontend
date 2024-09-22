@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import {
   useInvoicesDev,
   useDeleteInvoiceDev,
@@ -7,26 +7,14 @@ import InvoicePageTemplate from "../components/templates/InvoicePageTemplate";
 import StampSheet from "@/components/StampSheet";
 import InvoiceDetailsSheet from "@/components/InvoiceDetailsSheet";
 import { toast } from "sonner";
-import { CheckCircle, XCircle } from "lucide-react";
-import { Loader2 } from "lucide-react";
+import { CheckCircle, XCircle, Loader2 } from "lucide-react";
 
 const Index = () => {
-  const { data: initialInvoices, error, isLoading } = useInvoicesDev();
+  const { data: invoices, error, isLoading } = useInvoicesDev();
   const deleteInvoiceMutation = useDeleteInvoiceDev();
-  const [invoices, setInvoices] = useState([]);
   const [isStampSheetOpen, setIsStampSheetOpen] = useState(false);
   const [isDetailsSheetOpen, setIsDetailsSheetOpen] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
-  const [dateFilter, setDateFilter] = useState({ from: null, to: null });
-
-  useEffect(() => {
-    if (initialInvoices) {
-      const sortedInvoices = [...initialInvoices].sort(
-        (a, b) => new Date(b.invoice_date) - new Date(a.invoice_date)
-      );
-      setInvoices(sortedInvoices);
-    }
-  }, [initialInvoices]);
 
   const handleStampClick = useCallback((invoice) => {
     setSelectedInvoice(invoice);
@@ -57,20 +45,6 @@ const Index = () => {
     [deleteInvoiceMutation]
   );
 
-  const filteredInvoices = useMemo(() => {
-    return invoices
-      .map((invoice) => ({
-        ...invoice,
-        status:
-          invoice.status.toLowerCase() === "empfangen"
-            ? "Unchecked"
-            : invoice.status.toLowerCase() === "kontiert"
-            ? "Checked"
-            : invoice.status,
-      }))
-      .filter((invoice) => invoice.status !== "Marius_TEST");
-  }, [invoices]);
-
   if (isLoading) return (
     <div className="flex justify-center items-center h-screen">
       <Loader2 className="h-8 w-8 animate-spin" />
@@ -81,11 +55,10 @@ const Index = () => {
   return (
     <div>
       <InvoicePageTemplate
-        invoices={filteredInvoices}
+        invoices={invoices}
         onViewDetails={handleViewDetails}
         onDelete={handleDelete}
         onStamp={handleStampClick}
-        dateFilter={dateFilter}
       />
 
       <StampSheet
