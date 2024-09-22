@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { CheckCircle, XCircle, Loader2 } from "lucide-react";
 
 const Index = () => {
-  const { data: invoices, error, isLoading } = useInvoicesDev();
+  const { data: invoices, error, isLoading, refetch } = useInvoicesDev();
   const deleteInvoiceMutation = useDeleteInvoiceDev();
   const [isStampSheetOpen, setIsStampSheetOpen] = useState(false);
   const [isDetailsSheetOpen, setIsDetailsSheetOpen] = useState(false);
@@ -45,6 +45,13 @@ const Index = () => {
     [deleteInvoiceMutation]
   );
 
+  const handleDateRangeSelect = useCallback((fromDaysAgo, toDaysAgo) => {
+    // Here you would typically update your API call with the new date range
+    // For now, we'll just log it and refetch the data
+    console.log(`Fetching invoices from ${fromDaysAgo} to ${toDaysAgo} days ago`);
+    refetch();
+  }, [refetch]);
+
   if (isLoading)
     return (
       <div className="flex justify-center items-center h-screen">
@@ -60,6 +67,7 @@ const Index = () => {
         onViewDetails={handleViewDetails}
         onDelete={handleDelete}
         onStamp={handleStampClick}
+        onDateRangeSelect={handleDateRangeSelect}
       />
 
       <StampSheet
