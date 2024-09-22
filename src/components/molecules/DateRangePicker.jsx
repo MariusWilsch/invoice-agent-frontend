@@ -16,7 +16,15 @@ const DateRangePicker = ({ onConfirm }) => {
   const t = useTranslations();
 
   const handleSelect = (range) => {
-    setDateRange(range);
+    // Handle cases where range might be undefined
+    if (range && (range.from || range.to)) {
+      setDateRange({
+        from: range.from || dateRange.from,
+        to: range.to || dateRange.to,
+      });
+    } else {
+      setDateRange({ from: null, to: null });
+    }
   };
 
   const handleConfirm = () => {
@@ -39,7 +47,7 @@ const DateRangePicker = ({ onConfirm }) => {
             variant="outline"
             className={cn(
               "justify-start text-left font-normal",
-              !dateRange && "text-muted-foreground"
+              !dateRange.from && !dateRange.to && "text-muted-foreground"
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
@@ -61,20 +69,17 @@ const DateRangePicker = ({ onConfirm }) => {
           <Calendar
             initialFocus
             mode="range"
-            defaultMonth={dateRange.from}
+            defaultMonth={dateRange.from || new Date()}
             selected={dateRange}
             onSelect={handleSelect}
             numberOfMonths={2}
           />
           <div className="p-3 border-t flex justify-end space-x-2">
-            <Button 
-              onClick={handleClear}
-              variant="outline"
-            >
+            <Button onClick={handleClear} variant="outline">
               {t.clear}
             </Button>
-            <Button 
-              onClick={handleConfirm} 
+            <Button
+              onClick={handleConfirm}
               disabled={!dateRange.from || !dateRange.to}
             >
               {t.confirm}

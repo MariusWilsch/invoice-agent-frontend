@@ -19,7 +19,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useTranslations } from "@/hooks/useTranslations";
-import axios from "axios";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase";
 
@@ -82,7 +81,10 @@ const ActionButtons = ({ invoice, onViewDetails, onDelete, onStamp }) => {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `accounting_stamp_${invoice.id}.pdf`);
+      link.setAttribute(
+        "download",
+        `accounting_stamp_${invoice.company_name}_${invoice.eingegangen_am}.pdf`
+      );
       document.body.appendChild(link);
       link.click();
       link.remove();

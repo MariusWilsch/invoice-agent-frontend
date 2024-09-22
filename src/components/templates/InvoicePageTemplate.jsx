@@ -53,13 +53,15 @@ const InvoicePageTemplate = ({
     const formattedFromDate = fromDate.toLocaleDateString();
     const formattedToDate = toDate.toLocaleDateString();
 
-    toast.info(`Processing invoices from ${formattedFromDate} to ${formattedToDate}`);
+    toast.info(
+      `Processing invoices from ${formattedFromDate} to ${formattedToDate}`
+    );
 
     try {
-      await axios.post("http://127.0.0.1:8080", {
+      await axios.post("http://127.0.0.1:8081/run", {
         user_id: session?.user?.id,
-        from_date: fromDate.toISOString().split('T')[0],
-        to_date: toDate.toISOString().split('T')[0],
+        from_date: fromDate.toISOString().split("T")[0],
+        to_date: toDate.toISOString().split("T")[0],
       });
 
       // We don't await the response, so we can just call onDateRangeSelect here
