@@ -48,10 +48,8 @@ This is the database holding the Invoices from the Invoice Agent Project.
 Note: id is the Primary Key.
 */
 
-export const useInvoicesDev = () => {
-  const queryClient = useQueryClient();
-
-  const query = useQuery({
+export const useInvoicesDev = () =>
+  useQuery({
     queryKey: ["invoices_dev"],
     queryFn: () =>
       fromSupabase(
@@ -61,30 +59,6 @@ export const useInvoicesDev = () => {
           .order("eingegangen_am", { ascending: false })
       ),
   });
-
-  // Set up real-time listener
-  React.useEffect(() => {
-    const channel = supabase
-      .channel("invoices_changes")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "invoices_dev" },
-        (payload) => {
-          queryClient.setQueryData(["invoices_dev"], (oldData) => {
-            if (!oldData) return [payload.new];
-            return [payload.new, ...oldData];
-          });
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [queryClient]);
-
-  return query;
-};
 
 export const useAddInvoiceDev = () => {
   const queryClient = useQueryClient();
