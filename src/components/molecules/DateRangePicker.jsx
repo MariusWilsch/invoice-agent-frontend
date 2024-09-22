@@ -25,6 +25,10 @@ const DateRangePicker = ({ onConfirm }) => {
     }
   };
 
+  const handleClear = () => {
+    setDateRange({ from: null, to: null });
+  };
+
   return (
     <div className="inline-block">
       <Popover>
@@ -61,10 +65,15 @@ const DateRangePicker = ({ onConfirm }) => {
             onSelect={handleSelect}
             numberOfMonths={2}
           />
-          <div className="p-3 border-t">
+          <div className="p-3 border-t flex justify-end space-x-2">
+            <Button 
+              onClick={handleClear}
+              variant="outline"
+            >
+              {t.clear}
+            </Button>
             <Button 
               onClick={handleConfirm} 
-              className="w-full"
               disabled={!dateRange.from || !dateRange.to}
             >
               {t.confirm}

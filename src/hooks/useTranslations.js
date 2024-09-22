@@ -83,6 +83,7 @@ const translations = {
     addingAccountingStamp: "Kontierungsstempel wird hinzugefügt...",
     selectDateRange: "Datumsbereich auswählen",
     confirm: "Bestätigen",
+    clear: "Zurücksetzen",
   },
   en: {
     title: "Data Overview",
@@ -166,6 +167,7 @@ const translations = {
     addingAccountingStamp: "Adding accounting stamp...",
     selectDateRange: "Select date range",
     confirm: "Confirm",
+    clear: "Clear",
   },
 };
 
