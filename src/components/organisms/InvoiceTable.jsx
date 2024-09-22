@@ -15,7 +15,8 @@ import ActionButtons from "../molecules/ActionButtons";
 const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
   const t = useTranslations();
 
-  const renderSender = (sender) => {
+  const renderSender = (sender, company) => {
+    if (company) return company;
     if (Array.isArray(sender) && sender.length > 1) {
       return (
         <div className="flex flex-col">
@@ -97,19 +98,19 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
       <TableHeader>
         <TableRow className="border-b border-gray-200">
           <TableHead className="w-1/4 text-left">{t.vendorName}</TableHead>
-          <TableHead className="w-1/8 whitespace-nowrap text-left">
+          <TableHead className="w-1/8 whitespace-nowrap text-left hidden sm:table-cell">
             {t.dateIssued}
           </TableHead>
-          <TableHead className="w-1/8 whitespace-nowrap text-left">
+          <TableHead className="w-1/8 whitespace-nowrap text-left hidden md:table-cell">
             {t.dueDate}
           </TableHead>
-          <TableHead className="w-1/8 whitespace-nowrap text-left">
+          <TableHead className="w-1/8 whitespace-nowrap text-left hidden lg:table-cell">
             {t.invoiceNumber}
           </TableHead>
-          <TableHead className="w-1/8 whitespace-nowrap text-left">
+          <TableHead className="w-1/8 whitespace-nowrap text-left hidden xl:table-cell">
             {t.grossAmount}
           </TableHead>
-          <TableHead className="w-1/8 whitespace-nowrap text-left">
+          <TableHead className="w-1/8 whitespace-nowrap text-left hidden 2xl:table-cell">
             {t.vatAmount}
           </TableHead>
           <TableHead className="w-1/8 text-left">{t.status}</TableHead>
@@ -125,21 +126,21 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
             } transition-all duration-200 hover:shadow-md hover:-translate-y-1 hover:bg-gray-200 border-b border-gray-200 hover:border-transparent`}
           >
             <TableCell className="w-1/4">
-              {renderSender(invoice.sender)}
+              {renderSender(invoice.sender, invoice.company_name)}
             </TableCell>
-            <TableCell className="w-1/8 whitespace-nowrap">
+            <TableCell className="w-1/8 whitespace-nowrap hidden sm:table-cell">
               {invoice.invoice_date || "N/A"}
             </TableCell>
-            <TableCell className="w-1/8 whitespace-nowrap">
+            <TableCell className="w-1/8 whitespace-nowrap hidden md:table-cell">
               {invoice.faellig_am || "N/A"}
             </TableCell>
-            <TableCell className="w-1/8 whitespace-nowrap">
+            <TableCell className="w-1/8 whitespace-nowrap hidden lg:table-cell">
               {invoice.invoice_number || "N/A"}
             </TableCell>
-            <TableCell className="w-1/8 whitespace-nowrap">
+            <TableCell className="w-1/8 whitespace-nowrap hidden xl:table-cell">
               {renderAmount(invoice, "gross_amount")}
             </TableCell>
-            <TableCell className="w-1/8 whitespace-nowrap">
+            <TableCell className="w-1/8 whitespace-nowrap hidden 2xl:table-cell">
               {renderAmount(invoice, "vat_amount")}
             </TableCell>
             <TableCell className="w-1/8">
@@ -158,16 +159,19 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
       </TableBody>
       <TableFooter>
         <TableRow className="bg-muted/50 font-medium">
-          <TableCell colSpan={4} className="font-medium">
+          <TableCell colSpan={4} className="font-medium hidden lg:table-cell">
             {t.total}
           </TableCell>
-          <TableCell className="whitespace-nowrap font-medium">
+          <TableCell colSpan={4} className="font-medium lg:hidden">
+            {t.total}
+          </TableCell>
+          <TableCell className="whitespace-nowrap font-medium hidden xl:table-cell">
             {new Intl.NumberFormat(t.language === "de" ? "de-DE" : "en-US", {
               style: "currency",
               currency: invoices[0]?.amount?.currency || "EUR",
             }).format(totals.grossAmount)}
           </TableCell>
-          <TableCell className="whitespace-nowrap font-medium">
+          <TableCell className="whitespace-nowrap font-medium hidden 2xl:table-cell">
             {new Intl.NumberFormat(t.language === "de" ? "de-DE" : "en-US", {
               style: "currency",
               currency: invoices[0]?.amount?.currency || "EUR",
