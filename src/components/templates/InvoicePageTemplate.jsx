@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import InvoiceCard from "../organisms/InvoiceCard";
 import FilterButton from "../molecules/FilterButton";
 import ExportButton from "../molecules/ExportButton";
+import { toast } from "sonner";
 
 const InvoicePageTemplate = ({
   invoices,
@@ -46,6 +47,10 @@ const InvoicePageTemplate = ({
     );
   };
 
+  const handleNotImplemented = () => {
+    toast.info("This feature is not implemented yet");
+  };
+
   return (
     <div>
       <Tabs defaultValue="all" onValueChange={setActiveTab}>
@@ -61,8 +66,14 @@ const InvoicePageTemplate = ({
               onClearFilter={onClearFilter}
               isFilterActive={isFilterActive}
               status={getTranslatedStatus(activeTab)}
+              onClick={handleNotImplemented}
+              disabled={activeTab === "all"}
             />
-            <ExportButton dateFilter={dateFilter} />
+            <ExportButton 
+              dateFilter={dateFilter} 
+              onClick={handleNotImplemented}
+              disabled={true}
+            />
           </div>
         </div>
         <TabsContent value="all">
