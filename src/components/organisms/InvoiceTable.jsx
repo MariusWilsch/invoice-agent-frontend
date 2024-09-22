@@ -128,7 +128,7 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
               {renderSender(invoice.sender)}
             </TableCell>
             <TableCell className="w-1/8 whitespace-nowrap">
-              {invoice.invoice_date || "N/A"}
+              {invoice.eingegangen_am || "N/A"}
             </TableCell>
             <TableCell className="w-1/8 whitespace-nowrap">
               {invoice.faellig_am || "N/A"}

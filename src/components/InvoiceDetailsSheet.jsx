@@ -82,7 +82,7 @@ const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
                   />
                   <Field
                     label={t.dateIssued}
-                    value={invoice.invoice_date || t.empty}
+                    value={invoice.eingegangen_am || t.empty}
                   />
                   <Field
                     label={t.dueDate}
