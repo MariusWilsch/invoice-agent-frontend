@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "../../hooks/useTranslations";
 
-const FilterButton = ({ onFilter, onClearFilter, isFilterActive, status }) => {
+const FilterButton = ({ onFilter, onClearFilter, isFilterActive, status, onClick, disabled }) => {
   const t = useTranslations();
 
   const getButtonText = () => {
@@ -16,7 +16,9 @@ const FilterButton = ({ onFilter, onClearFilter, isFilterActive, status }) => {
   };
 
   const handleClick = () => {
-    if (isFilterActive) {
+    if (onClick) {
+      onClick();
+    } else if (isFilterActive) {
       onClearFilter();
     } else {
       onFilter();
@@ -24,7 +26,11 @@ const FilterButton = ({ onFilter, onClearFilter, isFilterActive, status }) => {
   };
 
   return (
-    <Button onClick={handleClick} variant={isFilterActive ? "default" : "outline"}>
+    <Button 
+      onClick={handleClick} 
+      variant={isFilterActive ? "default" : "outline"}
+      disabled={disabled}
+    >
       {getButtonText()}
     </Button>
   );

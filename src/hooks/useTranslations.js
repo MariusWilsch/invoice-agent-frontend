@@ -83,6 +83,9 @@ const translations = {
     errorAddingAccountingStamp:
       "Fehler beim Hinzufügen des Kontierungsstempels",
     addingAccountingStamp: "Kontierungsstempel wird hinzugefügt...",
+    selectDateRange: "Datumsbereich auswählen",
+    confirm: "Bestätigen",
+    clear: "Zurücksetzen",
   },
   en: {
     title: "Data Overview",
@@ -164,6 +167,9 @@ const translations = {
     accountingStampAdded: "Accounting stamp added successfully",
     errorAddingAccountingStamp: "Error adding accounting stamp",
     addingAccountingStamp: "Adding accounting stamp...",
+    selectDateRange: "Select date range",
+    confirm: "Confirm",
+    clear: "Clear",
   },
 };
 
