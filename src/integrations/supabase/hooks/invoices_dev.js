@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "../supabase";
+import { useEffect } from "react";
 
 const fromSupabase = async (query) => {
   const { data, error } = await query;
@@ -48,8 +49,45 @@ This is the database holding the Invoices from the Invoice Agent Project.
 Note: id is the Primary Key.
 */
 
-export const useInvoicesDev = () =>
-  useQuery({
+export const useInvoicesDev = () => {
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    const channel = supabase
+      .channel('invoices_dev_changes')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'invoices_dev' },
+        (payload) => {
+          queryClient.setQueryData(['invoices_dev'], (oldData) => {
+            if (!oldData) return [payload.new];
+            
+            const newInvoice = payload.new;
+            const newData = [...oldData];
+            
+            // Find the correct position to insert the new invoice
+            const insertIndex = newData.findIndex(
+              (invoice) => new Date(invoice.eingegangen_am) <= new Date(newInvoice.eingegangen_am)
+            );
+            
+            if (insertIndex === -1) {
+              newData.push(newInvoice);
+            } else {
+              newData.splice(insertIndex, 0, newInvoice);
+            }
+            
+            return newData;
+          });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [queryClient]);
+
+  return useQuery({
     queryKey: ["invoices_dev"],
     queryFn: () =>
       fromSupabase(
@@ -59,6 +97,7 @@ export const useInvoicesDev = () =>
           .order("eingegangen_am", { ascending: false })
       ),
   });
+};
 
 export const useAddInvoiceDev = () => {
   const queryClient = useQueryClient();
