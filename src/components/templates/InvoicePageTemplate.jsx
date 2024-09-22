@@ -2,19 +2,13 @@ import React from "react";
 import { useTranslations } from "../../hooks/useTranslations";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import InvoiceCard from "../organisms/InvoiceCard";
-import FilterButton from "../molecules/FilterButton";
-import ExportButton from "../molecules/ExportButton";
 import DateRangePicker from "../molecules/DateRangePicker";
-import { toast } from "sonner";
 
 const InvoicePageTemplate = ({
   invoices,
   onViewDetails,
   onDelete,
   onStamp,
-  onFilter,
-  onClearFilter,
-  isFilterActive,
   dateFilter,
 }) => {
   const t = useTranslations();
@@ -48,12 +42,7 @@ const InvoicePageTemplate = ({
     );
   };
 
-  const handleNotImplemented = () => {
-    toast.info("This feature is not implemented yet");
-  };
-
   const handleDateRangeConfirm = (dateRange) => {
-    toast.info("Date range filter not implemented yet");
     console.log("Selected date range:", dateRange);
   };
 
@@ -68,19 +57,6 @@ const InvoicePageTemplate = ({
           </TabsList>
           <div className="flex space-x-2">
             <DateRangePicker onConfirm={handleDateRangeConfirm} />
-            <FilterButton
-              onFilter={onFilter}
-              onClearFilter={onClearFilter}
-              isFilterActive={isFilterActive}
-              status={getTranslatedStatus(activeTab)}
-              onClick={handleNotImplemented}
-              disabled={activeTab === "all"}
-            />
-            <ExportButton 
-              dateFilter={dateFilter} 
-              onClick={handleNotImplemented}
-              disabled={true}
-            />
           </div>
         </div>
         <TabsContent value="all">

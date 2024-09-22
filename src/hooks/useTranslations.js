@@ -38,10 +38,6 @@ const translations = {
     deleteWarning:
       "Diese Aktion kann nicht rückgängig gemacht werden. Die Rechnung wird dauerhaft aus der Datenbank gelöscht.",
     cancel: "Abbrechen",
-    filter: "Filter",
-    applyFilter: "Filter anwenden",
-    clearFilter: "Filter löschen",
-    filterActive: "Filter aktiv",
     kontiert: "Kontiert",
     unkontiert: "Unkontiert",
     empfangen: "Empfangen",
@@ -124,10 +120,6 @@ const translations = {
     deleteWarning:
       "This action cannot be undone. The invoice will be permanently deleted from the database.",
     cancel: "Cancel",
-    filter: "Filter",
-    applyFilter: "Apply Filter",
-    clearFilter: "Clear Filter",
-    filterActive: "Filter Active",
     kontiert: "Checked",
     unkontiert: "Unchecked",
     empfangen: "Received",

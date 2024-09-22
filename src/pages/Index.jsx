@@ -2,37 +2,22 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
   useInvoicesDev,
   useDeleteInvoiceDev,
-  supabase,
 } from "@/integrations/supabase/index.js";
 import InvoicePageTemplate from "../components/templates/InvoicePageTemplate";
-import { format } from "date-fns";
 import StampSheet from "@/components/StampSheet";
 import InvoiceDetailsSheet from "@/components/InvoiceDetailsSheet";
 import { toast } from "sonner";
 import { CheckCircle, XCircle } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 const Index = () => {
   const { data: initialInvoices, error, isLoading } = useInvoicesDev();
   const deleteInvoiceMutation = useDeleteInvoiceDev();
   const [invoices, setInvoices] = useState([]);
-  const [statuses, setStatuses] = useState([]);
   const [isStampSheetOpen, setIsStampSheetOpen] = useState(false);
   const [isDetailsSheetOpen, setIsDetailsSheetOpen] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [dateFilter, setDateFilter] = useState({ from: null, to: null });
-
-  const updateStatuses = useCallback((invoicesList) => {
-    const uniqueStatuses = Array.from(
-      new Set(
-        invoicesList.map((invoice) => {
-          if (invoice.status.toLowerCase() === "empfangen") return "Unchecked";
-          if (invoice.status.toLowerCase() === "kontiert") return "Checked";
-          return invoice.status;
-        })
-      )
-    );
-    setStatuses(uniqueStatuses);
-  }, []);
 
   useEffect(() => {
     if (initialInvoices) {
@@ -40,30 +25,8 @@ const Index = () => {
         (a, b) => new Date(b.invoice_date) - new Date(a.invoice_date)
       );
       setInvoices(sortedInvoices);
-      updateStatuses(sortedInvoices);
     }
-  }, [initialInvoices, updateStatuses]);
-
-  useEffect(() => {
-    const channel = supabase
-      .channel("invoices_changes")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "invoices_dev" },
-        (payload) => {
-          setInvoices((currentInvoices) => {
-            const newInvoices = [...currentInvoices, payload.new];
-            updateStatuses(newInvoices);
-            return newInvoices;
-          });
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [updateStatuses]);
+  }, [initialInvoices]);
 
   const handleStampClick = useCallback((invoice) => {
     setSelectedInvoice(invoice);
@@ -94,14 +57,6 @@ const Index = () => {
     [deleteInvoiceMutation]
   );
 
-  const handleFilter = useCallback((dateRange) => {
-    setDateFilter(dateRange);
-  }, []);
-
-  const handleClearFilter = useCallback(() => {
-    setDateFilter({ from: null, to: null });
-  }, []);
-
   const filteredInvoices = useMemo(() => {
     return invoices
       .map((invoice) => ({
@@ -116,46 +71,20 @@ const Index = () => {
       .filter((invoice) => invoice.status !== "Marius_TEST");
   }, [invoices]);
 
-  useEffect(() => {
-    const fetchFilteredInvoices = async () => {
-      if (dateFilter.from && dateFilter.to) {
-        const { data, error } = await supabase
-          .from("invoices_dev")
-          .select()
-          .gte("invoice_date", format(dateFilter.from, "yyyy-MM-dd"))
-          .lte("invoice_date", format(dateFilter.to, "yyyy-MM-dd"));
-
-        if (error) {
-          console.error("Error fetching filtered invoices:", error);
-        } else {
-          setInvoices(data);
-        }
-      }
-    };
-
-    fetchFilteredInvoices();
-  }, [dateFilter]);
-
-  const isFilterActive = useMemo(
-    () => dateFilter.from !== null && dateFilter.to !== null,
-    [dateFilter]
+  if (isLoading) return (
+    <div className="flex justify-center items-center h-screen">
+      <Loader2 className="h-8 w-8 animate-spin" />
+    </div>
   );
-
-  if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading invoices: {error.message}</div>;
 
   return (
     <div>
       <InvoicePageTemplate
         invoices={filteredInvoices}
-        allInvoices={invoices}
-        statuses={statuses}
         onViewDetails={handleViewDetails}
         onDelete={handleDelete}
         onStamp={handleStampClick}
-        onFilter={handleFilter}
-        onClearFilter={handleClearFilter}
-        isFilterActive={isFilterActive}
         dateFilter={dateFilter}
       />
 
