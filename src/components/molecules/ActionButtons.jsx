@@ -21,6 +21,7 @@ import {
 import { useTranslations } from "@/hooks/useTranslations";
 import axios from "axios";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase";
 
 const ActionButton = ({ icon: Icon, tooltip, onClick, disabled }) => (
   <TooltipProvider>
@@ -65,18 +66,20 @@ const ActionButtons = ({ invoice, onViewDetails, onDelete, onStamp }) => {
         public_url: invoice.public_url || "",
       };
 
-      const response = await axios.post(
-        "https://eokgvoyqcnhkpfqhicuz.supabase.co/functions/v1/addAccoutingStamp",
-        stampData,
+      const { data, error } = await supabase.functions.invoke(
+        "addAccoutingStamp",
         {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          responseType: "blob",
+          body: stampData,
         }
       );
 
-      const url = window.URL.createObjectURL(new Blob([response.data]));
+      if (error) throw error;
+
+      const blob =
+        data instanceof Blob
+          ? data
+          : new Blob([data], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
       link.setAttribute("download", `accounting_stamp_${invoice.id}.pdf`);

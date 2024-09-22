@@ -1,3 +1,4 @@
+import { z } from "https://deno.land/x/zod@v3.21.4/mod.ts";
 import {
   PDFDocument,
   PDFFont,
@@ -6,21 +7,25 @@ import {
   StandardFonts,
 } from "https://esm.sh/pdf-lib@1.17.1";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@latest";
+import { authenticateUser } from "../_shared/auth.ts";
 
-// Define the interface for stamp data
-interface StampData {
-  eingegangen: string;
-  faellig: string;
-  konto: string;
-  evVp: string;
-  belegtext: string;
-  ticketnummer: string;
-  kostenstelle: string;
-  vb: string;
-  skonto: string;
-  kommentar: string;
-  public_url: string;
-}
+// Define the Zod schema for stamp data
+const StampDataSchema = z.object({
+  eingegangen: z.string().optional(),
+  faellig: z.string().optional(),
+  konto: z.string().optional(),
+  evVp: z.string().optional(),
+  belegtext: z.string().optional(),
+  ticketnummer: z.string().optional(),
+  kostenstelle: z.string().optional(),
+  vb: z.string().optional(),
+  skonto: z.string().optional(),
+  kommentar: z.string().optional(),
+  public_url: z.string().url(),
+});
+
+// Define the interface for stamp data based on the Zod schema
+type StampData = z.infer<typeof StampDataSchema>;
 
 // Helper function to get value or default to "Leer"
 function getValueOrDefault(value: string | null | undefined): string {
@@ -232,15 +237,25 @@ async function createStampedPDF(
   return existingPdfDoc.save();
 }
 
-// CORS headers
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
+function getCorsHeaders(origin: string) {
+  const allowedOrigins = Deno.env.get("ALLOWED_ORIGINS")?.split(",") || [];
+  if (allowedOrigins?.includes(origin)) {
+    return {
+      "Access-Control-Allow-Origin": origin,
+      "Access-Control-Allow-Headers":
+        "authorization, x-client-info, apikey, content-type",
+    };
+  }
+  return {
+    "Access-Control-Allow-Origin": "null",
+    "Access-Control-Allow-Headers":
+      "authorization, x-client-info, apikey, content-type",
+  };
+}
 
 Deno.serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req.headers.get("Origin") || "");
+
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -253,25 +268,12 @@ Deno.serve(async (req) => {
       status: 405,
     });
   }
-  // TODO: Check the jwt token of the user if he's authenticated
-  const token = req.headers.get("Authorization") || "";
-  const supabase = createClient(
-    Deno.env.get("SUPABASE_URL") || "",
-    Deno.env.get("SUPABASE_ANON_KEY") || "",
-    {
-      global: {
-        headers: {
-          Authorization: token,
-        },
-      },
-    },
-  );
-  const {
-    data: { user },
-  } = await supabase.auth.getUser(token);
 
-  if (!user) {
-    return new Response("Unauthorized", {
+  // * Authenticate user
+  const { error } = await authenticateUser(req);
+
+  if (error) {
+    return new Response(error, {
       headers: corsHeaders,
       status: 401,
     });
@@ -279,37 +281,42 @@ Deno.serve(async (req) => {
 
   // ! Handle POST request
   try {
-    const { public_url, ...stampData } = await req.json();
-    console.log("Data:", stampData);
+    const rawData = await req.json();
 
-    // TODO: Download the PDF from the private bucket
+    // Validate the incoming data
+    const validationResult = StampDataSchema.safeParse(rawData);
 
-    //! Right now our bucket is public, so we can download it without any problems
-    const pdfResponse = await fetch(public_url);
-    if (!pdfResponse.ok) {
-      throw new Error("Failed to download PDF");
+    if (!validationResult.success) {
+      // If validation fails, return a 400 Bad Request with error details
+      return new Response(
+        JSON.stringify({
+          error: "Invalid input data",
+          details: validationResult.error.errors,
+        }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 400,
+        },
+      );
     }
 
-    const pdfBytes = await pdfResponse.arrayBuffer();
+    // If validation succeeds, use the validated data
+    const { public_url, ...stampData } = validationResult.data;
 
-    const pdfDoc = await PDFDocument.load(pdfBytes);
-
+    const pdfDoc = await PDFDocument.load(
+      await (await fetch(public_url)).arrayBuffer(),
+    );
     const stampedPdfBytes = await createStampedPDF(pdfDoc, stampData);
 
+    // * Return the stamped PDF
     return new Response(stampedPdfBytes, {
-      headers: {
-        ...corsHeaders,
-        "Content-Type": "application/pdf",
-      },
+      headers: { ...corsHeaders, "Content-Type": "application/octet-stream" },
     });
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Server-side error:", error);
     return new Response(JSON.stringify({ error: error.message }), {
-      headers: {
-        ...corsHeaders,
-        "Content-Type": "application/json",
-      },
-      status: 400,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 500,
     });
   }
 });

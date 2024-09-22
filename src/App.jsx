@@ -18,10 +18,20 @@ import Settings from "./pages/Setting.jsx";
 const queryClient = new QueryClient();
 
 const ProtectedRoute = ({ children }) => {
-  const { session } = useSupabaseAuth();
+  const { session, loading } = useSupabaseAuth();
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-gray-900"></div>
+      </div>
+    );
+  }
+
   if (!session) {
     return <Navigate to="/login" replace />;
   }
+
   return children;
 };
 
