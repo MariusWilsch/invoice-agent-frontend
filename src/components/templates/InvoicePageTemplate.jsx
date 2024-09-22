@@ -9,7 +9,6 @@ const InvoicePageTemplate = ({
   onViewDetails,
   onDelete,
   onStamp,
-  dateFilter,
 }) => {
   const t = useTranslations();
 
