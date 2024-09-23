@@ -109,11 +109,6 @@ const ActionButtons = ({ invoice, onViewDetails, onDelete, onStamp }) => {
         onClick={() => onStamp(invoice)}
       />
       <ActionButton
-        icon={FileText}
-        tooltip={t.pdf}
-        onClick={() => window.open(invoice.public_url, "_blank")}
-      />
-      <ActionButton
         icon={Eye}
         tooltip={t.view}
         onClick={() => onViewDetails(invoice)}
