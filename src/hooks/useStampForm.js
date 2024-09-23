@@ -25,19 +25,30 @@ const initializeFormState = (invoice) => ({
   konto: invoice?.konto || "",
   ev_vp: invoice?.ev_vp || "",
   belegtext: invoice?.belegtext || "",
-  ticket_number: invoice?.ticket_number || "",
-  kommentar: invoice?.kommentar || "",
+  ticket_number: invoice.ticket_number ? `T#${invoice.ticket_number}` : "T#",
+  kommentar: generateComment(invoice),
   kostenstelle: invoice?.kostenstelle || "",
   vb: invoice?.vb || "",
   status: "Kontiert",
   skonto: invoice?.skonto || 0,
   fälligkeit_akzeptiert: invoice?.fälligkeit_akzeptiert || false,
+  company_name: invoice?.company_name || "",
 });
+
+const generateComment = (invoice) => {
+  return `T#${invoice?.ticket_number || "<ticker_number>"}/${
+    invoice?.ev_vp || "<ev_vp>"
+  }/${invoice?.company_name || "<company_name>"}/${
+    invoice?.belegtext || "<belegtext>"
+  }`;
+};
 
 const formReducer = (state, action) => {
   switch (action.type) {
     case "UPDATE_FIELD":
-      return { ...state, [action.field]: action.value };
+      const newState = { ...state, [action.field]: action.value };
+      newState.kommentar = generateComment(newState);
+      return newState;
     case "RESET":
       return initializeFormState(action.invoice);
     default:

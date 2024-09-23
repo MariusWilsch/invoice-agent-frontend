@@ -83,7 +83,10 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
 
   const handleStatusChange = async (invoiceId, newStatus) => {
     try {
-      await updateInvoiceMutation.mutateAsync({ id: invoiceId, status: newStatus });
+      await updateInvoiceMutation.mutateAsync({
+        id: invoiceId,
+        status: newStatus,
+      });
       toast.success(t.statusUpdateSuccess);
     } catch (error) {
       console.error("Error updating invoice status:", error);
@@ -127,8 +130,7 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
               {renderSender(invoice.sender, invoice.company_name)}
             </TableCell>
             <TableCell className="w-1/8 whitespace-nowrap">
-              {format(new Date(invoice.eingegangen_am), "dd.MM.yyyy") ||
-                "N/A"}
+              {format(new Date(invoice.eingegangen_am), "dd.MM.yyyy") || "N/A"}
             </TableCell>
             <TableCell className="w-1/8 whitespace-nowrap hidden md:table-cell">
               {invoice.faellig_am || "N/A"}
@@ -145,7 +147,9 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
             <TableCell className="w-1/8">
               <StatusTag
                 status={invoice.status}
-                onStatusChange={(newStatus) => handleStatusChange(invoice.id, newStatus)}
+                onStatusChange={(newStatus) =>
+                  handleStatusChange(invoice.id, newStatus)
+                }
               />
             </TableCell>
             <TableCell className="w-1/8">

@@ -73,7 +73,11 @@ const StampForm = ({ invoice, onClose }) => {
   };
 
   const confirmEdit = () => {
-    handleEditOption(editingOption.fieldType, editingOption.value, newOptionValue);
+    handleEditOption(
+      editingOption.fieldType,
+      editingOption.value,
+      newOptionValue
+    );
     setIsEditModalOpen(false);
   };
 
@@ -90,38 +94,52 @@ const StampForm = ({ invoice, onClose }) => {
       >
         <div className="grid grid-cols-2 gap-x-6 gap-y-4">
           <div className="space-y-4">
-            {renderFormField(t.receivedOn, "eingegangen_am", (
+            {renderFormField(
+              t.receivedOn,
+              "eingegangen_am",
               <DatePickerDemo
                 onChange={(date) => handleInputChange("eingegangen_am", date)}
                 value={formData.eingegangen_am}
                 placeholder={formData.eingegangen_am ? undefined : t.pickDate}
               />
-            ))}
-            {renderFormField(t.account, "konto", (
+            )}
+            {renderFormField(
+              t.account,
+              "konto",
               <Input
                 placeholder={formData.konto ? undefined : t.enterAccount}
                 onChange={(e) => handleInputChange("konto", e.target.value)}
                 value={formData.konto}
               />
-            ))}
-            {renderFormField(t.documentText, "belegtext", (
+            )}
+            {renderFormField(
+              t.documentText,
+              "belegtext",
               <Input
-                placeholder={formData.belegtext ? undefined : t.enterDocumentText}
+                placeholder={
+                  formData.belegtext ? undefined : t.enterDocumentText
+                }
                 onChange={(e) => handleInputChange("belegtext", e.target.value)}
                 value={formData.belegtext}
               />
-            ))}
+            )}
             <SelectField
               label={t.costCenter}
               id="kostenstelle"
               options={kostenstelleOptions}
               value={formData.kostenstelle}
               onChange={(value) => handleInputChange("kostenstelle", value)}
-              placeholder={formData.kostenstelle ? undefined : t.selectCostCenter}
+              placeholder={
+                formData.kostenstelle ? undefined : t.selectCostCenter
+              }
               onEditOption={(option) => handleEditClick(option, "kostenstelle")}
-              onDeleteOption={(option) => handleDeleteClick(option, "kostenstelle")}
+              onDeleteOption={(option) =>
+                handleDeleteClick(option, "kostenstelle")
+              }
             />
-            {renderFormField(t.discount, "skonto", (
+            {renderFormField(
+              t.discount,
+              "skonto",
               <div className="flex items-center space-x-4">
                 <span className="text-sm font-medium w-12">
                   {formData.skonto}%
@@ -138,10 +156,12 @@ const StampForm = ({ invoice, onClose }) => {
                   className="flex-grow"
                 />
               </div>
-            ))}
+            )}
           </div>
           <div className="space-y-4">
-            {renderFormField(t.dueOn, "faellig_am", (
+            {renderFormField(
+              t.dueOn,
+              "faellig_am",
               <div className="flex items-center space-x-2">
                 <TooltipProvider>
                   <Tooltip>
@@ -165,15 +185,19 @@ const StampForm = ({ invoice, onClose }) => {
                   placeholder={formData.faellig_am ? undefined : t.pickDate}
                 />
               </div>
-            ))}
-            {renderFormField(t.evVp, "ev_vp", (
+            )}
+            {renderFormField(
+              t.evVp,
+              "ev_vp",
               <Input
                 placeholder={formData.ev_vp ? undefined : t.enterEvVp}
                 onChange={(e) => handleInputChange("ev_vp", e.target.value)}
                 value={formData.ev_vp}
               />
-            ))}
-            {renderFormField(t.ticketNumber, "ticket_number", (
+            )}
+            {renderFormField(
+              t.ticketNumber,
+              "ticket_number",
               <Input
                 placeholder={
                   formData.ticket_number ? undefined : t.enterTicketNumber
@@ -183,7 +207,7 @@ const StampForm = ({ invoice, onClose }) => {
                 }
                 value={formData.ticket_number}
               />
-            ))}
+            )}
             <SelectField
               label={t.vb}
               id="vb"
@@ -194,13 +218,16 @@ const StampForm = ({ invoice, onClose }) => {
               onEditOption={(option) => handleEditClick(option, "vb")}
               onDeleteOption={(option) => handleDeleteClick(option, "vb")}
             />
-            {renderFormField(t.comment, "kommentar", (
+            {renderFormField(
+              t.comment,
+              "kommentar",
               <Textarea
                 placeholder={formData.kommentar ? undefined : t.enterComment}
-                onChange={(e) => handleInputChange("kommentar", e.target.value)}
                 value={formData.kommentar}
+                readOnly
+                className="bg-gray-100"
               />
-            ))}
+            )}
           </div>
         </div>
         <div className="flex justify-end space-x-4 mt-6">
@@ -248,7 +275,9 @@ const StampForm = ({ invoice, onClose }) => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{t.cancel}</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete}>{t.delete}</AlertDialogAction>
+            <AlertDialogAction onClick={confirmDelete}>
+              {t.delete}
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
