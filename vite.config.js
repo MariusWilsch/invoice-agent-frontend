@@ -1,3 +1,4 @@
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 import { fileURLToPath, URL } from "url";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
@@ -9,7 +10,13 @@ export default defineConfig({
     host: "::",
     port: "8080",
   },
-  plugins: [react()],
+
+  plugins: [react(), sentryVitePlugin({
+    org: "veloxforce",
+    project: "invoice-agent-frontend",
+    url: "https://sentry.io/"
+  })],
+
   resolve: {
     alias: [
       {
@@ -22,4 +29,8 @@ export default defineConfig({
       },
     ],
   },
+
+  build: {
+    sourcemap: true
+  }
 });
