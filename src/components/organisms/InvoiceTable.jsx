@@ -121,7 +121,7 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
             key={invoice.id}
             className={`${
               index % 2 === 0 ? "bg-white" : "bg-gray-50"
-            } transition-all duration-200 hover:shadow-md hover:-translate-y-1 hover:bg-gray-200 border-b border-gray-200 hover:border-transparent`}
+            } transition-all duration-200 hover:bg-gray-200 border-b border-gray-200`}
           >
             <TableCell className="w-1/4">
               {renderSender(invoice.sender, invoice.company_name)}
