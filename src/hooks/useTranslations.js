@@ -41,6 +41,7 @@ const translations = {
     kontiert: "Kontiert",
     unkontiert: "Unkontiert",
     empfangen: "Empfangen",
+    bezahlt: "Bezahlt",
     vendorName: "Absender",
     status: "Status",
     actions: "Aktionen",
@@ -82,6 +83,8 @@ const translations = {
     selectDateRange: "Datumsbereich auswählen",
     confirm: "Bestätigen",
     clear: "Zurücksetzen",
+    statusUpdateSuccess: "Status erfolgreich aktualisiert",
+    statusUpdateError: "Fehler beim Aktualisieren des Status",
   },
   en: {
     title: "Data Overview",
@@ -123,6 +126,7 @@ const translations = {
     kontiert: "Checked",
     unkontiert: "Unchecked",
     empfangen: "Received",
+    bezahlt: "Paid",
     vendorName: "Vendor/Supplier Name / Email",
     status: "Status",
     actions: "Actions",
@@ -162,6 +166,8 @@ const translations = {
     selectDateRange: "Select date range",
     confirm: "Confirm",
     clear: "Clear",
+    statusUpdateSuccess: "Status updated successfully",
+    statusUpdateError: "Error updating status",
   },
 };
 

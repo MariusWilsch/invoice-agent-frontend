@@ -13,8 +13,10 @@ const StatusBadge = ({ status }) => {
         return { color: "bg-red-500", text: t.unkontiert };
       case "empfangen":
         return { color: "bg-yellow-500", text: t.empfangen };
+      case "bezahlt":
+        return { color: "bg-blue-500", text: t.bezahlt };
       default:
-        return { color: "bg-red-500", text: "Error" };
+        return { color: "bg-gray-500", text: "Unknown" };
     }
   };
 

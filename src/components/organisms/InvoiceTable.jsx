@@ -12,9 +12,13 @@ import {
 import StatusBadge from "../molecules/StatusBadge";
 import ActionButtons from "../molecules/ActionButtons";
 import { format } from "date-fns";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useUpdateInvoiceDev } from "@/integrations/supabase/index.js";
+import { toast } from "sonner";
 
 const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
   const t = useTranslations();
+  const updateInvoiceMutation = useUpdateInvoiceDev();
 
   const renderSender = (sender, company) => {
     if (company) return company;
@@ -78,19 +82,13 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
     );
   }, [invoices]);
 
-  const getGermanStatus = (status) => {
-    switch (status.toLowerCase()) {
-      case "checked":
-      case "kontiert":
-        return "kontiert";
-      case "unchecked":
-      case "unkontiert":
-        return "unkontiert";
-      case "received":
-      case "empfangen":
-        return "empfangen";
-      default:
-        return status;
+  const handleStatusChange = async (invoiceId, newStatus) => {
+    try {
+      await updateInvoiceMutation.mutateAsync({ id: invoiceId, status: newStatus });
+      toast.success(t.statusUpdateSuccess);
+    } catch (error) {
+      console.error("Error updating invoice status:", error);
+      toast.error(t.statusUpdateError);
     }
   };
 
@@ -146,7 +144,21 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
               {renderAmount(invoice, "vat_amount")}
             </TableCell>
             <TableCell className="w-1/8">
-              <StatusBadge status={getGermanStatus(invoice.status)} />
+              <Select
+                value={invoice.status}
+                onValueChange={(value) => handleStatusChange(invoice.id, value)}
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue>
+                    <StatusBadge status={invoice.status} />
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="unkontiert">{t.unkontiert}</SelectItem>
+                  <SelectItem value="kontiert">{t.kontiert}</SelectItem>
+                  <SelectItem value="bezahlt">{t.bezahlt}</SelectItem>
+                </SelectContent>
+              </Select>
             </TableCell>
             <TableCell className="w-1/8">
               <ActionButtons
