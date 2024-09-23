@@ -219,17 +219,32 @@ const StampForm = ({ invoice, onClose }) => {
               onDeleteOption={(option) => handleDeleteClick(option, "vb")}
             />
             {renderFormField(
-              t.comment,
-              "kommentar",
-              <Textarea
-                placeholder={formData.kommentar ? undefined : t.enterComment}
-                value={formData.kommentar}
-                readOnly
-                className="bg-gray-100"
+              t.companyName,
+              "company_name",
+              <Input
+                label={t.companyName}
+                id="company_name"
+                value={formData.company_name}
+                onChange={(e) =>
+                  handleInputChange("company_name", e.target.value)
+                }
+                placeholder={
+                  formData.company_name ? undefined : t.enterCompanyName
+                }
               />
             )}
           </div>
         </div>
+        {renderFormField(
+          t.comment,
+          "kommentar",
+          <Textarea
+            placeholder={formData.kommentar ? undefined : t.enterComment}
+            value={formData.kommentar}
+            readOnly
+            className="bg-gray-100"
+          />
+        )}
         <div className="flex justify-end space-x-4 mt-6">
           <Button type="button" variant="outline" onClick={handleClear}>
             {t.clear}

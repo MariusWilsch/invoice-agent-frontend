@@ -85,6 +85,8 @@ const translations = {
     clear: "Zurücksetzen",
     statusUpdateSuccess: "Status erfolgreich aktualisiert",
     statusUpdateError: "Fehler beim Aktualisieren des Status",
+    enterCompanyName: "Firmenname eingeben",
+    companyName: "Firmenname",
   },
   en: {
     title: "Data Overview",
@@ -168,6 +170,8 @@ const translations = {
     clear: "Clear",
     statusUpdateSuccess: "Status updated successfully",
     statusUpdateError: "Error updating status",
+    enterCompanyName: "Enter company name",
+    companyName: "Company Name",
   },
 };
 
