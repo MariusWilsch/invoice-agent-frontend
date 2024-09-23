@@ -30,6 +30,9 @@ const InvoicePageTemplate = ({
       case "received":
       case "empfangen":
         return t.received;
+      case "paid":
+      case "bezahlt":
+        return t.bezahlt;
       default:
         return status;
     }
@@ -80,6 +83,7 @@ const InvoicePageTemplate = ({
             <TabsTrigger value="all">{t.all}</TabsTrigger>
             <TabsTrigger value="unkontiert">{t.unkontiert}</TabsTrigger>
             <TabsTrigger value="kontiert">{t.kontiert}</TabsTrigger>
+            <TabsTrigger value="bezahlt">{t.bezahlt}</TabsTrigger>
           </TabsList>
           <div className="flex space-x-2">
             <DateRangePicker onConfirm={handleDateRangeConfirm} />
@@ -111,6 +115,16 @@ const InvoicePageTemplate = ({
             title={`${t.kontiert} ${t.invoices}`}
             description={t.manage}
             invoices={filterInvoices("kontiert")}
+            onViewDetails={onViewDetails}
+            onDelete={onDelete}
+            onStamp={onStamp}
+          />
+        </TabsContent>
+        <TabsContent value="bezahlt">
+          <InvoiceCard
+            title={`${t.bezahlt} ${t.invoices}`}
+            description={t.manage}
+            invoices={filterInvoices("bezahlt")}
             onViewDetails={onViewDetails}
             onDelete={onDelete}
             onStamp={onStamp}
