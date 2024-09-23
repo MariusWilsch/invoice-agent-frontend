@@ -22,7 +22,11 @@ const StatusBadge = ({ status }) => {
 
   const { color, text } = getStatusInfo(status);
 
-  return <Badge className={`${color} text-white`}>{text}</Badge>;
+  return (
+    <Badge className={`${color} text-white flex items-center justify-center`}>
+      {text}
+    </Badge>
+  );
 };
 
 export default StatusBadge;
