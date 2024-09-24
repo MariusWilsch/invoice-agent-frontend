@@ -41,7 +41,6 @@ const formReducer = (state, action) => {
   switch (action.type) {
     case "UPDATE_FIELD":
       const newState = { ...state, [action.field]: action.value };
-      newState.kommentar = generateComment(newState);
       return newState;
     case "RESET":
       return initializeFormState(action.invoice);
