@@ -25,7 +25,9 @@ const initializeFormState = (invoice) => ({
   konto: invoice?.konto || "",
   ev_vp: invoice?.ev_vp || "",
   belegtext: invoice?.belegtext || "",
-  ticket_number: invoice.ticket_number ? `T#${invoice.ticket_number}` : "T#",
+  ticket_number: invoice.ticket_number
+    ? `T#${invoice.ticket_number.replace(/\D/g, "")}`
+    : "T#",
   kommentar: generateComment(invoice),
   kostenstelle: invoice?.kostenstelle || "",
   vb: invoice?.vb || "",
