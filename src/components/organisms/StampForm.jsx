@@ -239,7 +239,7 @@ const StampForm = ({ invoice, onClose }) => {
           <Textarea
             placeholder={formData.kommentar ? undefined : t.enterComment}
             value={formData.kommentar}
-            readOnly
+            onChange={(e) => handleInputChange("kommentar", e.target.value)}
             className="bg-gray-100"
           />
         )}

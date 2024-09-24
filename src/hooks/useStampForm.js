@@ -18,8 +18,6 @@ const useDropdownOptions = (options, fieldType) => {
   );
 };
 
-
-
 const initializeFormState = (invoice) => ({
   id: invoice?.id,
   eingegangen_am: invoice?.eingegangen_am || null,
@@ -30,7 +28,7 @@ const initializeFormState = (invoice) => ({
   ticket_number: invoice.ticket_number
     ? `T#${invoice.ticket_number.replace(/\D/g, "")}`
     : "T#",
-  kommentar: generateComment(invoice),
+  kommentar: "",
   kostenstelle: invoice?.kostenstelle || "",
   vb: invoice?.vb || "",
   status: "Kontiert",
@@ -38,14 +36,6 @@ const initializeFormState = (invoice) => ({
   fälligkeit_akzeptiert: invoice?.fälligkeit_akzeptiert || false,
   company_name: invoice?.company_name || "",
 });
-
-const generateComment = (invoice) => {
-  return `T#${invoice?.ticket_number || "<ticker_number>"}/${
-    invoice?.ev_vp || "<ev_vp>"
-  }/${invoice?.company_name || "<company_name>"}/${
-    invoice?.belegtext || "<belegtext>"
-  }`;
-};
 
 const formReducer = (state, action) => {
   switch (action.type) {
