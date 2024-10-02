@@ -14,7 +14,7 @@ import StatusTag from "../molecules/StatusTag";
 import { format } from "date-fns";
 import { useUpdateInvoiceDev } from "@/integrations/supabase/index.js";
 import { toast } from "sonner";
-
+import { formatCurrency } from "@/lib/formatCurrency";
 const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
   const t = useTranslations();
   const updateInvoiceMutation = useUpdateInvoiceDev();
@@ -36,15 +36,6 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
 
   const renderAmount = (invoice, field) => {
     if (!invoice) return "N/A";
-
-    const formatCurrency = (value, currency) => {
-      // Convert "Euro" to "EUR" if necessary
-      const currencyCode = currency === "Euro" ? "EUR" : currency || "EUR";
-      return new Intl.NumberFormat("de-DE", {
-        style: "currency",
-        currency: currencyCode,
-      }).format(value);
-    };
 
     if (
       field === "vat_amount" &&

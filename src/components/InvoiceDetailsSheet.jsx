@@ -9,6 +9,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { formatCurrency } from "@/lib/formatCurrency";
 
 const InvoiceDetailsSheet = ({ isOpen, onOpenChange, invoice }) => {
   const t = useTranslations();
@@ -188,13 +189,6 @@ const Field = ({ label, value, fullWidth = false }) => {
 };
 
 const renderAmount = (invoice, field, language) => {
-  const formatCurrency = (value, currency) => {
-    return new Intl.NumberFormat(language === "de" ? "de-DE" : "en-US", {
-      style: "currency",
-      currency: currency || "EUR",
-    }).format(value);
-  };
-
   if (!invoice) return "N/A";
 
   if (field === "vat_amount" && "vat_amount" in invoice) {
