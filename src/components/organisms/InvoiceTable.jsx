@@ -165,16 +165,10 @@ const InvoiceTable = ({ invoices, onViewDetails, onDelete, onStamp }) => {
             {t.total}
           </TableCell>
           <TableCell className="whitespace-nowrap font-medium hidden xl:table-cell">
-            {new Intl.NumberFormat(t.language === "de" ? "de-DE" : "en-US", {
-              style: "currency",
-              currency: invoices[0]?.amount?.currency || "EUR",
-            }).format(totals.grossAmount)}
+            {formatCurrency(totals.grossAmount, invoices[0]?.amount?.currency)}
           </TableCell>
           <TableCell className="whitespace-nowrap font-medium hidden 2xl:table-cell">
-            {new Intl.NumberFormat(t.language === "de" ? "de-DE" : "en-US", {
-              style: "currency",
-              currency: invoices[0]?.amount?.currency || "EUR",
-            }).format(totals.vatAmount)}
+            {formatCurrency(totals.vatAmount, invoices[0]?.amount?.currency)}
           </TableCell>
           <TableCell colSpan={2} />
         </TableRow>
